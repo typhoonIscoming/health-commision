@@ -25,6 +25,42 @@
 						<uv-icon name="arrow-right"></uv-icon>
 					</template>
 				</uv-form-item>
+				<uv-form-item
+					label="选择科室"
+					prop="department"
+					borderBottom
+					labelWidth="auto"
+					@click="showDepartmentSelect"
+				>
+					<uv-input
+						v-model="model.department"
+						border="none"
+						readonly
+						placeholder="请选择科室"
+					>
+					</uv-input>
+					<template v-slot:right>
+						<uv-icon name="arrow-right"></uv-icon>
+					</template>
+				</uv-form-item>
+				<uv-form-item
+					label="选择服务"
+					prop="service"
+					borderBottom
+					labelWidth="auto"
+					@click="showServiceSelect"
+				>
+					<uv-input
+						v-model="model.service"
+						border="none"
+						readonly
+						placeholder="请选择服务"
+					>
+					</uv-input>
+					<template v-slot:right>
+						<uv-icon name="arrow-right"></uv-icon>
+					</template>
+				</uv-form-item>
 			</uv-form>
 		</view>
 		<view class="footer" :style="{ height: `${paddingBottom}px` }">
@@ -35,8 +71,19 @@
 			:actions="hospitalList"
 			title="请选择医院"
 			@select="handleSelect"
-		>
-		</uv-action-sheet>
+		/>
+		<uv-action-sheet
+			ref="departmentSelect"
+			:actions="departmentList"
+			title="请选择科室"
+			@select="handleSelectDepart"
+		/>
+		<uv-action-sheet
+			ref="serviceSelect"
+			:actions="serviceList"
+			title="请选择科室"
+			@select="handleSelectService"
+		/>
 	</view>
 </template>
 <script setup>
@@ -46,19 +93,44 @@ import { isEmpty } from '@/utils';
 const paddingBottom = ref(60);
 const model = ref({
 	hospital: '',
+	department: '',
+	service: '',
 });
 const rules = ref({
 	hospital: [{ required: true, message: '请选择医院' }],
+	department: [{ required: true, message: '请选择科室' }],
+	service: [{ required: true, message: '请选择服务' }],
 });
 const hospitalSelect = ref();
+const departmentSelect = ref();
+const serviceSelect = ref();
 
 const hospitalList = ref([{ name: '第一人民医院' }, { name: '第二人民医院' }]);
+const departmentList = ref([{ name: '内科' }, { name: '体检科' }]);
+const serviceList = ref([{ name: '体检' }]);
 
 const showSelect = () => {
 	hospitalSelect.value?.open();
 };
 const handleSelect = (e) => {
 	model.value.hospital = e.name;
+};
+
+// 打开科室弹窗
+const showDepartmentSelect = () => {
+	departmentSelect.value?.open();
+};
+// 选择科室
+const handleSelectDepart = (e) => {
+	model.value.department = e.name;
+};
+
+// 选择服务
+const showServiceSelect = () => {
+	serviceSelect.value?.open();
+};
+const handleSelectService = (e) => {
+	model.value.service = e.name;
 };
 
 onMounted(() => {
@@ -74,6 +146,11 @@ onMounted(() => {
 	&-wrapper {
 		.uv-line {
 			display: none;
+		}
+		.uv-form-item {
+			& ~ .uv-form-item {
+				margin-top: 12px;
+			}
 		}
 		.uv-form-item__body {
 			padding: 0;
