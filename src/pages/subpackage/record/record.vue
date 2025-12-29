@@ -111,7 +111,13 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, defineOptions } from 'vue';
+
+defineOptions({
+	options: {
+		styleIsolation: 'shared'
+	},
+})
 
 const recordForm = ref();
 const model = ref({

@@ -104,7 +104,7 @@
 		/>
 		<uv-datetime-picker
 			ref="datetimePicker"
-			v-model="model.date"
+			v-model="datetimePickerValue"
 			mode="datetime"
 			:maxDate="maxDate"
 			:minDate="minDate"
@@ -115,7 +115,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { isEmpty } from '@/utils';
+import { isEmpty, parseTime } from '@/utils';
 
 // 一周后的日期
 const getSevenDayLater = () => {
@@ -145,6 +145,8 @@ const rules = ref({
 	department: [{ required: true, message: '请选择科室' }],
 	service: [{ required: true, message: '请选择服务' }],
 });
+// 弹窗的绑定时间
+const datetimePickerValue = ref();
 const hospitalSelect = ref();
 const departmentSelect = ref();
 const serviceSelect = ref();
@@ -181,6 +183,7 @@ const showServiceSelect = () => {
 };
 const handleSelectService = (e) => {
 	model.value.service = e.name;
+	
 };
 
 // 过滤时间
@@ -195,12 +198,16 @@ const filterDate = (type, options) => {
 }
 
 const showDateSelect = () => {
-	
-
 	datetimePicker.value?.open();
+	if (model.value.date) {
+		datetimePickerValue.value = model.value.date
+	}
 };
 // 时间确认
-const confirm = () => {};
+const confirm = ({ value }) => {
+	const result = parseTime(value);
+	model.value.date = result;
+};
 
 onMounted(() => {
 	const sysInfo = uni.getWindowInfo();

@@ -64,6 +64,26 @@ export const uuid = (len = 6) => {
 	return slider.slice(0, len);
 };
 
+export const parseTime = (v, format = 'yyyy-MM-dd HH:mm:ss') => {
+	if (isEmpty(v)) return v;
+	const date = new Date(v);
+	if (isNaN(date.getTime())) return v;
+	const pad = (n) => (n < 10 ? '0' + n : n);
+	const map = {
+		yyyy: date.getFullYear(),
+		MM: pad(date.getMonth() + 1),
+		dd: pad(date.getDate()),
+		HH: pad(date.getHours()),
+		mm: pad(date.getMinutes()),
+		ss: pad(date.getSeconds()),
+	};
+	let result = format;
+	Object.keys(map).forEach((key) => {
+		result = result.replace(new RegExp(key, 'g'), map[key]);
+	});
+	return result;
+};
+
 export const checkLogin = {
 	checkAuthInfo: (fn = noop) => {
 		const pages = getCurrentPages();

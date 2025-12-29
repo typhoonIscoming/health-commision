@@ -4,14 +4,43 @@
 			<image src="@/static/home/logo.png" mode="heightFix" />
 		</view>
 		<view class="login-form">
-			<button
-				open-type="getPhoneNumber"
-				class="authorized-btn"
-				@getphonenumber="onGetPhoneNumberLogin"
-			>
-				手机号快速登录
-			</button>
+			<view v-if="loginStatus === 'fastLogin'" class="fast-login">
+				<button
+					open-type="getPhoneNumber"
+					class="authorized-btn"
+					@getphonenumber="onGetPhoneNumberLogin"
+				>
+					手机号快速登录
+				</button>
+			</view>
+			<view v-else-if="loginStatus === 'phoneLogin'" class="phone-login">
+				<uv-form labelPosition="left" :model="model" :rules="rules" ref="form">
+					<uv-form-item prop="phone">
+						<uv-input v-model="model.phone" type="digit" border="none" placeholder="请输入手机号">
+							<template #prefix>
+								<text class="prefix">+86</text>
+							</template>
+						</uv-input>
+					</uv-form-item>
+					<uv-form-item prop="verify">
+						<uv-input v-model="model.verify" type="digit" border="none" placeholder="请输入验证码">
+							<template #suffix>
+								<view class="suffix">
+									<text v-if="showCountDown" class="input-btn"> {{ count }} s </text>
+									<text v-else @tap="getVerify">获取验证码</text>
+								</view>
+							</template>
+						</uv-input>
+					</uv-form-item>
+				</uv-form>
+				<view>
+					<button class="authorized-btn" @tap="onLogin">
+						登录
+					</button>
+				</view>
+			</view>
 		</view>
+		
 		<view class="footer">
 			<view class="other-login-text"> 其他登录方式 </view>
 			<view class="other-login">
@@ -40,9 +69,26 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, defineOptions } from 'vue';
+
+defineOptions({
+	options: {
+		styleIsolation: 'shared'
+	},
+})
 
 const loginStatus = ref('fastLogin');
+
+const model = ref({
+	phone: '',
+	verify: '',
+});
+const rules = ref({});
+const count = ref();
+// 显示倒计时
+const showCountDown = ref(false);
+
+let timer = null;
 
 const otherLogin = (type) => {
 	loginStatus.value = type;
@@ -56,6 +102,34 @@ const onGetPhoneNumberLogin = (e) => {
 		return;
 	}
 };
+
+const startInterval = () => {
+	const entryTime = parseInt(new Date().getTime() / 1000); // 进入页面得当前时间
+	let currentTime = 0; // 当前时间
+	const maxtime = 60; // 传入秒钟 = 最多走几秒
+	count.value = maxtime;
+	showCountDown.value = true;
+	timer = setInterval(() => {
+		currentTime = parseInt(new Date().getTime() / 1000); // 在定时器里面每隔一秒记录当前时间；
+		const TimeDifference = currentTime - entryTime; // 时间差
+		const mytime = maxtime - TimeDifference; // 传入的秒数 - 已经走掉的秒数  = 当前还剩多少秒数
+		if (TimeDifference <= maxtime) {
+			// 如果已经走掉的秒数 小于等于  传入的秒数
+			count.value = Math.floor(mytime % 60);
+		} else {
+			clearInterval(timer);
+			timer = null;
+			showCountDown.value = false;
+		}
+	}, 1000);
+};
+
+// 获取验证码
+const getVerify = () => {
+	startInterval();
+}
+
+const onLogin = () => {}
 </script>
 <style lang="scss">
 .page-container {
@@ -98,6 +172,34 @@ const onGetPhoneNumberLogin = (e) => {
 		border-radius: 14rpx;
 		font-size: 30rpx;
 		margin-top: 80rpx;
+	}
+	.phone-login{
+		.uv-form-item{
+			padding: 0 10px;
+			&~.uv-form-item{
+				margin-top: 40rpx;
+			}
+			border: 1px solid #e1e1e1;
+			border-radius: 14rpx;
+		}
+		.prefix{
+			position: relative;
+			margin-right: 10px;
+			&::before{
+				content: '';
+				position: absolute;
+				right: -8px;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+				width: 1px;
+				height: 30rpx;
+				background: #e1e1e1;
+			}
+		}
+		.suffix{
+			color: #F81A1A;
+		}
 	}
 	.footer {
 		position: absolute;
