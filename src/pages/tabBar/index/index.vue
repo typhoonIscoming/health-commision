@@ -3,7 +3,7 @@
 		<NavBar title="自治区二次补偿信息服务" :opacity="opacity" />
 		<Background />
 		<HomeCard />
-		<view style="margin-bottom: 30rpx">
+		<view style="margin-bottom: 30rpx;position: relative;">
 			<uv-notice-bar :text="notice"></uv-notice-bar>
 		</view>
 		<view class="satisfaction-wrapper page-gap card-radius flex-center">
@@ -27,6 +27,7 @@
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
+		<Tabbar />
 	</view>
 </template>
 
@@ -40,6 +41,7 @@ import HomeCard from '@/components/HomeCard.vue';
 import HomeHealthRecord from '@/components/HomeHealthRecord';
 import Satisfaction from '@/components/Satisfaction';
 import Questionnaire from '@/components/Questionnaire.vue';
+import Tabbar from '@/components/Tabbar.vue';
 
 const opacity = ref(0);
 const notice = ref('需要关注公众号，才能获得推送消息');
@@ -65,6 +67,8 @@ onPageScroll((e) => {
 		margin-bottom: 40rpx;
 		padding: 20rpx;
 		background: white;
+		position: relative;
+		z-index: 1;
 		.content {
 			flex: 1;
 		}

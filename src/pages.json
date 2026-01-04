@@ -15,6 +15,14 @@
 			}
 		},
 		{
+			"path": "pages/tabBar/appointment/appointment",
+			"style": {
+				"navigationBarTitleText": "自治区二次补偿信息服务",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/tabBar/user/user",
 			"style": {
 				"navigationBarTitleText": "个人中心",
@@ -110,15 +118,15 @@
 		"list": [
 			{
 				"pagePath": "pages/tabBar/index/index",
-				"iconPath": "static/tabbar/home.png",
-				"selectedIconPath": "static/tabbar/home_selected.png",
-				"text": "首页"
+				"text": ""
+			},
+			{
+				"pagePath": "pages/tabBar/appointment/appointment",
+				"text": ""
 			},
 			{
 				"pagePath": "pages/tabBar/user/user",
-				"iconPath": "static/tabbar/mine.png",
-				"selectedIconPath": "static/tabbar/mine_selected.png",
-				"text": "个人中心"
+				"text": ""
 			}
 		]
 	}

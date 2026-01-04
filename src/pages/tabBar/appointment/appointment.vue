@@ -1,3 +1,8 @@
 <template>
-	<view class="appointment"> 预约 </view>
+	<view class="appointment">
+		<Tabbar current-tab="appointment" />
+	</view>
 </template>
+<script setup>
+import Tabbar from '@/components/Tabbar.vue';
+</script>

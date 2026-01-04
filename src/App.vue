@@ -38,7 +38,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import './static/iconfont/iconfont.css';
+
 /*每个页面公共css */
 view,
 text {
@@ -50,6 +52,9 @@ text {
 }
 page {
 	background: #fafafa;
+}
+.uni-tabbar-bottom{
+	display: none;
 }
 .flex {
 	display: flex;
@@ -74,4 +79,5 @@ page {
 	border-radius: 5px;
 	overflow: hidden;
 }
+
 </style>

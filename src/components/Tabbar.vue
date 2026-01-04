@@ -7,8 +7,18 @@
 				class="tab-item"
 				@click="onSwitchTab(item)"
 			>
+				<uni-icons
+					custom-prefix="iconfont"
+					:type="`icon-${item.className}`"
+					size="36rpx"
+					:color="
+						currentTab === item.tabName
+							? '#D67E5A'
+							: '#999'
+					"
+				/>
 				<!-- 文案 -->
-				<text :class="{ active: currentTab === item.tabName }">
+				<text class="tab-text" :class="{ active: currentTab === item.tabName }">
 					{{ item.text }}
 				</text>
 			</view>
@@ -30,16 +40,19 @@ const tabBarList = ref([
 		text: '首页',
 		url: '/pages/tabBar/index/index',
 		tabName: 'index',
+		className: 'shouye',
 	},
 	{
 		text: '门诊预约',
 		url: '/pages/tabBar/appointment/appointment',
-		tabName: 'basket',
+		tabName: 'appointment',
+		className: 'yuyuetijian',
 	},
 	{
 		text: '我的',
 		url: '/pages/tabBar/user/user',
 		tabName: 'user',
+		className: 'gerenzhongxin',
 	},
 ]);
 
@@ -79,6 +92,8 @@ const initTabList = () => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/uni.scss';
+
 .component-tabbar {
 	line-height: normal;
 	font-family: 'PingFang SC-Regular, PingFang SC';
@@ -113,14 +128,14 @@ const initTabList = () => {
 				font-size: 20rpx;
 			}
 			.active {
-				color: var(--mall4j-color-primary);
+				color: red;
 			}
 
 			.badge {
 				position: absolute;
 				top: 2rpx;
 				right: 30rpx;
-				background-color: var(--mall4j-color-primary);
+				background-color: $uni-primary-active-color;
 				color: #fff;
 				width: auto;
 				height: 32rpx;

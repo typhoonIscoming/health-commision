@@ -35,6 +35,7 @@
 				></uv-cell>
 			</uv-cell-group>
 		</view>
+		<Tabbar current-tab="user" />
 	</view>
 </template>
 <script setup>
@@ -47,6 +48,7 @@ import { uploadImage } from '@/api';
 import Background from '@/components/Background.vue';
 import { to } from '@/utils';
 import HomeCard from '@/components/HomeCard.vue';
+import Tabbar from '@/components/Tabbar.vue';
 
 defineOptions({
 	options: {
