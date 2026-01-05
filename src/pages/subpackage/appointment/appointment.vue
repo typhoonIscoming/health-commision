@@ -1,5 +1,5 @@
 <template>
-	<view class="appointment" :style="{ paddingBottom: `${paddingBottom}px` }">
+	<view class="appointment-page" :style="{ paddingBottom: `${paddingBottom}px` }">
 		<view class="appointment-wrapper">
 			<uv-form
 				labelPosition="top"
@@ -217,9 +217,9 @@ onMounted(() => {
 });
 </script>
 <style lang="scss">
-.appointment {
+.appointment-page {
 	padding: 13px;
-	&-wrapper {
+	.appointment-wrapper {
 		.uv-line {
 			display: none;
 		}

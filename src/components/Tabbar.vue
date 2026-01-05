@@ -4,21 +4,22 @@
 			<view
 				v-for="(item, index) in showTabBarList"
 				:key="index"
+				:class="item.tabName"
 				class="tab-item"
 				@click="onSwitchTab(item)"
 			>
-				<uni-icons
-					custom-prefix="iconfont"
-					:type="`icon-${item.className}`"
-					size="36rpx"
-					:color="
-						currentTab === item.tabName
-							? '#D67E5A'
-							: '#999'
-					"
-				/>
-				<!-- 文案 -->
-				<text class="tab-text" :class="{ active: currentTab === item.tabName }">
+				<view class="tab-icon">
+					<uni-icons
+						custom-prefix="iconfont"
+						:type="`icon-${item.className}`"
+						size="36rpx"
+						:color="currentTab === item.tabName ? '#D67E5A' : '#999'"
+					/>
+				</view>
+				<text
+					class="tab-text"
+					:class="{ active: currentTab === item.tabName }"
+				>
 					{{ item.text }}
 				</text>
 			</view>
@@ -91,7 +92,7 @@ const initTabList = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/uni.scss';
 
 .component-tabbar {
@@ -129,6 +130,12 @@ const initTabList = () => {
 			}
 			.active {
 				color: red;
+			}
+			.appointment{
+				// .tab-icon{
+				// 	width: 40px;
+				// 	height: 40px;
+				// }
 			}
 
 			.badge {
