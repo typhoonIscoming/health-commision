@@ -65,8 +65,6 @@ import { ref, computed, defineOptions } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import useLoginStore from '@/store/login';
-import LoginWrapper from '@/components/LoginWrapper.vue';
-import { uploadImage } from '@/api';
 import Background from '@/components/Background.vue';
 import { to } from '@/utils';
 import HomeCard from '@/components/HomeCard.vue';

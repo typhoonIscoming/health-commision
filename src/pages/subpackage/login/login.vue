@@ -5,42 +5,63 @@
 		</view>
 		<view class="login-form">
 			<view v-if="loginStatus === 'fastLogin'" class="fast-login">
-				<button
+				<!-- <button
 					open-type="getPhoneNumber"
 					class="authorized-btn"
 					@getphonenumber="onGetPhoneNumberLogin"
 				>
 					手机号快速登录
-				</button>
+				</button> -->
+				<button @click="handlePreLogin">微信快速登录</button>
 			</view>
 			<view v-else-if="loginStatus === 'phoneLogin'" class="phone-login">
-				<uv-form labelPosition="left" :model="model" :rules="rules" ref="form">
+				<uv-form
+					labelPosition="left"
+					:model="model"
+					:rules="rules"
+					ref="form"
+				>
 					<uv-form-item prop="phone">
-						<uv-input v-model="model.phone" type="digit" border="none" placeholder="请输入手机号">
+						<uv-input
+							v-model="model.phone"
+							type="digit"
+							border="none"
+							placeholder="请输入手机号"
+						>
 							<template #prefix>
 								<text class="prefix">+86</text>
 							</template>
 						</uv-input>
 					</uv-form-item>
 					<uv-form-item prop="verify">
-						<uv-input v-model="model.verify" type="digit" border="none" placeholder="请输入验证码">
+						<uv-input
+							v-model="model.verify"
+							type="digit"
+							border="none"
+							placeholder="请输入验证码"
+						>
 							<template #suffix>
 								<view class="suffix">
-									<text v-if="showCountDown" class="input-btn"> {{ count }} s </text>
-									<text v-else @tap="getVerify">获取验证码</text>
+									<text
+										v-if="showCountDown"
+										class="input-btn"
+									>
+										{{ count }} s
+									</text>
+									<text v-else @tap="getVerify"
+										>获取验证码</text
+									>
 								</view>
 							</template>
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
 				<view>
-					<button class="authorized-btn" @tap="onLogin">
-						登录
-					</button>
+					<button class="authorized-btn" @tap="onLogin">登录</button>
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="footer">
 			<view class="other-login-text"> 其他登录方式 </view>
 			<view class="other-login">
@@ -70,12 +91,15 @@
 </template>
 <script setup>
 import { ref, defineOptions } from 'vue';
+import { fastLogin, checkUserAuth } from '@/api';
+import { isEmpty, to } from '@/utils';
+import constants from '@/utils/constants';
 
 defineOptions({
 	options: {
-		styleIsolation: 'shared'
+		styleIsolation: 'shared',
 	},
-})
+});
 
 const loginStatus = ref('fastLogin');
 
@@ -101,6 +125,72 @@ const onGetPhoneNumberLogin = (e) => {
 		uni.showToast({ icon: 'none', title: '手机授权获取失败' });
 		return;
 	}
+	handleLogin(e.detail.code);
+};
+const handlePreLogin = () => {
+	wx.login({
+		success: (loginRes) => {
+			console.log('微信登录成功：', loginRes);
+			if (!isEmpty(loginRes.code)) {
+				handleLogin(loginRes.code);
+			} else {
+				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+			}
+		},
+		fail: (err) => {
+			// eslint-disable-next-line no-console
+			console.log('获取登录code失败：', err);
+			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+		},
+	});
+};
+const handleLogin = (code) => {
+	fastLogin({
+		js_code: code,
+		appKey: constants.appKey,
+		sign: constants.sign,
+	})
+		.then((res) => {
+			// eslint-disable-next-line no-console
+			if (!isEmpty(res.token)) {
+				console.log('快速登录成功：', res);
+				handleFastLoginCheck(res);
+			} else {
+				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+			}
+		})
+		.catch((err) => {
+			// eslint-disable-next-line no-console
+			console.log('快速登录失败：', err);
+		});
+};
+const handleFastLoginCheck = async (data) => {
+	// 检查用户是否已经授权，如果没有授权，就跳转授权页
+	const [err, res] = await to(checkUserAuth({ open_id: data.openid }));
+	if (!isEmpty(err)) {
+		return
+	}
+	const { responseInfos } = res;
+	const { code } = responseInfos;
+	if (code === '未查询到绑定信息') {
+		// 未认证，跳转认证页
+		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
+		setTimeout(() => {
+			uni.reLaunch({
+				url: '/pages/subpackage/userAuth/userAuth',
+			});
+		}, 1000);
+		return;
+	}
+	console.log('handleFastLoginCheck', res);
+	uni.setStorageSync('b2cToken', data.token);
+	uni.setStorageSync('b2cOpenid', data.openid);
+	uni.showToast({ icon: 'none', title: '登录成功' });
+	setTimeout(() => {
+		uni.reLaunch({
+			url: '/pages/tabBar/index/index',
+		});
+	}, 1000);
 };
 
 const startInterval = () => {
@@ -127,9 +217,9 @@ const startInterval = () => {
 // 获取验证码
 const getVerify = () => {
 	startInterval();
-}
+};
 
-const onLogin = () => {}
+const onLogin = () => {};
 </script>
 <style lang="scss">
 .page-container {
@@ -173,19 +263,19 @@ const onLogin = () => {}
 		font-size: 30rpx;
 		margin-top: 80rpx;
 	}
-	.phone-login{
-		.uv-form-item{
+	.phone-login {
+		.uv-form-item {
 			padding: 0 10px;
-			&~.uv-form-item{
+			& ~ .uv-form-item {
 				margin-top: 40rpx;
 			}
 			border: 1px solid #e1e1e1;
 			border-radius: 14rpx;
 		}
-		.prefix{
+		.prefix {
 			position: relative;
 			margin-right: 10px;
-			&::before{
+			&::before {
 				content: '';
 				position: absolute;
 				right: -8px;
@@ -197,8 +287,8 @@ const onLogin = () => {}
 				background: #e1e1e1;
 			}
 		}
-		.suffix{
-			color: #F81A1A;
+		.suffix {
+			color: #f81a1a;
 		}
 	}
 	.footer {

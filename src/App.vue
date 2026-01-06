@@ -1,7 +1,6 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import useLoginStore from './store/login';
-import { wxLogin } from './api';
 export default {
 	computed: {
 		...mapState(useLoginStore, ['getLoginState']),
