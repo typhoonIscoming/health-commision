@@ -10,6 +10,9 @@ export default {
 		console.log('App Launch');
 	},
 	onShow: function () {
+		// #ifdef MP-WEIXIN
+		uni.hideTabBar();
+		// #endif
 		console.log('App Show', this.getLoginState);
 		if (!this.getLoginState) {
 			// this.login();
@@ -53,7 +56,27 @@ text {
 page {
 	background: #fafafa;
 }
-.uni-tabbar-bottom{
+
+/* h5低版本浏览兼容 */
+page {
+	--mall4j-safe-area-inset-bottom: env(safe-area-inset-bottom);
+}
+/* #ifdef H5 */
+page {
+	--mall4j-safe-area-inset-bottom: 0px;
+}
+@supports (bottom: constant(safe-area-inset-bottom)) {
+	page {
+		--mall4j-safe-area-inset-bottom: constant(safe-area-inset-bottom);
+	}
+}
+@supports (bottom: env(safe-area-inset-bottom)) {
+	page {
+		--mall4j-safe-area-inset-bottom: env(safe-area-inset-bottom);
+	}
+}
+/* #endif */
+.uni-tabbar-bottom {
 	display: none;
 }
 .flex {
@@ -79,5 +102,4 @@ page {
 	border-radius: 5px;
 	overflow: hidden;
 }
-
 </style>

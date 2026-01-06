@@ -1,6 +1,6 @@
 <template>
-	<view class="appointment">
-		<NavBar title="体检预约" />
+	<view class="appointment-page">
+		<NavBar title="体检预约" :opacity="1" />
 		<Tabbar current-tab="appointment" />
 		<view class="appointment-container">
 			<view class="appointment-wrapper">
@@ -228,9 +228,9 @@ onMounted(() => {
 });
 </script>
 <style lang="scss">
-.appointment {
+.appointment-page {
 	padding: 13px;
-	&-wrapper {
+	.appointment-wrapper {
 		.uv-line {
 			display: none;
 		}

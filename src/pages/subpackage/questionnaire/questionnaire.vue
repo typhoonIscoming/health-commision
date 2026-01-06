@@ -205,23 +205,24 @@ onPageScroll((e) => {
 			margin-bottom: 20rpx;
 			padding-bottom: 10px;
 			overflow: hidden;
-			.uv-form-item__body {
-				padding-bottom: 0;
-			}
-			.uv-form-item__body__right__message {
-				margin-left: 10px !important;
-			}
-			.uv-form-item__body__left {
-				width: 100% !important;
-				padding-left: 10px;
-				padding-right: 10px;
-			}
-			.uv-form-item__body__left__content {
-				padding-right: 0% !important;
-			}
+
 			.uv-line {
 				display: none;
 			}
+		}
+		.uv-form-item__body {
+			padding-bottom: 0;
+		}
+		.uv-form-item__body__right__message {
+			margin-left: 10px !important;
+		}
+		.uv-form-item__body__left {
+			width: 100% !important;
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		.uv-form-item__body__left__content {
+			padding-right: 0% !important;
 		}
 	}
 }

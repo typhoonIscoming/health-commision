@@ -1,24 +1,24 @@
 <template>
-	<view class="reservation" :style="{ paddingBottom: `${paddingBottom}px` }">
+	<view class="reservation">
 		<view class="reservation-wrapper">
 			<ReservationItem />
+			<ReservationItem :status="1" />
+			<ReservationItem :status="2" />
+			<ReservationItem :status="3" />
+			<ReservationItem :status="1" />
+			<ReservationItem :status="2" />
 			<ReservationItem />
-			<ReservationItem />
-			<ReservationItem />
-			<ReservationItem />
-			<ReservationItem />
-			<ReservationItem />
-			<ReservationItem />
+			<ReservationItem :status="3" />
 			<ReservationItem />
 		</view>
-		<view class="footer" :style="{ height: `${paddingBottom}px` }">
+		<!-- <view class="footer" :style="{ height: `${paddingBottom}px` }">
 			<uv-button
 				type="primary"
 				color="#0F62FB"
 				text="立即预约"
 				@click="handleAppointment"
 			></uv-button>
-		</view>
+		</view> -->
 	</view>
 </template>
 <script setup>

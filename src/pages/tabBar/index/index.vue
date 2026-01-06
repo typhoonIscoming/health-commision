@@ -1,5 +1,5 @@
 <template>
-	<view class="home" style="width: 100%">
+	<view class="home" :style="{width: '100%', paddingBottom: `${paddingBottom}px`}">
 		<NavBar title="自治区二次补偿信息服务" :opacity="opacity" />
 		<Background />
 		<HomeCard />
@@ -42,9 +42,11 @@ import HomeHealthRecord from '@/components/HomeHealthRecord';
 import Satisfaction from '@/components/Satisfaction';
 import Questionnaire from '@/components/Questionnaire.vue';
 import Tabbar from '@/components/Tabbar.vue';
+import { isEmpty } from '@/utils';
 
 const opacity = ref(0);
 const notice = ref('需要关注公众号，才能获得推送消息');
+const paddingBottom = ref(60);
 
 // 跳转新闻列表页面
 const handleRouteList = () => {
@@ -52,6 +54,13 @@ const handleRouteList = () => {
 		url: `/pages/subpackage/dynamicNews/dynamicNews`,
 	});
 };
+
+onMounted(() => {
+	const sysInfo = uni.getWindowInfo();
+	const { safeAreaInsets } = sysInfo;
+	if (isEmpty(safeAreaInsets)) return;
+	paddingBottom.value = paddingBottom.value + safeAreaInsets.bottom;
+});
 
 onPageScroll((e) => {
 	const { scrollTop } = e;

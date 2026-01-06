@@ -4,14 +4,16 @@
 		<view class="physical-item-address">昌吉市大西渠镇卫生院</view>
 		<view class="physical-item-date flex-center flex-between">
 			<uv-tags
-				text="2025-12-01"
+				text="体检日期：2025-12-01"
 				plain
 				color="#0F62FB"
 				borderColor="#0F62FB"
+				shape="circle"
 			></uv-tags>
 			<uv-tags
 				text="查看报告"
-				bgColor="#0F62FB"
+				type="warning"
+				shape="circle"
 				@click="handleRoute"
 			></uv-tags>
 		</view>

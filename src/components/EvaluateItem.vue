@@ -1,7 +1,10 @@
 <template>
 	<view class="evaluateItem">
 		<view class="header flex-center">
-			<view class="evaluateItem-date">2025-10-25 10:25:30</view>
+			<view class="evaluateItem-date flex">
+				<text class="label">体检时间:</text>
+				<text class="value">2025-10-25 10:25:30</text>
+			</view>
 			<uv-tags text="已完成" plain size="mini" type="warning"></uv-tags>
 		</view>
 		<view class="evaluateItem-title">
@@ -40,7 +43,15 @@ const props = defineProps({
 		justify-content: space-between;
 	}
 	&-date {
-		color: #575757;
+		align-items: center;
+		.label, .value{
+			color: #575757;
+			line-height: 1;
+		}
+		.value{
+			margin-left: 10rpx;
+			
+		}
 	}
 	&-title {
 		font-size: 28rpx;

@@ -88,18 +88,21 @@
 			ref="hospitalSelect"
 			:actions="hospitalList"
 			title="请选择医院"
+			safeAreaInsetBottom
 			@select="handleSelect"
 		/>
 		<uv-action-sheet
 			ref="departmentSelect"
 			:actions="departmentList"
 			title="请选择科室"
+			safeAreaInsetBottom
 			@select="handleSelectDepart"
 		/>
 		<uv-action-sheet
 			ref="serviceSelect"
 			:actions="serviceList"
 			title="请选择科室"
+			safeAreaInsetBottom
 			@select="handleSelectService"
 		/>
 		<uv-datetime-picker

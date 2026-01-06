@@ -8,13 +8,25 @@
 				class="tab-item"
 				@click="onSwitchTab(item)"
 			>
-				<view class="tab-icon">
+				<view v-if="item.tabName !== 'appointment'" class="tab-icon">
 					<uni-icons
 						custom-prefix="iconfont"
 						:type="`icon-${item.className}`"
 						size="36rpx"
 						:color="currentTab === item.tabName ? '#D67E5A' : '#999'"
 					/>
+				</view>
+				<view v-else style="height: 36rpx;width: 100%;position: relative;">
+					<view class="appointItem-wrap">
+						<view class="appointItem">
+							<uni-icons
+								custom-prefix="iconfont"
+								:type="`icon-${item.className}`"
+								size="42rpx"
+								:color="currentTab === item.tabName ? '#D67E5A' : '#999'"
+							/>
+						</view>
+					</view>
 				</view>
 				<text
 					class="tab-text"
@@ -100,7 +112,6 @@ const initTabList = () => {
 	font-family: 'PingFang SC-Regular, PingFang SC';
 	position: fixed;
 	bottom: 0px;
-	width: 100%;
 	left: 0px;
 	width: 100%;
 	background-color: #f7f7fa;
@@ -110,7 +121,7 @@ const initTabList = () => {
 	align-items: center;
 	box-sizing: border-box;
 	border-top: 1rpx solid #ceced1;
-	z-index: 98;
+	z-index: 68;
 	.tab-con {
 		width: 100%;
 		display: flex;
@@ -122,7 +133,7 @@ const initTabList = () => {
 			justify-content: space-evenly;
 			align-items: center;
 			height: 98rpx;
-
+			width: 100%;
 			> text {
 				text-align: center;
 				color: #333;
@@ -131,13 +142,50 @@ const initTabList = () => {
 			.active {
 				color: red;
 			}
-			.appointment{
-				// .tab-icon{
-				// 	width: 40px;
-				// 	height: 40px;
-				// }
+			.tab-icon{
+				font-size: 0;
 			}
+			.appointItem-wrap{
+				margin: auto;
+				width: 100rpx;
+				height: 50rpx;
+				transform: translateY(-120%);
+				border-radius: 50rpx 50rpx 0 0;
+				background-color: #f7f7fa;
+				border: 1px solid #ceced1;
+				border-bottom: 0;
+				position: relative;
+				display: flex;
+				justify-content: center;
+				&::before{
+					content: '';
+					display: block;
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					height: 100rpx;
+					width: 100rpx;
+					border-radius: 50%;
 
+				}
+			}
+			.appointItem{
+				position: absolute;
+				top: 3px;
+				left: 0;
+				right: 0;
+				margin: auto;
+				height: 80rpx;
+				width: 80rpx;
+				border-radius: 50%;
+				background-color: #f7f7fa;
+				z-index: 2;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
 			.badge {
 				position: absolute;
 				top: 2rpx;

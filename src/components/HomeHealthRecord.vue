@@ -5,11 +5,12 @@
 			<view
 				v-for="(item, i) in service"
 				:key="i"
-				class="service-item card-radius"
+				class="service-item card-radius flex-col"
 				:class="item.name"
 				@click="handleRoute(item)"
 			>
-				{{ item.label }}
+				<view class="label">{{ item.label }}</view>
+				<view class="desc">{{ item.desc }}</view>
 			</view>
 		</view>
 	</view>
@@ -20,10 +21,10 @@ import Title from './Title.vue';
 import { checkLogin } from '@/utils/index.js';
 
 const service = ref([
-	{ label: '体检记录', name: 'tj' },
-	{ label: '门诊记录', name: 'mz' },
-	{ label: '住院记录', name: 'zy' },
-	{ label: '检查记录', name: 'jc' },
+	{ label: '体检记录', desc: '11次', name: 'tj' },
+	{ label: '门诊记录', desc: '查看电子报告', name: 'mz' },
+	{ label: '住院记录', desc: '', name: 'zy' },
+	{ label: '检查记录', desc: '5次', name: 'jc' },
 ]);
 
 const handleRoute = (item) => {
@@ -58,8 +59,7 @@ const handleRoute = (item) => {
 		height: 100px;
 		padding: 20rpx;
 		overflow: hidden;
-		font-size: 28rpx;
-		font-weight: bold;
+		justify-content: center;
 		&.tj {
 			background: url('../static/home/tj.png') no-repeat;
 			background-size: cover;
@@ -75,6 +75,14 @@ const handleRoute = (item) => {
 		&.jc {
 			background: url('../static/home/jc.png') no-repeat;
 			background-size: cover;
+		}
+		.label{
+			font-size: 30rpx;
+			font-weight: bold;
+		}
+		.desc{
+			margin-top: 20rpx;
+			min-height: 36rpx;
 		}
 	}
 }

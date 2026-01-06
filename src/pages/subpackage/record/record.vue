@@ -4,6 +4,7 @@
 			labelPosition="left"
 			:model="model"
 			:rules="rules"
+			labelWidth="auto"
 			ref="recordForm"
 		>
 			<uv-form-item label="姓名" prop="name" borderBottom>
@@ -102,10 +103,10 @@
 		<view class="button-wrapper" style="padding: 20px">
 			<uv-button
 				type="primary"
-				:plain="true"
+				:plain="false"
 				hairline
 				text="解除绑定"
-				:custom-style="{ color: '#0F62FB' }"
+				:custom-style="{ color: 'white', borderRadius: '6px' }"
 			></uv-button>
 		</view>
 	</view>
@@ -115,9 +116,9 @@ import { ref, defineOptions } from 'vue';
 
 defineOptions({
 	options: {
-		styleIsolation: 'shared'
+		styleIsolation: 'shared',
 	},
-})
+});
 
 const recordForm = ref();
 const model = ref({
@@ -140,16 +141,13 @@ const rules = ref({});
 	.uv-form-item {
 		background: white;
 		padding: 0 10px;
-		.uv-form-item__body {
-			padding-left: 10px;
-			padding-right: 10px;
-		}
-		.uv-form-item__body__left__content__label {
-			color: #000000;
-		}
-		.uv-form-item__body__left {
-			width: fit-content !important;
-		}
+	}
+	.uv-form-item__body {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.uv-form-item__body__left__content__label {
+		color: #000000;
 	}
 }
 </style>

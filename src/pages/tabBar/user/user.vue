@@ -130,7 +130,6 @@ const handleRoute = (type) => {
 </script>
 <style lang="scss">
 .user {
-	height: 100vh;
 	position: relative;
 	.entry-wrapper {
 		padding: 0 16px;
