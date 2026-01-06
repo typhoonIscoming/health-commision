@@ -1,6 +1,6 @@
 <template>
 	<view class="home-card">
-		<view class="page-gap flex-center">
+		<view class="page-gap flex-center" @click="handleDetail">
 			<uv-avatar
 				src="https://cdn.uviewui.com/uview/album/1.jpg"
 				:size="props.size"
@@ -14,13 +14,6 @@
 				<view class="phone">18298786756</view>
 			</view>
 		</view>
-		<uv-modal
-			ref="modal"
-			title="标题"
-			:showConfirmButton="false"
-			content="不知天上宫阙，今夕是何年"
-			@confirm="confirm"
-		></uv-modal>
 	</view>
 </template>
 <script setup>
@@ -31,9 +24,10 @@ const props = defineProps({
 		default: 70,
 	},
 });
+const emits = defineEmits(['onClick']);
 
-const confirm = () => {
-	console.log('点击了确认按钮');
+const handleDetail = () => {
+	emits('onClick');
 };
 </script>
 <style lang="scss">

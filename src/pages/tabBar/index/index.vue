@@ -2,7 +2,7 @@
 	<view class="home" :style="{width: '100%', paddingBottom: `${paddingBottom}px`}">
 		<NavBar title="自治区二次补偿信息服务" :opacity="opacity" />
 		<Background />
-		<HomeCard />
+		<HomeCard @onClick="handleDetail" />
 		<view style="margin-bottom: 30rpx;position: relative;">
 			<uv-notice-bar :text="notice"></uv-notice-bar>
 		</view>
@@ -24,6 +24,7 @@
 			</view>
 			<text class="time">2025-12-01</text>
 		</view>
+		<UserCard ref="userCardModel" />
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
@@ -42,11 +43,13 @@ import HomeHealthRecord from '@/components/HomeHealthRecord';
 import Satisfaction from '@/components/Satisfaction';
 import Questionnaire from '@/components/Questionnaire.vue';
 import Tabbar from '@/components/Tabbar.vue';
+import UserCard from '@/components/UserCard.vue';
 import { isEmpty } from '@/utils';
 
 const opacity = ref(0);
 const notice = ref('需要关注公众号，才能获得推送消息');
 const paddingBottom = ref(60);
+const userCardModel = ref();
 
 // 跳转新闻列表页面
 const handleRouteList = () => {
@@ -67,6 +70,10 @@ onPageScroll((e) => {
 	const result = Math.min(40, scrollTop);
 	opacity.value = (result / 40).toFixed(1);
 });
+
+const handleDetail = () => {
+	userCardModel.value?.open();
+}
 </script>
 
 <style lang="scss">
