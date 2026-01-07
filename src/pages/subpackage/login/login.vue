@@ -12,7 +12,9 @@
 				>
 					手机号快速登录
 				</button> -->
-				<button @click="handlePreLogin">微信快速登录</button>
+				<uv-button @click="handlePreLogin" color="#f81b1a">
+					微信快速登录
+				</uv-button>
 			</view>
 			<view v-else-if="loginStatus === 'phoneLogin'" class="phone-login">
 				<uv-form
@@ -48,20 +50,58 @@
 									>
 										{{ count }} s
 									</text>
-									<text v-else @tap="getVerify"
-										>获取验证码</text
-									>
+									<text v-else @tap="getVerify">
+										获取验证码
+									</text>
 								</view>
 							</template>
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
 				<view>
-					<button class="authorized-btn" @tap="onLogin">登录</button>
+					<uv-button class="authorized-btn" color="#f81b1a" @click="onLogin">
+						登录
+					</uv-button>
 				</view>
 			</view>
 		</view>
-
+		<view class="service-wrap">
+			<label class="statement-label" @tap.stop="onHandlePrivacyClick">
+				<checkbox
+					class="check-box"
+					color="#fff"
+					:checked="isPrivacy === 1"
+					@tap.stop="onHandlePrivacyClick"
+				/>
+				<view style="color: #999999;" class="statement-content">
+					若手机号未注册将进入注册流程，注册即视为同意
+					<text
+						@tap.stop="onToTermsOfService('serviceTerms')"
+					>
+						《服务条款》
+					</text>
+					
+				</view>
+			</label>
+		</view>
+		<view v-if="showAgreementPop" class="agreement-pop">
+			<view class="mask" />
+			<view class="main">
+				<view class="title">温馨提示</view>
+				<view class="content">
+					请您仔细阅读并充分理解相关条款，点击同意即代表您已阅读并同意
+					<text @tap.stop="onToTermsOfService('serviceTerms')">
+						《服务条款》
+					</text>
+				</view>
+				<view class="btn-con">
+					<view class="btn plain" @tap="showAgreementPop = false">
+						取消
+					</view>
+					<view class="btn" @tap="onHandlePrivacyClick"> 同意 </view>
+				</view>
+			</view>
+		</view>
 		<view class="footer">
 			<view class="other-login-text"> 其他登录方式 </view>
 			<view class="other-login">
@@ -111,6 +151,8 @@ const rules = ref({});
 const count = ref();
 // 显示倒计时
 const showCountDown = ref(false);
+const showAgreementPop = ref(false);
+const isPrivacy = ref(0); // 是否同意隐私协议，1已同意，0未同意
 
 let timer = null;
 
@@ -128,6 +170,10 @@ const onGetPhoneNumberLogin = (e) => {
 	handleLogin(e.detail.code);
 };
 const handlePreLogin = () => {
+	if (isPrivacy.value !== 1) {
+		showAgreementPop.value = true;
+		return;
+	}
 	wx.login({
 		success: (loginRes) => {
 			console.log('微信登录成功：', loginRes);
@@ -168,7 +214,7 @@ const handleFastLoginCheck = async (data) => {
 	// 检查用户是否已经授权，如果没有授权，就跳转授权页
 	const [err, res] = await to(checkUserAuth({ open_id: data.openid }));
 	if (!isEmpty(err)) {
-		return
+		return;
 	}
 	const { responseInfos } = res;
 	const { code } = responseInfos;
@@ -220,6 +266,15 @@ const getVerify = () => {
 };
 
 const onLogin = () => {};
+
+const onHandlePrivacyClick = () => {
+	isPrivacy.value = isPrivacy.value === 1 ? 0 : 1;
+	showAgreementPop.value = false;
+};
+// 打开服务条款
+const onToTermsOfService = () => {
+
+}
 </script>
 <style lang="scss">
 .page-container {
@@ -248,7 +303,7 @@ const onLogin = () => {};
 	}
 	.login-form {
 		width: 90%;
-		margin: 0 auto 10%;
+		margin: 0 auto 40rpx;
 	}
 	.authorized-btn {
 		width: 100%;
@@ -321,6 +376,104 @@ const onLogin = () => {};
 				width: 80rpx;
 				height: 80rpx;
 				margin-bottom: 10rpx;
+			}
+		}
+	}
+
+	.agreement-pop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		width: 100vw;
+		z-index: 9;
+		.mask {
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: block;
+			background-color: rgba(0, 0, 0, 0.3);
+			height: 100vh;
+			width: 100vw;
+			z-index: -1;
+		}
+		.main {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 65%;
+			background-color: #fff;
+			border-radius: 30rpx;
+			padding: 30rpx 50rpx;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.title {
+				font-size: 32rpx;
+			}
+			.content {
+				font-size: 24rpx;
+				color: #999;
+				padding: 30rpx 0;
+				line-height: 1.5;
+				> text {
+					color: #f81a1a;
+				}
+			}
+			.btn-con {
+				display: flex;
+				width: 100%;
+				justify-content: space-between;
+				.btn {
+					padding: 10rpx 60rpx;
+					border: 1rpx solid #f81a1a;
+					border-radius: 40rpx;
+					font-size: 26rpx;
+					background-color: #f81a1a;
+					color: #fff;
+				}
+				.btn.plain {
+					border-color: #999;
+					color: #000;
+					background-color: #fff;
+				}
+			}
+		}
+	}
+	.service-wrap{
+		width: 90%;
+		margin: 0 auto;
+		.statement-label {
+			display: flex;
+			align-items: flex-start;
+			
+			&:active {
+				background-color: none;
+			}
+			.statement-content{
+				font-size: 28rpx;
+			}
+			text {
+				color: #f81a1a;
+				cursor: pointer;
+				font-size: 28rpx;
+			}
+		}
+		.check-box{
+			transform: scale(1);
+      		color: #f81a1a;
+		}
+		:deep(uni-checkbox.check-box){
+			.uni-checkbox-input{
+				background-color: #f81a1a !important;
+				border-color: #d1d1d1 !important;
+				&:not(:empty){
+				border: 1px solid transparent !important;
+				}
+				&:empty {
+					background-color: #fff !important;
+				}
 			}
 		}
 	}
