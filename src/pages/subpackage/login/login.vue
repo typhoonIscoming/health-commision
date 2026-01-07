@@ -59,7 +59,11 @@
 					</uv-form-item>
 				</uv-form>
 				<view>
-					<uv-button class="authorized-btn" color="#f81b1a" @click="onLogin">
+					<uv-button
+						class="authorized-btn"
+						color="#f81b1a"
+						@click="onLogin"
+					>
 						登录
 					</uv-button>
 				</view>
@@ -67,20 +71,17 @@
 		</view>
 		<view class="service-wrap">
 			<label class="statement-label" @tap.stop="onHandlePrivacyClick">
-				<checkbox
-					class="check-box"
-					color="#fff"
+				<uv-checkbox
 					:checked="isPrivacy === 1"
-					@tap.stop="onHandlePrivacyClick"
-				/>
-				<view style="color: #999999;" class="statement-content">
+					:size="20"
+					activeColor="#f81a1a"
+					@change="onHandlePrivacyClick"
+				></uv-checkbox>
+				<view style="color: #999999" class="statement-content">
 					若手机号未注册将进入注册流程，注册即视为同意
-					<text
-						@tap.stop="onToTermsOfService('serviceTerms')"
-					>
+					<text @tap.stop="onToTermsOfService('serviceTerms')">
 						《服务条款》
 					</text>
-					
 				</view>
 			</label>
 		</view>
@@ -147,12 +148,33 @@ const model = ref({
 	phone: '',
 	verify: '',
 });
-const rules = ref({});
+const rules = ref({
+	phone: [
+		{
+			required: true,
+			message: '请输入手机号',
+			trigger: 'blur',
+		},
+		{
+			pattern: /^1[3-9]\d{9}$/,
+			message: '请输入正确的手机号',
+			trigger: 'blur',
+		},
+	],
+	// verify: [
+	// 	{
+	// 		required: true,
+	// 		message: '请输入验证码',
+	// 		trigger: 'blur',
+	// 	},
+	// ],
+});
 const count = ref();
 // 显示倒计时
 const showCountDown = ref(false);
 const showAgreementPop = ref(false);
 const isPrivacy = ref(0); // 是否同意隐私协议，1已同意，0未同意
+const form = ref();
 
 let timer = null;
 
@@ -174,6 +196,7 @@ const handlePreLogin = () => {
 		showAgreementPop.value = true;
 		return;
 	}
+	// #ifdef MP-WEIXIN
 	wx.login({
 		success: (loginRes) => {
 			console.log('微信登录成功：', loginRes);
@@ -189,6 +212,12 @@ const handlePreLogin = () => {
 			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 		},
 	});
+	// #endif
+	// #ifndef MP-WEIXIN
+	uni.navigateTo({
+		url: '/pages/subpackage/userAuth/userAuth',
+	});
+	// #endif
 };
 const handleLogin = (code) => {
 	fastLogin({
@@ -199,7 +228,6 @@ const handleLogin = (code) => {
 		.then((res) => {
 			// eslint-disable-next-line no-console
 			if (!isEmpty(res.token)) {
-				console.log('快速登录成功：', res);
 				handleFastLoginCheck(res);
 			} else {
 				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
@@ -218,7 +246,9 @@ const handleFastLoginCheck = async (data) => {
 	}
 	const { responseInfos } = res;
 	const { code } = responseInfos;
-	if (code === '未查询到绑定信息') {
+	uni.setStorageSync('b2cOpenid', data.openid);
+	uni.setStorageSync('b2cToken', { expires: +new Date(), token: data.token });
+	if (code !== '已绑定') {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
 		setTimeout(() => {
@@ -228,9 +258,6 @@ const handleFastLoginCheck = async (data) => {
 		}, 1000);
 		return;
 	}
-	console.log('handleFastLoginCheck', res);
-	uni.setStorageSync('b2cToken', data.token);
-	uni.setStorageSync('b2cOpenid', data.openid);
 	uni.showToast({ icon: 'none', title: '登录成功' });
 	setTimeout(() => {
 		uni.reLaunch({
@@ -265,16 +292,56 @@ const getVerify = () => {
 	startInterval();
 };
 
-const onLogin = () => {};
+const onLogin = () => {
+	console.log('---', form.value);
+	form.value.validate((valid) => {
+		console.log('validate---', valid);
+		if (valid) {
+			if (isPrivacy.value !== 1) {
+				showAgreementPop.value = true;
+				return;
+			}
+			loginByPhone();
+		} else {
+			uni.showToast({ icon: 'none', title: '请填写完整信息' });
+			return false;
+		}
+	});
+};
+// 通过手机号登录
+const loginByPhone = async() => {
+	const [err, res] = await to(checkUserAuth({
+		mob_num: model.value.phone,
+	}));
+	if (!isEmpty(err)) {
+		return;
+	}
+	const { responseInfos } = res;
+	const { code } = responseInfos;
+	if (code !== '已绑定') {
+		// 未认证，跳转认证页
+		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
+		setTimeout(() => {
+			uni.reLaunch({
+				url: '/pages/subpackage/userAuth/userAuth',
+			});
+		}, 1000);
+		return;
+	}
+	uni.showToast({ icon: 'none', title: '登录成功' });
+	setTimeout(() => {
+		uni.reLaunch({
+			url: '/pages/tabBar/index/index',
+		});
+	}, 1000);
+};
 
 const onHandlePrivacyClick = () => {
 	isPrivacy.value = isPrivacy.value === 1 ? 0 : 1;
 	showAgreementPop.value = false;
 };
 // 打开服务条款
-const onToTermsOfService = () => {
-
-}
+const onToTermsOfService = () => {};
 </script>
 <style lang="scss">
 .page-container {
@@ -402,7 +469,7 @@ const onToTermsOfService = () => {
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			width: 65%;
+			width: 75%;
 			background-color: #fff;
 			border-radius: 30rpx;
 			padding: 30rpx 50rpx;
@@ -441,17 +508,17 @@ const onToTermsOfService = () => {
 			}
 		}
 	}
-	.service-wrap{
+	.service-wrap {
 		width: 90%;
 		margin: 0 auto;
 		.statement-label {
 			display: flex;
 			align-items: flex-start;
-			
+
 			&:active {
 				background-color: none;
 			}
-			.statement-content{
+			.statement-content {
 				font-size: 28rpx;
 			}
 			text {
@@ -460,16 +527,17 @@ const onToTermsOfService = () => {
 				font-size: 28rpx;
 			}
 		}
-		.check-box{
+		.check-box {
 			transform: scale(1);
-      		color: #f81a1a;
+			color: #f81a1a;
 		}
-		:deep(uni-checkbox.check-box){
-			.uni-checkbox-input{
+		:deep(uni-checkbox.check-box) {
+			.uni-checkbox-input {
 				background-color: #f81a1a !important;
 				border-color: #d1d1d1 !important;
-				&:not(:empty){
-				border: 1px solid transparent !important;
+				margin-right: 20rpx;
+				&:not(:empty) {
+					border: 1px solid transparent !important;
 				}
 				&:empty {
 					background-color: #fff !important;

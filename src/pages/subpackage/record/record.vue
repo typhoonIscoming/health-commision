@@ -107,6 +107,7 @@
 				hairline
 				text="解除绑定"
 				:custom-style="{ color: 'white', borderRadius: '6px' }"
+				@click="handleUnbind"
 			></uv-button>
 		</view>
 	</view>
@@ -135,6 +136,22 @@ const model = ref({
 	cardType: '二次补偿卡',
 });
 const rules = ref({});
+
+// 解除绑定
+const handleUnbind = () => {
+	uni.setStorageSync('b2cAuth', null);
+	uni.setStorageSync('b2cToken', null);
+	uni.showToast({
+		title: '绑定已解除',
+		icon: 'none',
+		duration: 2000,
+		complete: () => {
+			uni.reLaunch({
+				url: '/pages/tabBar/index/index',
+			});
+		},
+	});
+}
 </script>
 <style lang="scss">
 .record {

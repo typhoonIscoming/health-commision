@@ -21,10 +21,10 @@ import Title from './Title.vue';
 import { checkLogin } from '@/utils/index.js';
 
 const service = ref([
-	{ label: '体检记录', desc: '11次', name: 'tj' },
-	{ label: '门诊记录', desc: '查看电子报告', name: 'mz' },
-	{ label: '住院记录', desc: '', name: 'zy' },
-	{ label: '检查记录', desc: '5次', name: 'jc' },
+	{ label: '体检报告', desc: '11次', name: 'tj' },
+	{ label: '一般门诊', desc: '查看电子报告', name: 'mz' },
+	{ label: '门诊慢病', desc: '', name: 'zy' },
+	{ label: '住院', desc: '5次', name: 'jc' },
 ]);
 
 const handleRoute = (item) => {

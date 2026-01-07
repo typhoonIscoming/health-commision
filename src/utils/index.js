@@ -86,17 +86,32 @@ export const parseTime = (v, format = 'yyyy-MM-dd HH:mm:ss') => {
 
 export const checkLogin = {
 	checkAuthInfo: (fn = noop) => {
-		const pages = getCurrentPages();
-		if (uni.getStorageSync('b2cToken')) {
+		const tokenInfo = uni.getStorageSync('b2cToken');
+		const auth = uni.getStorageSync('b2cAuth');
+		if (tokenInfo && auth) {
 			fn();
 			return true;
 		}
 		// 设置登录后的跳转地址
 		checkLogin.setRouteUrlAfterLogin();
+		// 如果未登录或登录过期，跳转登录页
+		if (
+			!tokenInfo ||
+			!tokenInfo.token ||
+			(tokenInfo.expires &&
+				+new Date() - tokenInfo.expires > 7 * 24 * 3600 * 1000)
+		) {
+			uni.navigateTo({
+				url: '/pages/subpackage/login/login',
+			});
+			return false;
+		}
+		if (!auth) {
+			uni.navigateTo({
+				url: '/pages/subpackage/userAuth/userAuth',
+			});
+		}
 
-		uni.navigateTo({
-			url: '/pages/subpackage/login/login',
-		});
 		return false;
 	},
 	setRouteUrlAfterLogin: () => {

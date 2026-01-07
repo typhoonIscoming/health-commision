@@ -17,3 +17,13 @@ export const checkUserAuth = (data) => {
 		data,
 	});
 };
+
+// 绑定用户信息
+export const bindUserAuth = (data) => {
+	return request({
+		url: `/api/workflow/hooks/${constants.hookAuthBind}`,
+		method: 'POST',
+		data,
+	});
+};
+
