@@ -39,6 +39,10 @@
 					</uv-input>
 				</uv-form-item>
 				<uv-form-item prop="recognition">
+					<view style="font-weight: bold;font-size: 32rpx;margin: 40rpx 0;">
+						人脸识别功能验证你的身份信息，
+						<view style="font-weight: bold;font-size: 32rpx;">请确保为本人操作</view>
+					</view>
 					<view class="flex recognition-box" @click="handleStartSoterAuthentication">
 						<uni-icons
 							custom-prefix="iconfont"
@@ -69,10 +73,9 @@
 					</view>
 				</uv-form-item>
 			</uv-form>
-			<view> 
+			<view style="margin-top: 60rpx;"> 
 				<uv-button
 					type="primary"
-					style="margin-top: 60rpx;"
 					@click="handleSubmit"
 				>
 					提交
@@ -129,31 +132,33 @@ const rules = ref({
 	recognition: [
 		{
 			validator: (_, v, c) => {
-				if (v && v.length > 0) {
+				console.log('人脸识别结果', v);
+				if (!v) {
+					c(new Error('请进行人脸识别'));
+					return;
+				}
+				if (v && v === 'success') {
 					c();
 				} else {
-					c(new Error('请进行人脸识别'));
+					c(new Error('人脸识别未通过，请重新识别'));
 				}
 			},
-			message: '请进行人脸识别',
 			trigger: 'blur',
 		},
 	],
 });
 
 const handleSubmit = () => {
-	form.value.validate((valid) => {
+	form.value.validate().then(valid => {
 		if (valid) {
-			uni.showToast({
-				title: '提交成功',
-				icon: 'success',
-			});
-		} else {
-			uni.showToast({
-				title: '表单填写有误',
-				icon: 'error',
-			});
+			// 绑定用户信息
+			handleBindUserInfo();
 		}
+	}).catch(() => {
+		uni.showToast({
+			title: '表单填写有误',
+			icon: 'error',
+		});
 	});
 };
 // 人脸识别
@@ -176,11 +181,6 @@ const handleStartSoterAuthentication = () => {
 		success: (res) => {
 			console.log('人脸识别成功', res);
 			model.value.recognition = 'success';
-			// uni.showToast({
-			// 	title: '人脸识别成功',
-			// 	icon: 'success',
-			// });
-			handleBindUserInfo();
 		},
 		fail: (err) => {
 			console.log('人脸识别失败', err);

@@ -259,6 +259,8 @@ const handleFastLoginCheck = async (data) => {
 		return;
 	}
 	uni.showToast({ icon: 'none', title: '登录成功' });
+	// 这里默认填入数据以防本地认证状态丢失（userAuth.vue--204行）
+	uni.setStorageSync('b2cAuth', { responseInfos: { code: 'S200' } });
 	setTimeout(() => {
 		uni.reLaunch({
 			url: '/pages/tabBar/index/index',
@@ -293,8 +295,8 @@ const getVerify = () => {
 };
 
 const onLogin = () => {
-	console.log('---', form.value);
-	form.value.validate((valid) => {
+	console.log('---', form.value.validate);
+	form.value.validate().then(valid => {
 		console.log('validate---', valid);
 		if (valid) {
 			if (isPrivacy.value !== 1) {
@@ -306,7 +308,10 @@ const onLogin = () => {
 			uni.showToast({ icon: 'none', title: '请填写完整信息' });
 			return false;
 		}
-	});
+	}).catch(() => {
+		uni.showToast({ icon: 'none', title: '请填写完整信息' });
+		return false;
+	})
 };
 // 通过手机号登录
 const loginByPhone = async() => {
@@ -341,7 +346,11 @@ const onHandlePrivacyClick = () => {
 	showAgreementPop.value = false;
 };
 // 打开服务条款
-const onToTermsOfService = () => {};
+const onToTermsOfService = () => {
+	uni.navigateTo({
+		url: '/pages/subpackage/agreement/agreement',
+	});
+};
 </script>
 <style lang="scss">
 .page-container {

@@ -105,6 +105,12 @@
 					"style": {
 						"navigationBarTitleText": "用户认证"
 					}
+				},
+				{
+					"path": "agreement/agreement",
+					"style": {
+						"navigationBarTitleText": "服务协议"
+					}
 				}
 			]
 		}
