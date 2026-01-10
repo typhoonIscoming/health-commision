@@ -3,31 +3,89 @@
 		<uv-modal ref="modal" :asyncClose="true" :showConfirmButton="false">
 			<view class="card-content">
 				<view class="user-info">
-					<view class="user-avatar">
-						<uv-avatar
-							src="https://cdn.uviewui.com/uview/album/1.jpg"
-							:size="100"
-						></uv-avatar>
-					</view>
-
-					<view class="details">
-						<view class="row flex-between">
-							<text class="label">姓名：</text>
-							<text class="value">张三</text>
-						</view>
-						<view class="row flex-between">
-							<text class="label">身份证号：</text>
-							<text class="value">123456789012345678</text>
-						</view>
-						<view class="row flex-between">
-							<text class="label">卡片类型：</text>
-							<text class="value">退休</text>
-						</view>
-						<view class="row flex-between">
-							<text class="label">级别：</text>
-							<text class="value">高级</text>
-						</view>
-					</view>
+					<Carousel :list="list">
+						<template #default="{ item }">
+							<view
+								v-if="item.name === 'detail'"
+								class="swiper-item-content details"
+							>
+								<view class="top-wrap flex">
+									<view class="left-wrap">
+										<view class="title-wrap flex-center">
+											<image
+												src="../static/home/card.png"
+												mode="aspectFill"
+												style="
+													width: 80rpx;
+													height: 80rpx;
+													border-radius: 50%;
+												"
+											></image>
+											<text
+												style="
+													font-size: 32rpx;
+													font-weight: bold;
+													margin-left: 20rpx;
+												"
+											>
+												医疗优诊卡
+											</text>
+										</view>
+										<view class="row flex-center">
+											<view class="label">姓名：</view>
+											<view class="value">张三丰</view>
+										</view>
+										<view class="row flex">
+											<view class="label">单位：</view>
+											<view class="value">中共新疆维吾尔自治区纪律监委</view>
+										</view>
+										<view class="row flex-center">
+											<view class="label">身份证号：</view>
+											<view class="value">1234567891011111</view>
+										</view>
+									</view>
+									<view class="right-wrap flex-center">
+										<image
+											src="../static/home/card.png"
+											mode="widthFix"
+											style="
+												width: 100% !important;
+											"
+										></image>
+									</view>
+								</view>
+								<view class="bottom-wrap flex-column">
+									<view>新疆维吾尔自治区卫生健康委员会</view>
+									<view>
+										新疆维吾尔自治区保健委员会办公室
+									</view>
+								</view>
+							</view>
+							<view
+								v-else-if="item.name === 'list'"
+								class="swiper-item-content list"
+							>
+								<view class="table-wrap">
+									<view class="table-row">
+										<view class="table-cell name-cell">
+											<text>医院名称</text>
+										</view>
+										<view class="table-cell phone-cell">
+											<text>电话</text>
+										</view>
+									</view>
+									<view class="table-row" v-for="row in hospital" :key="row">
+										<view class="table-cell name-cell">
+											<text>{{ row.name }}</text>
+										</view>
+										<view class="table-cell phone-cell">
+											<text>{{ row.phone }}</text>
+										</view>
+									</view>
+								</view>
+							</view>
+						</template>
+					</Carousel>
 				</view>
 				<view class="close-wrap">
 					<uv-icon
@@ -43,7 +101,29 @@
 </template>
 <script setup>
 import { ref } from 'vue';
+import Carousel from './Carousel.vue';
 const modal = ref();
+const list = [
+	{
+		name: 'detail',
+	},
+	{
+		name: 'list',
+	},
+];
+
+const hospital = ref([
+	{ name: '自治区人民医院', phone: '0991-8564427' },
+	{ name: '新疆医科大学第一附属医院', phone: '0991-4361415' },
+	{ name: '新疆医科大学附属中医医院', phone: '0991-5813577' },
+	{ name: '新疆医科大学第二附属医院', phone: '0991-4609151' },
+	{ name: '新疆医科大学附属肿瘤医院', phone: '0991-7968089' },
+	{ name: '新疆医科大学第六附属医院', phone: '0991-2630571' },
+	{ name: '自治区维吾尔医医院', phone: '0991-6296628' },
+	{ name: '自治区第三人民医院', phone: '0991-7673676' },
+	{ name: '乌鲁木齐市口腔医院', phone: '0991-2821320 4112685' },
+])
+
 const handleOpen = () => {
 	modal.value?.open();
 };
@@ -61,51 +141,126 @@ defineOptions({
 </script>
 <style lang="scss">
 .user-card {
+	.uv-popup {
+		.uv-modal__content {
+			position: relative;
+			padding: 0% !important;
+		}
+	}
+
 	.uv-popup__content {
 		background: transparent !important;
-		padding: 2px;
 		box-sizing: border-box;
-		border: 1px solid white;
 		overflow: visible !important;
+		width: 90% !important;
 	}
 	.uv-modal {
-		background: linear-gradient(to bottom, #d1e7ff 0%, #ffffff 100%);
+		// background: linear-gradient(to bottom, #d1e7ff 0%, #ffffff 100%);
 		overflow: visible;
+		width: 100% !important;
 	}
-	.uv-modal__content {
-		padding-top: 60px !important;
-		position: relative;
+	.uv-line {
+		display: none;
 	}
 	.card-content {
 		width: 100%;
+		transform: translateY(-30%);
 	}
-	.user-avatar {
-		position: absolute;
-		top: -50px;
-		left: 50%;
-		transform: translateX(-50%);
+	.swiper-item-content {
+		border-radius: 30rpx;
+		border: 1px solid #525252;
+		background: white;
+		overflow: hidden;
+		&.details {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			.top-wrap {
+				flex: 1;
+			}
+			.left-wrap {
+				flex: 1;
+				height: 100%;
+				padding: 20rpx 0 20rpx 20rpx;
+				.row{
+					padding-top: 20rpx;
+				}
+				.label{
+					white-space: nowrap;
+				}
+				.label, .value{
+					color: #080708;
+					font-size: 28rpx;
+				}
+			}
+			.right-wrap {
+				width: 200rpx;
+				height: 100%;
+				background: #ffffff;
+			}
+			.bottom-wrap {
+				display: flex;
+				flex-direction: column;
+				background: #63a639;
+				justify-content: center;
+				align-items: center;
+				padding: 20rpx 0;
+				color: white;
+			}
+		}
+		&.list{
+			height: 100%;
+			padding: 20rpx;
+		}
 	}
-	.details {
-		.row {
-			padding-top: 20rpx;
-		}
-		.label {
-			color: #6a7b8f;
-			font-weight: bold;
-			font-size: 28rpx;
-		}
-		.value {
-			font-size: 30rpx;
-		}
-	}
+
 	.close-wrap {
 		position: absolute;
 		right: 0;
 		left: 0;
 		bottom: 0;
 		margin: auto;
-		transform: translateY(150%);
+		transform: translateY(200%);
 		width: fit-content;
+	}
+
+	.swiper-item-content.list {
+		background: #D2E9D3;
+		.table-wrap {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+			border: 1px solid #525252;
+			border-radius: 8rpx;
+			overflow: hidden;
+		}
+		.table-row {
+			display: flex;
+			flex-direction: row;
+			gap: 0;
+			border-bottom: 1px solid #525252;
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+		.table-cell {
+			flex: 1;
+			padding: 5rpx 0;
+			text-align: center;
+			font-size: 26rpx;
+			color: #333;
+			border-right: 1px solid #525252;
+			&:last-child {
+				border-right: none;
+			}
+			&.phone-cell {
+				flex: 0.8;
+			}
+			&.name-cell{
+				text-align: left;
+				padding-left: 10rpx;
+			}
+		}
 	}
 }
 </style>
