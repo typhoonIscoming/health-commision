@@ -65,11 +65,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import Tabbar from '@/components/Tabbar.vue';
-import { hospitalList } from '@/utils/hospital.js';
-import { isEmpty } from '@/utils';
+import { isEmpty, to, checkLogin } from '@/utils';
+import appointmentHook from '@/hooks/appointment';
+import { makeAppointment } from '@/api';
+
+const { hospitial, currentIndex, getHospitialDateList, getHospitial } = appointmentHook();
 
 const getSevenDayLater = () => {
 	const now = new Date();
@@ -93,23 +96,30 @@ const getSevenDayLater = () => {
 	}
 	return list;
 };
-const hospital = hospitalList.map((item) => ({
-	name: item.name,
-	childrens: getSevenDayLater(),
-}));
 
-const currentIndex = ref(0);
-const list = ref(hospital);
+
+const list = computed(() => {
+	return hospitial.value.map((item) => ({
+		...item,
+	}))
+});
 const height = computed(() => {
 	return uni.getSystemInfoSync().windowHeight - uni.upx2px(200);
 });
 const currentList = computed(() => {
-	return list.value[currentIndex.value].childrens;
+	if (isEmpty(currentIndex.value)) return []
+	return list.value[currentIndex.value]?.children || [];
 });
+
 const change = (index) => {
 	console.log('当前选中tab索引：', index);
+	if (index === currentIndex.value) {
+		return
+	}
 	currentIndex.value = index;
 	timeIndex.value = null;
+	const item = list.value[index];
+	getHospitialDateList(item)
 };
 // 选择的医院
 const hospitalIndex = ref(0);
@@ -122,20 +132,38 @@ const handleSelected = (index2) => {
 };
 // 提交事件
 const handleConfrim = () => {
-	if (isEmpty(timeIndex.value)) {
-		uni.showToast({
-			title: '请选择预约时间',
-			icon: 'none',
+	checkLogin.checkAuthInfo(async(userInfo) => {
+		if (isEmpty(timeIndex.value)) {
+			uni.showToast({
+				title: '请选择预约时间',
+				icon: 'none',
+			});
+			return;
+		}
+		const selectedHospital = list.value[hospitalIndex.value];
+		const selectedTime = selectedHospital.children[timeIndex.value];
+		console.log('selectedTime', selectedTime)
+		const params = {
+			row_id: selectedTime.rowid,
+			ybbh: userInfo.ybbh
+		}
+		const [err, res] = await to(makeAppointment(params));
+		if (!isEmpty(err) || isEmpty(res)) {
+			return
+		}
+		const { responseInfos } = res;
+		if (responseInfos.code !== 'S200') {
+			uni.showToast({ icon: 'none', title: responseInfos.msg || '预约失败' })
+			return
+		}
+		getHospitial();
+		uni.showModal({
+			title: '预约成功',
+			content: `您已成功预约${selectedHospital.name}，预约时间为${selectedTime.date}，请按时前往体检！`,
+			showCancel: false,
 		});
-		return;
-	}
-	const selectedHospital = list.value[hospitalIndex.value];
-	const selectedTime = selectedHospital.childrens[timeIndex.value];
-	uni.showModal({
-		title: '预约成功',
-		content: `您已成功预约${selectedHospital.name}，预约时间为${selectedTime.date}，请按时前往体检！`,
-		showCancel: false,
-	});
+	})
+	
 };
 </script>
 <style lang="scss">

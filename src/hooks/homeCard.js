@@ -69,6 +69,9 @@ export default () => {
 		const control = config.controls.find(
 			(item) => item.controlName === '参保人员',
 		);
+		const urlControl = config.controls.find(
+			(item) => item.controlName.indexOf('附件下载地址') > -1,
+		);
 		if (isEmpty(view)) {
 			return;
 		}
@@ -99,7 +102,10 @@ export default () => {
 			console.log('获取工作表详情失败', err);
 			return;
 		}
-		list.value = res.data.rows;
+		list.value = res.data.rows.map((item) => {
+			const row = item[urlControl.controlId];
+			return { ...item, url: row };
+		});
 		num.value = res.data.total;
 		// onRowDetail(person);
 		console.log('获取工作表详情成功', res, num.value);

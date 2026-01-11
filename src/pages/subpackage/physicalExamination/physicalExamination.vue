@@ -41,21 +41,37 @@
 			</view>
 		</view>
 		<view class="physical-list">
-			<PhysicalItem v-for="i in 5" :key="i" />
+			<template v-if="serviceType === 'tj'">
+				<PhysicalItem v-for="(item, i) in list" :item="item" :key="i" />
+			</template>
 		</view>
 		<uv-load-more :status="loadStatus" @loadmore="getData" />
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import PhysicalItem from '@/components/PhysicalItem.vue';
-import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import { onPullDownRefresh, onReachBottom, onLoad } from '@dcloudio/uni-app';
+import homeCardHook from '@/hooks/homeCard';
+import { isEmpty } from '@/utils';
 
+const { tjbgList } = homeCardHook();
+
+const serviceType = ref('');
 const type = ref('');
 const loadStatus = ref('noMore');
 
+const list = ref([]);
+
+watch(() => [tjbgList.value], (result) => {
+	const tjList = result[0];
+	if (!isEmpty(tjList)) {
+		list.value = tjList;
+	}
+
+}, { deep: true, immediate: true })
+
 const handleClick = (sortType) => {
-	console.log('点击了排序', sortType);
 	if (!type.value) {
 		type.value = `${sortType}_down`;
 		return;
@@ -84,6 +100,11 @@ const getData = () => {
 		loadStatus.value = 'noMore';
 	}, 1500);
 };
+
+onLoad((options) => {
+	serviceType.value = options.type;
+	console.log('options', options)
+})
 
 onPullDownRefresh(() => {
 	console.log('下拉刷新数据');

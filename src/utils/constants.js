@@ -5,6 +5,8 @@ export default {
 	hookLogin: 'Njk1M2Q2MWM5YmI4MzcxMjBhOTFiNTBj', // 快速登录hook值
 	hookAuthCheck: 'Njk1ZDI1MTI5YmI4MzcxMjBhYTY0OGZk', // 用户认证hook值
 	hookAuthBind: 'Njk2MGE5NTlmMWQyYjk1ZWE2OTljNDVi', // 绑定用户信息hook值
+	hookDownloadReport: 'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
+	hookMakeAppointment: 'Njk2MzcwNmE4NTViZjhmNDVmM2E1NGM3', // 提交预约
 	mobileVerifyCodeKey: 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi',
 
 	// 表名

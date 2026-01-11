@@ -63,3 +63,30 @@ export const getRowDetail = (data) => {
 	})
 }
 
+// 获取体检报告的下载地址
+export const getReportUrl = (data) => {
+	return request({
+		url: `/api/workflow/hooks/${ constants.hookDownloadReport }`,
+		method: 'POST',
+		data,
+	})
+}
+
+// 获取关联表
+export const getRelationSheet = (data) => {
+	return request({
+		url: '/api/v2/open/worksheet/getRowRelations',
+		method: 'post',
+		data
+	})
+}
+
+// 预约接口
+export const makeAppointment = (data) => {
+	return request({
+		url: `/api/workflow/hooks2/${ constants.hookMakeAppointment }`,
+		method: 'post',
+		data
+	})
+}
+

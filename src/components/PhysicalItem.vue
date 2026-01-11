@@ -21,6 +21,8 @@
 </template>
 <script setup>
 import { ref, defineProps } from 'vue';
+import { getReportUrl } from '@/api';
+import { to, isEmpty } from '@/utils';
 
 const props = defineProps({
 	item: {
@@ -29,10 +31,34 @@ const props = defineProps({
 	},
 });
 
-const handleRoute = () => {
-	uni.navigateTo({
-		url: `/pages/subpackage/physicalDetail/physicalDetail`,
-	});
+const handleRoute = async() => {
+	const params = { row_id: props.item.rowid }
+	const [err, res] = await to(getReportUrl(params));
+	if (!isEmpty(err) || isEmpty(res)) {
+		uni.showToast({ icon: 'none', title: '获取体检报告失败' })
+		return
+	}
+	const path = decodeURIComponent(res.url);
+	const match = path.match(/\.([a-zA-Z0-9]+)(?=[\?&]|$)/);
+	const fileType = match ? match[1] : 'pdf';
+
+	uni.downloadFile({
+		url: path,
+		fail: function(result) {
+			console.log('下载文档异常', result)
+		},
+		success: function(result) {
+			var filePath = result.tempFilePath;
+			uni.openDocument({
+				filePath: filePath,
+				showMenu: true,
+				fileType: fileType,
+				success: function() {
+					console.log('打开文档成功');
+				},
+			})
+		}
+	})
 };
 </script>
 <style lang="scss">

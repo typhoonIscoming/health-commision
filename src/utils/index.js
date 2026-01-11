@@ -89,7 +89,7 @@ export const checkLogin = {
 		const tokenInfo = uni.getStorageSync('b2cToken');
 		const auth = uni.getStorageSync('b2cAuth');
 		if (tokenInfo && auth) {
-			fn();
+			fn(auth, tokenInfo);
 			return true;
 		}
 		// 设置登录后的跳转地址
