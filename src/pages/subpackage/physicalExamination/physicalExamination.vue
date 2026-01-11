@@ -44,6 +44,9 @@
 			<template v-if="serviceType === 'tj'">
 				<PhysicalItem v-for="(item, i) in list" :item="item" :key="i" />
 			</template>
+			<template v-else>
+				<PhysicalItemRecord v-for="(item, i) in list" :item="item" :key="i" />
+			</template>
 		</view>
 		<uv-load-more :status="loadStatus" @loadmore="getData" />
 	</view>
@@ -51,6 +54,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import PhysicalItem from '@/components/PhysicalItem.vue';
+import PhysicalItemRecord from '@/components/PhysicalItemRecord.vue';
 import { onPullDownRefresh, onReachBottom, onLoad } from '@dcloudio/uni-app';
 import homeCardHook from '@/hooks/homeCard';
 import { isEmpty } from '@/utils';
@@ -67,6 +71,7 @@ watch(() => [tjbgList.value], (result) => {
 	const tjList = result[0];
 	if (!isEmpty(tjList)) {
 		list.value = tjList;
+		console.log('tjList', tjList)
 	}
 
 }, { deep: true, immediate: true })

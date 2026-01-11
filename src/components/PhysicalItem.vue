@@ -1,26 +1,37 @@
 <template>
 	<view class="physical-item">
-		<view class="physical-item-title">成人健康体检表</view>
-		<view class="physical-item-address">昌吉市大西渠镇卫生院</view>
-		<view class="physical-item-date flex-center flex-between">
-			<uv-tags
-				text="体检日期：2025-12-01"
-				plain
-				color="#0F62FB"
-				borderColor="#0F62FB"
-				shape="circle"
-			></uv-tags>
-			<uv-tags
-				text="查看报告"
-				type="warning"
-				shape="circle"
-				@click="handleRoute"
-			></uv-tags>
+		<view class="content-wrap flex">
+			<view class="physical-icon">
+				<image
+					src="../static/home/ckbg.png"
+					mode="aspectFill"
+					style="width: 60rpx; height: 60rpx"
+				/>
+			</view>
+			<view class="content-detail">
+				<view class="physical-item-title flex-between">
+					<view class="title">{{ info.bgmc }}</view>
+					<uv-tags
+						text="查看报告"
+						type="warning"
+						shape="circle"
+						@click="handleRoute"
+					></uv-tags>
+				</view>
+				<view class="physical-item-address"
+				>
+					体检机构：{{ info.tjyy }}
+				</view>
+				<view class="physical-item-address flex-between">
+					<view>报告日期：{{ info.bgrq }}</view>
+					<view>体检结果：{{ info.bgjgms }}</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, computed } from 'vue';
 import { getReportUrl } from '@/api';
 import { to, isEmpty } from '@/utils';
 
@@ -31,12 +42,14 @@ const props = defineProps({
 	},
 });
 
-const handleRoute = async() => {
-	const params = { row_id: props.item.rowid }
+const info = computed(() => props.item);
+
+const handleRoute = async () => {
+	const params = { row_id: props.item.rowid };
 	const [err, res] = await to(getReportUrl(params));
 	if (!isEmpty(err) || isEmpty(res)) {
-		uni.showToast({ icon: 'none', title: '获取体检报告失败' })
-		return
+		uni.showToast({ icon: 'none', title: '获取体检报告失败' });
+		return;
 	}
 	const path = decodeURIComponent(res.url);
 	const match = path.match(/\.([a-zA-Z0-9]+)(?=[\?&]|$)/);
@@ -44,36 +57,49 @@ const handleRoute = async() => {
 
 	uni.downloadFile({
 		url: path,
-		fail: function(result) {
-			console.log('下载文档异常', result)
+		fail: function (result) {
+			console.log('下载文档异常', result);
 		},
-		success: function(result) {
+		success: function (result) {
 			var filePath = result.tempFilePath;
 			uni.openDocument({
 				filePath: filePath,
 				showMenu: true,
 				fileType: fileType,
-				success: function() {
+				success: function () {
 					console.log('打开文档成功');
 				},
-			})
-		}
-	})
+			});
+		},
+	});
 };
 </script>
 <style lang="scss">
 .physical-item {
 	padding: 20rpx;
 	border-radius: 6px;
-	background: #fff;
+	background: #f5faff;
 	margin-top: 20rpx;
+	.content-detail {
+		margin-left: 30rpx;
+		flex: 1;
+	}
 	&-title {
-		font-size: 30rpx;
-		font-weight: bold;
+		.title{
+			font-size: 38rpx;
+			font-weight: bold;
+			flex: 1;
+			word-break: break-all;
+			margin-right: 20rpx;
+		}
 	}
 	&-address {
-		padding: 20rpx 0;
+		padding-top: 20rpx;
 		color: #383838;
+	}
+	&-date {
+		margin-top: 20rpx;
+		justify-content: center;
 	}
 }
 </style>

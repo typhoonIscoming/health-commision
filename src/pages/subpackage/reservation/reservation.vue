@@ -11,14 +11,6 @@
 			<ReservationItem :status="3" />
 			<ReservationItem />
 		</view>
-		<!-- <view class="footer" :style="{ height: `${paddingBottom}px` }">
-			<uv-button
-				type="primary"
-				color="#0F62FB"
-				text="立即预约"
-				@click="handleAppointment"
-			></uv-button>
-		</view> -->
 	</view>
 </template>
 <script setup>
@@ -69,6 +61,7 @@ onReachBottom(() => {
 .reservation {
 	padding: 13px;
 	position: relative;
+	background: white;
 	.footer {
 		position: fixed;
 		bottom: 0;

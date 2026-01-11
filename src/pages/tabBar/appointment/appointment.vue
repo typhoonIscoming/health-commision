@@ -23,7 +23,7 @@
 			@change="change"
 		>
 			<uv-vtabs-item>
-				<view class="flex flex-wrap" style="flex-wrap: wrap">
+				<view class="flex flex-wrap" style="flex-wrap: wrap;">
 					<view
 						class="item"
 						v-for="(item2, index2) in currentList"
@@ -33,20 +33,24 @@
 							active:
 								hospitalIndex === currentIndex &&
 								timeIndex === index2,
+							disabled: !item2.num
 						}"
 						@click="handleSelected(index2)"
 					>
-						<view class="item-content">
-							<text class="item-date">{{ item2.date }}</text>
-						</view>
-						<view class="item-num-content">
-							<text class="text"> 剩余: </text>
-							<uv-count-to
-								:startVal="0"
-								:endVal="item2.num"
-								:fontSize="17"
-								:duration="1000"
-							></uv-count-to>
+						<view class="item-wrap">
+							<view class="item-content">
+								<text class="item-date">{{ item2.date }}</text>
+							</view>
+							<view class="item-num-content">
+								<text class="text"> 剩余: </text>
+								<uv-count-to
+									:startVal="0"
+									:endVal="item2.num"
+									:fontSize="17"
+									:duration="1000"
+									color="white"
+								></uv-count-to>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -71,9 +75,18 @@ import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
 import appointmentHook from '@/hooks/appointment';
 import { makeAppointment } from '@/api';
+import { onShow } from '@dcloudio/uni-app';
 
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } = appointmentHook();
 
+onShow(() => {
+	const userInfo = uni.getStorageSync('b2cAuth');
+	if (isEmpty(userInfo)) {
+		return;
+	}
+	getHospitial();
+});
+	
 const getSevenDayLater = () => {
 	const now = new Date();
 	now.setHours(23, 59, 59, 999);
@@ -126,8 +139,18 @@ const hospitalIndex = ref(0);
 // 选择的时间索引
 const timeIndex = ref();
 // 选择预约时间
-const handleSelected = (index2) => {
-	timeIndex.value = index2;
+const handleSelected = (index) => {
+	const selected = currentList.value[index];
+	if (!selected.num) {
+		uni.showToast({ icon: 'none', title: '当天已预约完，请选择其他时间' })
+		return
+	}
+	if (timeIndex.value !== index) {
+		timeIndex.value = index;
+	} else {
+		timeIndex.value = null;
+	}
+	
 	hospitalIndex.value = currentIndex.value;
 };
 // 提交事件
@@ -143,6 +166,7 @@ const handleConfrim = () => {
 		const selectedHospital = list.value[hospitalIndex.value];
 		const selectedTime = selectedHospital.children[timeIndex.value];
 		console.log('selectedTime', selectedTime)
+		
 		const params = {
 			row_id: selectedTime.rowid,
 			ybbh: userInfo.ybbh
@@ -176,12 +200,30 @@ const handleConfrim = () => {
 	}
 	.item {
 		width: 33%;
-		padding: 10rpx;
-		border: 2rpx solid transparent;
-		&.active {
-			background: #e6f0ff;
-			border-color: #2a82e4;
+		padding: 6rpx;
+		
+		&-wrap{
+			background: #53c21d;
+			border: 2rpx solid transparent;
 			border-radius: 10rpx;
+			padding: 5px;
+		}
+		&.disabled{
+			.item-wrap{
+				background: #c4c6c9;
+				border-color: #c4c6c9;
+				&-content, &-num-content{
+					.item-date{
+						color: red;
+					}
+				}
+			}
+		}
+		&.active {
+			.item-wrap{
+				background: #2a82e4;
+				border-color: #2a82e4;
+			}
 		}
 		&-num-content{
 			margin-top: 10rpx;
@@ -189,12 +231,12 @@ const handleConfrim = () => {
 		&-content, &-num-content {
 			.item-date {
 				font-size: 28rpx;
-				color: #111;
+				color: white;
 			}
 			.text {
 				line-height: 48rpx;
 				font-size: 24rpx;
-				color: #111;
+				color: white;
 				/* #ifndef APP-NVUE */
 				word-break: break-all;
 				/* #endif */

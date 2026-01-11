@@ -53,13 +53,6 @@ export default () => {
 		}
 	};
 
-	onMounted(() => {
-		const userInfo = uni.getStorageSync('b2cAuth');
-		if (isEmpty(userInfo)) {
-			return;
-		}
-		getHospitial();
-	});
 
 	// 获取当前医院的预约日期列表
 	const getHospitialDateList = async (currHospitial) => {
