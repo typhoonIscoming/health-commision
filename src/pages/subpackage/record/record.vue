@@ -193,7 +193,7 @@ const fetchUserInfo = () => {
 	}
 	model.value.birthday = birthday || '';
 	model.value.rankYears = auth.zjnx || '';
-	model.value.recordStatus = auth.ryzt || '';
+	model.value.recordStatus = auth.jlzt || '';
 	model.value.personStatus = auth.ryzt || '';
 	model.value.civilServantLevel = auth.gwyjb || '';
 	model.value.treatmentLevel = auth.dyjb || '';

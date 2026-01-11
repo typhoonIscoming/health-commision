@@ -344,12 +344,11 @@ const loginByPhone = async () => {
 	const [err, res] = await to(checkUserAuth({
 		mob_num: model.value.phone,
 	}));
-	if (!isEmpty(err)) {
+	if (!isEmpty(err) || isEmpty(res.user_id)) {
 		return;
 	}
-	const { responseInfos } = res;
-	const { code } = responseInfos;
-	if (code !== '已绑定') {
+	const { ybbh } = res;
+	if (!ybbh) {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
 		setTimeout(() => {

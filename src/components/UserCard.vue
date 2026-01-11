@@ -35,14 +35,23 @@
 											<view class="label">姓名：</view>
 											<view class="value">{{ userInfo?.name }}</view>
 										</view>
+										<view class="row flex-center">
+											<view class="label">性别：</view>
+											<view class="value">{{ userInfo?.sex }}</view>
+										</view>
 										<view class="row flex">
 											<view class="label">单位：</view>
-											<view class="value">中共新疆维吾尔自治区纪律监委</view>
+											<view class="value">{{ userInfo?.yhdw }}</view>
 										</view>
 										<view class="row flex-center">
 											<view class="label">身份证号：</view>
 											<view class="value">{{ userInfo?.car_id }}</view>
 										</view>
+										<view class="row flex">
+											<view class="label">职业状态：</view>
+											<view class="value">{{ userInfo?.zjnx }}</view>
+										</view>
+										<!--姓名，性别，单位，身份证号，在职状态/退休状态-->
 									</view>
 									<view class="right-wrap flex-center">
 										<image
@@ -186,6 +195,11 @@ defineOptions({
 				}
 				.label{
 					white-space: nowrap;
+					width: 145rpx;
+				}
+				.value{
+					word-break: break-all;
+					flex: 1;
 				}
 				.label, .value{
 					color: #080708;

@@ -91,10 +91,10 @@ import { bindUserAuth } from '@/api/index.js';
 
 const form = ref(null);
 const model = ref({
-	name: '白振声',
-	phone: '16601762764',
-	idCard: '650103193011031830',
-	recognition: 'success',
+	name: '',
+	phone: '',
+	idCard: '',
+	recognition: '',
 });
 const rules = ref({
 	name: [
