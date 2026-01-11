@@ -58,7 +58,7 @@
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
-				<view>
+				<view style="margin-top: 20rpx;">
 					<uv-button
 						class="authorized-btn"
 						color="#f81b1a"
@@ -132,7 +132,7 @@
 </template>
 <script setup>
 import { ref, defineOptions } from 'vue';
-import { fastLogin, checkUserAuth } from '@/api';
+import { fastLogin, checkUserAuth, getMobileVerifyCode } from '@/api';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
 
@@ -224,8 +224,11 @@ const handleLogin = (code) => {
 		js_code: code,
 		appKey: constants.appKey,
 		sign: constants.sign,
+		login_type: 'weixin'
 	})
 		.then((res) => {
+			uni.setStorageSync('b2cWechatCode', code);
+			console.log('快速登录成功：', res);
 			// eslint-disable-next-line no-console
 			if (!isEmpty(res.token)) {
 				handleFastLoginCheck(res);
@@ -240,15 +243,14 @@ const handleLogin = (code) => {
 };
 const handleFastLoginCheck = async (data) => {
 	// 检查用户是否已经授权，如果没有授权，就跳转授权页
-	const [err, res] = await to(checkUserAuth({ open_id: data.openid }));
+	const [err, res] = await to(checkUserAuth({ open_id: data.openid, token: data.token }));
 	if (!isEmpty(err)) {
 		return;
 	}
-	const { responseInfos } = res;
-	const { code } = responseInfos;
+	const { user_id } = res;
 	uni.setStorageSync('b2cOpenid', data.openid);
 	uni.setStorageSync('b2cToken', { expires: +new Date(), token: data.token });
-	if (code !== '已绑定') {
+	if (!user_id) {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
 		setTimeout(() => {
@@ -260,7 +262,8 @@ const handleFastLoginCheck = async (data) => {
 	}
 	uni.showToast({ icon: 'none', title: '登录成功' });
 	// 这里默认填入数据以防本地认证状态丢失（userAuth.vue--204行）
-	uni.setStorageSync('b2cAuth', { responseInfos: { code: 'S200' } });
+	// 如果已经绑定，这里的res就是返回的身份信息
+	uni.setStorageSync('b2cAuth', res);
 	setTimeout(() => {
 		uni.reLaunch({
 			url: '/pages/tabBar/index/index',
@@ -291,7 +294,24 @@ const startInterval = () => {
 
 // 获取验证码
 const getVerify = () => {
-	startInterval();
+	if (isEmpty(model.value.phone)) {
+		uni.showToast({ icon: 'none', title: '请输入手机号' });
+		return;
+	}
+	getMobileVerifyCode({
+		手机号: model.value.phone,
+		time: new Date().getTime(),
+	})
+		.then(() => {
+			uni.showToast({ icon: 'none', title: '验证码已发送' });
+			// 开始倒计时
+			startInterval();
+		})
+		.catch((err) => {
+			// eslint-disable-next-line no-console
+			console.log('获取验证码失败：', err);
+			uni.showToast({ icon: 'none', title: '获取验证码失败，请稍后重试' });
+		});
 };
 
 const onLogin = () => {
@@ -314,7 +334,13 @@ const onLogin = () => {
 	})
 };
 // 通过手机号登录
-const loginByPhone = async() => {
+const loginByPhone = async () => {
+	// #ifdef H5
+	const token = {"expires":1768101136169,"token":"27a7a0b6-65c8-4b1c-a542-d47d180ede4e"}
+	const info = {"msg":"已绑定","code":"已绑定","user_id":"U20248711472","name":"白振声","mob_num":"+8616601762764","age":"88","birthday":"","zjnx":"离休一般离休干部无年限限制","car_id":"650103193011031830","ryzt":"离休","ybbh":"62224596","sex":"男","dyjb":"","gwyjb":"","tx":""}
+	uni.setStorageSync('b2cAuth', info)
+	uni.setStorageSync('b2cToken', token)
+	// #endif
 	const [err, res] = await to(checkUserAuth({
 		mob_num: model.value.phone,
 	}));

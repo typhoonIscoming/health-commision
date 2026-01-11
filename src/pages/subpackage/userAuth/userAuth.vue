@@ -91,10 +91,10 @@ import { bindUserAuth } from '@/api/index.js';
 
 const form = ref(null);
 const model = ref({
-	name: '',
-	phone: '',
-	idCard: '',
-	recognition: '',
+	name: '白振声',
+	phone: '16601762764',
+	idCard: '650103193011031830',
+	recognition: 'success',
 });
 const rules = ref({
 	name: [
@@ -200,15 +200,17 @@ const handleBindUserInfo = () => {
 		mob_num: model.value.phone,
 		car_id: model.value.idCard,
 		open_id: uni.getStorageSync('b2cOpenid'),
+		token: uni.getStorageSync('b2cToken')?.token,
+		xcx_code: uni.getStorageSync('b2cWechatCode'),
 	}).then((res) => {
-		uni.setStorageSync('b2cAuth', res);
-		if (!res || !res.responseInfos || res.responseInfos.code !== 'S200') {
+		if (!res || res.code !== 'S200') {
 			uni.showToast({
 				title: '绑定失败',
 				icon: 'error',
 			});
 			return;
 		}
+		uni.setStorageSync('b2cAuth', res);
 		uni.showToast({
 			title: '绑定成功',
 			icon: 'success',

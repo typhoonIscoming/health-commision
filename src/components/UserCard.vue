@@ -33,7 +33,7 @@
 										</view>
 										<view class="row flex-center">
 											<view class="label">姓名：</view>
-											<view class="value">张三丰</view>
+											<view class="value">{{ userInfo?.name }}</view>
 										</view>
 										<view class="row flex">
 											<view class="label">单位：</view>
@@ -41,7 +41,7 @@
 										</view>
 										<view class="row flex-center">
 											<view class="label">身份证号：</view>
-											<view class="value">1234567891011111</view>
+											<view class="value">{{ userInfo?.car_id }}</view>
 										</view>
 									</view>
 									<view class="right-wrap flex-center">
@@ -102,6 +102,7 @@
 <script setup>
 import { ref } from 'vue';
 import Carousel from './Carousel.vue';
+import { hospitalList } from '@/utils/hospital.js';
 const modal = ref();
 const list = [
 	{
@@ -112,17 +113,9 @@ const list = [
 	},
 ];
 
-const hospital = ref([
-	{ name: '自治区人民医院', phone: '0991-8564427' },
-	{ name: '新疆医科大学第一附属医院', phone: '0991-4361415' },
-	{ name: '新疆医科大学附属中医医院', phone: '0991-5813577' },
-	{ name: '新疆医科大学第二附属医院', phone: '0991-4609151' },
-	{ name: '新疆医科大学附属肿瘤医院', phone: '0991-7968089' },
-	{ name: '新疆医科大学第六附属医院', phone: '0991-2630571' },
-	{ name: '自治区维吾尔医医院', phone: '0991-6296628' },
-	{ name: '自治区第三人民医院', phone: '0991-7673676' },
-	{ name: '乌鲁木齐市口腔医院', phone: '0991-2821320 4112685' },
-])
+const hospital = ref(hospitalList);
+
+const userInfo = ref(null);
 
 const handleOpen = () => {
 	modal.value?.open();
@@ -131,6 +124,12 @@ const handleOpen = () => {
 defineExpose({
 	open() {
 		handleOpen();
+		const auth = uni.getStorageSync('b2cAuth');
+		if (!auth) {
+			userInfo.value = null;
+			return;
+		}
+		userInfo.value = auth;
 	},
 });
 defineOptions({
@@ -195,7 +194,6 @@ defineOptions({
 			}
 			.right-wrap {
 				width: 200rpx;
-				height: 100%;
 				background: #ffffff;
 			}
 			.bottom-wrap {

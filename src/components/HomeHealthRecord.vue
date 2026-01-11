@@ -16,16 +16,28 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Title from './Title.vue';
 import { checkLogin } from '@/utils/index.js';
+import homeCardHook from '../hooks/homeCard';
+
+const { tjbgNum } = homeCardHook();
 
 const service = ref([
-	{ label: '体检报告', desc: '11次', name: 'tj' },
+	{ label: '体检报告', desc: '0次', name: 'tj' },
 	{ label: '一般门诊', desc: '查看电子报告', name: 'mz' },
 	{ label: '门诊慢病', desc: '', name: 'zy' },
 	{ label: '住院', desc: '5次', name: 'jc' },
 ]);
+
+watch(() => [tjbgNum.value], (list) => {
+	service.value = service.value.map(item => {
+		if (item.name === 'tj') {
+			return { ...item, desc: `${list[0]}次` }
+		}
+		return item
+	})
+}, { deep: true, immediate: true })
 
 const handleRoute = (item) => {
 	if (item.name === 'tj') {

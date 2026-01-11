@@ -32,8 +32,9 @@ export default function request(options) {
 				// 'Authorization': `Bearer ${loginState.accessToken}`,
 			};
 		}
+		const isWexin = uni.getAccountInfoSync;
 		wx.request({
-			url: url && http.test(url) ? url : BASE_URL + url,
+			url: isWexin ? (url && http.test(url) ? url : BASE_URL + url) : url,
 			data,
 			method,
 			timeout: timeout,

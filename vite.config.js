@@ -11,4 +11,15 @@ export default defineConfig({
 			dirs: ['src/utils', 'src/store/**'],
 		}),
 	],
+	server: {
+		open: true,
+		proxy: {
+			// 或者更详细的配置
+			'/api': {
+				target: 'https://www.2g2b.cn',
+				changeOrigin: true,
+				// rewrite: (path) => path.replace(/^\/api/, '/api'),
+			},
+		},
+	},
 });

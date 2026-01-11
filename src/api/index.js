@@ -27,3 +27,39 @@ export const bindUserAuth = (data) => {
 	});
 };
 
+// 获取验证码
+export const getMobileVerifyCode = (data) => {
+	return request({
+		url: `/api/workflow/hooks/${constants.mobileVerifyCodeKey}`,
+		method: 'POST',
+		data,
+	});
+};
+
+// 获取工作表ID
+export const getWorksheetInfo = (data) => {
+	return request({
+		url: '/api/v2/open/worksheet/getWorksheetInfo',
+		method: 'POST',
+		data,
+	});
+}
+
+// 获取工作表详情
+export const getWorksheetDetail = (data) => {
+	return request({
+		url: '/api/v2/open/worksheet/getFilterRows',
+		method: 'POST',
+		data,
+	});
+};
+
+// 获取行记录详情
+export const getRowDetail = (data) => {
+	return request({
+		url: '/api/v2/open/worksheet/getRowByIdPost',
+		method: 'POST',
+		data
+	})
+}
+
