@@ -48,18 +48,20 @@
 				<PhysicalItemRecord v-for="(item, i) in list" :item="item" :key="i" />
 			</template>
 		</view>
-		<uv-load-more :status="loadStatus" @loadmore="getData" />
+		<uv-load-more :status="loadStatus" @loadmore="getPageData" />
 	</view>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import PhysicalItem from '@/components/PhysicalItem.vue';
 import PhysicalItemRecord from '@/components/PhysicalItemRecord.vue';
 import { onPullDownRefresh, onReachBottom, onLoad } from '@dcloudio/uni-app';
 import homeCardHook from '@/hooks/homeCard';
+import homeCardFee from '@/hooks/homeCardFee';
 import { isEmpty } from '@/utils';
 
 const { tjbgList } = homeCardHook();
+const { list: resultList, getData } = homeCardFee(false);
 
 const serviceType = ref('');
 const type = ref('');
@@ -67,13 +69,20 @@ const loadStatus = ref('noMore');
 
 const list = ref([]);
 
-watch(() => [tjbgList.value], (result) => {
+watch(() => [tjbgList.value, resultList.value], (result) => {
 	const tjList = result[0];
-	if (!isEmpty(tjList)) {
-		list.value = tjList;
-		console.log('tjList', tjList)
+	console.log('result', result)
+	if (serviceType.value === 'tj') {
+		if (!isEmpty(tjList)) {
+			list.value = tjList;
+		}
+	} else {
+		const val = result[1];
+		const current = val.find(item => item.name === serviceType.value);
+		if (!isEmpty(current)) {
+			list.value = current.list;
+		}
 	}
-
 }, { deep: true, immediate: true })
 
 const handleClick = (sortType) => {
@@ -99,8 +108,7 @@ const arrowColor = (sortType, direction) => {
 		return '#E5E5E5';
 	}
 };
-const getData = () => {
-	console.log('加载更多数据');
+const getPageData = () => {
 	setTimeout(() => {
 		loadStatus.value = 'noMore';
 	}, 1500);
@@ -109,6 +117,7 @@ const getData = () => {
 onLoad((options) => {
 	serviceType.value = options.type;
 	console.log('options', options)
+	getData();
 })
 
 onPullDownRefresh(() => {
@@ -122,7 +131,7 @@ onReachBottom(() => {
 		return;
 	}
 	loadStatus.value = 'loading';
-	getData();
+	getPageData();
 });
 </script>
 <style lang="scss">

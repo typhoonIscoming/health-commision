@@ -43,7 +43,7 @@ export default () => {
 		};
 		// 获取人员详细信息
 		const [e, response] = await to(getWorksheetDetail(params));
-		console.log('人员维护详细信息', response);
+		// console.log('人员维护详细信息', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
@@ -58,11 +58,9 @@ export default () => {
 		};
 		const [err, res] = await to(getWorksheetInfo(data));
 		if (!isEmpty(err) || isEmpty(res) || !res.success) {
-			console.log('获取工作表ID失败', err);
 			return;
 		}
 		onWorkDetail(res.data, person);
-		console.log('获取工作表ID成功', res);
 	};
 	const onWorkDetail = async (config, person) => {
 		const view = config.views.find((item) => item.name === '全部');
@@ -99,7 +97,6 @@ export default () => {
 			}),
 		);
 		if (!isEmpty(err) || !res.success) {
-			console.log('获取工作表详情失败', err);
 			return;
 		}
 		list.value = res.data.rows.map((item) => {
@@ -108,7 +105,7 @@ export default () => {
 		});
 		num.value = res.data.total;
 		// onRowDetail(person);
-		console.log('获取工作表详情成功', res, num.value);
+		// console.log('获取工作表详情成功', res, num.value);
 	};
 	// 获取行记录详情
 	const onRowDetail = async (config) => {
@@ -122,7 +119,7 @@ export default () => {
 		if (isEmpty(err)) {
 			return;
 		}
-		console.log('onRowDetail', res);
+		// console.log('onRowDetail', res);
 	};
 	onMounted(() => {
 		onPersonList();

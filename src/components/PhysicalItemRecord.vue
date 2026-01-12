@@ -3,28 +3,28 @@
 		<view class="left">
 			<view class="row">
 				<text class="label">医院机构：</text>
-				<text>非定点医院</text>
+				<text>{{ info.yymc }}</text>
 			</view>
 			<view class="row">
 				<text class="label">补偿类型：</text>
-				<text>住院</text>
+				<text>{{ info.jzlb }}</text>
 			</view>
 			<view class="row">
 				<text class="label">结算日期：</text>
-				<text>2026-01-08</text>
+				<text>{{ info.jsrq }}</text>
 			</view>
 		</view>
 		<view class="right flex-col flex-center">
 			<view>
-				<text class="count">1389.00</text>
+				<text class="count">{{ info.bcje }}</text>
 				<text class="unit">元</text>
 			</view>
-			<view class="label">已补偿</view>
+			<view class="label">{{ info.bcsqzt }}</view>
 		</view>
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
 	item: {
@@ -32,6 +32,8 @@ const props = defineProps({
 		required: true,
 	},
 });
+
+const info = computed(() => props.item);
 </script>
 <style lang="scss">
 .PhysicalItemRecord {

@@ -36,27 +36,22 @@ import homeCardHook from '../hooks/homeCard';
 import homeCardFee from '../hooks/homeCardFee';
 
 const { tjbgNum } = homeCardHook();
-const resultList = homeCardFee();
+const { list: resultList } = homeCardFee();
 
 const service = ref([
 	{ label: '体检报告', count: 0, name: 'tj' },
-	{ label: '一般门诊', count: 2, name: 'mz' },
-	{ label: '门诊慢病', count: 3, name: 'mzmb' },
-	{ label: '住院', count: 5, name: 'zy' },
+	{ label: '一般门诊', count: 0, name: 'mz' },
+	{ label: '门诊慢病', count: 0, name: 'mzmb' },
+	{ label: '住院', count: 0, name: 'zy' },
 ]);
 
-watch(() => [tjbgNum.value], (list) => {
+watch(() => [tjbgNum.value, resultList.value], (list) => {
 	service.value = service.value.map(item => {
 		if (item.name === 'tj') {
 			return { ...item, count: list[0] }
-		} else if (item.name === 'mz') {
-			return { ...item, count: 3 }
-		} else if (item.name === 'mzmb') {
-			return { ...item, count: 3 }
-		} else if (item.name === 'zy') {
-			return { ...item, count: 3 }
 		}
-		return item
+		const oItem = list[1].find(fItem => fItem.name === item.name);
+		return { ...item, count: oItem.count }
 	})
 }, { deep: true, immediate: true })
 
