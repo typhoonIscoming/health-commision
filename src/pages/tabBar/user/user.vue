@@ -4,36 +4,6 @@
 		<Background />
 		<HomeCard :size="60" />
 		<view class="entry-wrapper">
-			<!-- <uv-cell-group>
-				<uv-cell
-					icon="setting"
-					title="备案信息"
-					:isLink="true"
-					:cellStyle="cellStyle"
-					@click="handleRoute('record')"
-				></uv-cell>
-				<uv-cell
-					icon="heart"
-					title="我的评价"
-					:isLink="true"
-					:cellStyle="cellStyle"
-					@click="handleRoute('evaluate')"
-				></uv-cell>
-				<uv-cell
-					icon="empty-news"
-					title="我的问卷"
-					:isLink="true"
-					:cellStyle="cellStyle"
-					@click="handleRoute('questionnaire')"
-				></uv-cell>
-				<uv-cell
-					icon="clock"
-					title="我的预约"
-					:isLink="true"
-					:cellStyle="cellStyle"
-					@click="handleRoute('reservation')"
-				></uv-cell>
-			</uv-cell-group> -->
 			<view class="menus-wrapper">
 				<view
 					v-for="(item, i) in menus"
@@ -97,13 +67,13 @@ const menus = ref([
 		icon: 'pingjia',
 		color: '#67B5F9',
 	},
-	{
-		name: '我的问卷',
-		desc: '查看历史问卷调查',
-		label: 'questionnaire',
-		icon: 'wodewenjuan',
-		color: '#4ACF9E',
-	},
+	// {
+	// 	name: '我的问卷',
+	// 	desc: '查看历史问卷调查',
+	// 	label: 'questionnaire',
+	// 	icon: 'wodewenjuan',
+	// 	color: '#4ACF9E',
+	// },
 	{
 		name: '我的预约',
 		desc: '查看我的预约',
@@ -144,8 +114,7 @@ const handleRoute = (type) => {
 		z-index: 9;
 	}
 	.menus-item {
-		min-width: 48%;
-		flex: 1;
+		width: 100%;
 		height: 180rpx;
 		display: flex;
 		justify-content: space-between;

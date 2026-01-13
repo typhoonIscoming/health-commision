@@ -1,20 +1,35 @@
 <template>
 	<view class="reservation-item flex">
 		<view class="left">
-			<image src="../static/home/tjjl.png" mode="aspectFill" style="width: 60rpx;height:60rpx" />
+			<image
+				src="../static/home/tjjl.png"
+				mode="aspectFill"
+				style="width: 60rpx; height: 60rpx"
+			/>
 		</view>
 		<view class="right">
 			<view class="row flex">
 				<view class="title">体检机构名称：</view>
-				<view class="value">新疆医科大学第六附属医院（建工医院）</view>
+				<view class="value">{{ info.jgmc }}</view>
 			</view>
 			<view class="row flex">
 				<view class="title">机构地址：</view>
-				<view class="value">乌鲁木齐市天山区五星路24号</view>
+				<view class="value">{{ info.jgdz }}</view>
 			</view>
 			<view class="row flex">
 				<view class="title">预约日期：</view>
-				<view class="value" style="font-size: 32rpx;font-weight: bold;">2026-01-20</view>
+				<view class="value" style="font-size: 32rpx; font-weight: bold">
+					{{ info.yyrq }}
+				</view>
+			</view>
+			<view class="row flex" style="align-items: center;">
+				<view class="title">预约号：</view>
+				<view
+					class="value"
+					style="color: red; font-size: 38rpx; font-weight: bold"
+				>
+					{{ info.tjyyh }}
+				</view>
 			</view>
 		</view>
 	</view>
@@ -26,19 +41,13 @@ const props = defineProps({
 	status: {
 		type: Number,
 		default: 0,
-	}
+	},
+	item: {
+		type: Object,
+		default: () => ({}),
+	},
 });
-const tagType = computed(() => {
-	const s = props.status;
-	switch (s) {
-		case 0: return 'primary'
-		case 1: return 'warning'
-		case 2: return 'success'
-		case 3: return 'error'
-		default: return 'primary'
-	}
-});
-
+const info = computed(() => props.item);
 </script>
 <style lang="scss">
 .reservation-item {
@@ -56,12 +65,12 @@ const tagType = computed(() => {
 			white-space: nowrap;
 			width: 200rpx;
 		}
-		.value{
+		.value {
 			word-break: break-all;
 			flex: 1;
 		}
 	}
-	.right{
+	.right {
 		flex: 1;
 		margin-left: 20rpx;
 	}

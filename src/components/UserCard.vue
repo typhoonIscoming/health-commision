@@ -48,7 +48,7 @@
 											<view class="value">{{ userInfo?.car_id }}</view>
 										</view>
 										<view class="row flex">
-											<view class="label">职业状态：</view>
+											<view class="label">职级及年限：</view>
 											<view class="value">{{ userInfo?.zjnx }}</view>
 										</view>
 										<!--姓名，性别，单位，身份证号，在职状态/退休状态-->
@@ -195,7 +195,7 @@ defineOptions({
 				}
 				.label{
 					white-space: nowrap;
-					width: 145rpx;
+					width: 160rpx;
 				}
 				.value{
 					word-break: break-all;

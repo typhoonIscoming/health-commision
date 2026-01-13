@@ -1,33 +1,54 @@
 <template>
 	<view class="reservation">
 		<view class="reservation-wrapper">
-			<ReservationItem />
-			<ReservationItem :status="1" />
-			<ReservationItem :status="2" />
-			<ReservationItem :status="3" />
-			<ReservationItem :status="1" />
-			<ReservationItem :status="2" />
-			<ReservationItem />
-			<ReservationItem :status="3" />
-			<ReservationItem />
+			<ReservationItem v-for="(item, i) in reservationList" :key="i" :item="item" />
 		</view>
+		<uv-load-more :status="loadStatus" @loadmore="getData" />
 	</view>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import { onPullDownRefresh, onReachBottom, onShow } from '@dcloudio/uni-app';
 import ReservationItem from '@/components/ReservationItem.vue';
 import { isEmpty } from '@/utils';
+import reservationHook from '@/hooks/reservationHook';
 
-const loadStatus = ref('noMore');
+const { reservationList, getList } = reservationHook();
+
+const loadStatus = ref('');
 
 const paddingBottom = ref(60);
 
-const getData = () => {
-	console.log('加载更多数据');
-	setTimeout(() => {
-		loadStatus.value = 'noMore';
-	}, 1500);
+const pageIndex = ref(1);
+const pageSize = ref(5);
+const loading = ref(false);
+
+const getData = (fresh) => {
+	if (loadStatus.value === 'noMore') {
+		return;
+	}
+	loading.value = true;
+	loadStatus.value = 'loading'
+	getList({
+		pageIndex: pageIndex.value,
+		pageSize: pageSize.value,
+		refresh: !!fresh,
+	}).then(res => {
+		if (!isEmpty(res)) {
+			const { total } = res;
+			if (pageIndex.value * pageSize.value >= total) {
+				loadStatus.value = 'noMore'
+			} else {
+				loadStatus.value = 'loadmore'
+			}
+			pageIndex.value = pageIndex.value + 1;
+		} else {
+			loadStatus.value = 'noMore'
+		}
+	}).finally(() => {
+		loading.value = false;
+		uni.stopPullDownRefresh();
+	});
 };
 
 const handleAppointment = () => {
@@ -37,23 +58,21 @@ const handleAppointment = () => {
 };
 
 onMounted(() => {
+	pageIndex.value = 1;
+	getData();
 	const sysInfo = uni.getWindowInfo();
 	const { safeAreaInsets } = sysInfo;
 	if (isEmpty(safeAreaInsets)) return;
 	paddingBottom.value = paddingBottom.value + safeAreaInsets.bottom;
 });
 
+
 onPullDownRefresh(() => {
-	console.log('下拉刷新数据');
-	setTimeout(() => {
-		uni.stopPullDownRefresh();
-	}, 1500);
+	pageIndex.value = 1;
+	loadStatus.value = 'loadmore'
+	getData(true)
 });
 onReachBottom(() => {
-	if (loadStatus.value === 'noMore') {
-		return;
-	}
-	loadStatus.value = 'loading';
 	getData();
 });
 </script>
@@ -62,6 +81,7 @@ onReachBottom(() => {
 	padding: 13px;
 	position: relative;
 	background: white;
+	min-height: 100vh;
 	.footer {
 		position: fixed;
 		bottom: 0;
