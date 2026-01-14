@@ -22,7 +22,7 @@ import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 import homeNoticebar from '@/hooks/home-noticebar';
 
 const { noticeList, getList } = homeNoticebar();
-console.log('noticeList', noticeList.value)
+
 const loadStatus = ref('');
 const pageIndex = ref(1);
 const pageSize = ref(5);
@@ -66,7 +66,9 @@ onMounted(() => {
 onPullDownRefresh(() => {
 	pageIndex.value = 1;
 	loadStatus.value = 'loadmore'
-	getData(true)
+	getData(true).then(() => {
+		uni.stopPullDownRefresh();
+	})
 });
 onReachBottom(() => {
 	getData();
