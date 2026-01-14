@@ -51,12 +51,6 @@ const getData = (fresh) => {
 	});
 };
 
-const handleAppointment = () => {
-	uni.navigateTo({
-		url: '/pages/subpackage/appointment/appointment',
-	});
-};
-
 onMounted(() => {
 	pageIndex.value = 1;
 	getData();

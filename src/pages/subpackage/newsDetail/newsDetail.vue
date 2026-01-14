@@ -59,12 +59,18 @@ const handleReload = () => {
 }
 
 onLoad((options) => {
-	console.log('options', options)
 	if (options.id) {
 		rowId.value = options.id;
 		getData(options.id)
 	}
 })
+onPullDownRefresh(() => {
+	if (rowId.value) {
+		getData(rowId.value).finally(() => {
+			uni.stopPullDownRefresh();
+		})
+	}
+});
 </script>
 <style lang="scss">
 .news-detail {
