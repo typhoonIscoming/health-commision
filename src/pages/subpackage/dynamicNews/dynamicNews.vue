@@ -28,7 +28,7 @@ const pageIndex = ref(1);
 const pageSize = ref(5);
 const loading = ref(false);
 
-const getData = (fresh) => {
+const getData = async(fresh) => {
 	if (loadStatus.value === 'noMore' || loading.value) {
 		return;
 	}
