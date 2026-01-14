@@ -19,7 +19,7 @@
 			:list="list"
 			:height="height"
 			hdHeight="100rpx"
-			barWidth="240rpx"
+			barWidth="200rpx"
 			@change="change"
 		>
 			<uv-vtabs-item>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
@@ -79,7 +79,7 @@ import { onShow } from '@dcloudio/uni-app';
 
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } = appointmentHook();
 
-onShow(() => {
+onMounted(() => {
 	const userInfo = uni.getStorageSync('b2cAuth');
 	if (isEmpty(userInfo)) {
 		return;
@@ -182,8 +182,8 @@ const handleConfrim = () => {
 		}
 		getHospitial();
 		uni.showModal({
-			title: '预约成功',
-			content: `您已成功预约${selectedHospital.name}，预约时间为${selectedTime.date}，请按时前往体检！`,
+			title: '提交成功',
+			content: `您已预约${selectedHospital.name}，预约时间为${selectedTime.date}，请等待机构人员确认后按时前往体检！`,
 			showCancel: false,
 		});
 	})

@@ -1,10 +1,10 @@
 import { ref } from 'vue';
-import { getWorksheetInfo, getWorksheetDetail, getRowDetail } from '@/api';
+import { getWorksheetInfo, getWorksheetDetail, getRelationSheet } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
 export default () => {
-	const reservationList = ref([]);
+	const noticeList = ref([]);
 	// 保存配置
 	const worksheetInfo = ref({});
 
@@ -12,7 +12,7 @@ export default () => {
 		const data = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'tjyyyhmx',
+			worksheetId: 'ggxxgl',
 		};
 		const [err, res] = await to(getWorksheetInfo(data));
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
@@ -38,47 +38,35 @@ export default () => {
 		}
 		const { views, controls } = config;
 		const view = views.find((item) => item.name === '全部');
-		const control = controls.find((item) => item.alias === 'ybbh');
-		const sortControl = controls.find((item) => item.alias === 'yyrq');
-		if (isEmpty(view) || isEmpty(control)) {
+		const sortControl = controls.find((item) => item.alias === 'fbrq');
+		if (isEmpty(view)) {
 			return;
 		}
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'tjyyyhmx',
+			worksheetId: 'ggxxgl',
 			viewId: view.viewId,
 			pageSize,
 			pageIndex,
 			listType: 1,
 			sortId: sortControl.controlId,
 			isAsc: false,
-			filters: [
-				{
-					controlId: control.controlId,
-					// values: ['62224596'],
-					values: [userInfo.ybbh],
-					filterType: 2,
-					dataType: 2,
-					spliceType: 1,
-				},
-			],
 		};
 		const [e, response] = await to(getWorksheetDetail(params));
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
 		if (refresh) {
-			reservationList.value = response.data.rows;
+			noticeList.value = response.data.rows;
 		} else {
-			reservationList.value = reservationList.value.concat(
-				response.data.rows,
-			);
+			noticeList.value = noticeList.value.concat(response.data.rows);
 		}
 		return response.data;
 	};
+
 	return {
-		reservationList,
+		noticeList,
 		getList,
 	};
 };

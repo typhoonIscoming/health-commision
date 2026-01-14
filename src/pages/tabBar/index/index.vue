@@ -14,16 +14,7 @@
 			<text class="time">2025-12-01</text>
 		</view>
 		<HomeHealthRecord />
-		<view class="publicize-wrapper page-gap card-radius flex-center">
-			<view
-				class="publicize-content flex-center"
-				@click="handleRouteList"
-			>
-				<view class="type">宣传教育</view>
-				<view class="title">2024年自治区医疗保障</view>
-			</view>
-			<text class="time">2025-12-01</text>
-		</view>
+		<NoticeBar />
 		<UserCard ref="userCardModel" />
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
@@ -44,6 +35,7 @@ import Satisfaction from '@/components/Satisfaction';
 import Questionnaire from '@/components/Questionnaire.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import UserCard from '@/components/UserCard.vue';
+import NoticeBar from '@/components/NoticeBar.vue';
 import { isEmpty } from '@/utils';
 
 const opacity = ref(0);
@@ -51,12 +43,6 @@ const notice = ref('需要关注公众号，才能获得推送消息');
 const paddingBottom = ref(60);
 const userCardModel = ref();
 
-// 跳转新闻列表页面
-const handleRouteList = () => {
-	uni.navigateTo({
-		url: `/pages/subpackage/dynamicNews/dynamicNews`,
-	});
-};
 
 onMounted(() => {
 	const sysInfo = uni.getWindowInfo();
@@ -91,25 +77,6 @@ const handleDetail = () => {
 		.fill-btn {
 			color: #2a82e4;
 			margin-left: 20rpx;
-		}
-	}
-	.publicize-wrapper {
-		margin-top: 40rpx;
-		margin-bottom: 40rpx;
-		padding: 20rpx;
-		background: #e8f3ff;
-		.publicize-content {
-			flex: 1;
-			padding-right: 20rpx;
-		}
-		.type {
-			margin-right: 10rpx;
-		}
-		.title {
-			flex: 1;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
 		}
 	}
 }

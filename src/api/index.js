@@ -90,3 +90,12 @@ export const makeAppointment = (data) => {
 	})
 }
 
+// 获取行数据详情
+export const getRowById = (data) => {
+	return request({
+		url:'/api/v2/open/worksheet/getRowById',
+		method: 'get',
+		data
+	})
+}
+

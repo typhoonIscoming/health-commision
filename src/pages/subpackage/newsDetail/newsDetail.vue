@@ -1,21 +1,71 @@
 <template>
 	<view class="news-detail">
-		<view class="news-wrapper">
+		<view v-if="loading" class="loading-status">
+			<uv-loading-page :loading="true" loading-text="加载中..." font-size="24rpx"></uv-loading-page>
+		</view>
+		<view v-else-if="!news" class="empty-wrap flex-col" @click="handleReload">
+			<view style="width:fit-content">
+				<uv-icon name="empty-favor" size="60" color="#c4c6c9"></uv-icon>
+			</view>
+			<view class="empty-info">未查询到详细信息！</view>
+		</view>
+		<view v-else class="news-wrapper">
 			<view class="news-title">
-				2024年自治区医疗保障局基金监管飞行检查启动会在乌鲁木齐市召开
+				{{ news.biaoti }}
 			</view>
 			<view class="news-author">
-				<text>王培生</text>
-				<text style="color: #0f62fb">富有商服</text>
-				<text>2025-12-01 10:23:35</text>
+				<text style="margin-right: 0;">发布人：</text>
+				<text style="margin-right: 20rpx;color: #0f62fb">{{ news.faburen }}</text>
+				<text style="margin-right: 0;">发布时间：</text>
+				<text>{{ news.fbrq }}</text>
 			</view>
 			<view class="news-content">
-				香港《南华早报》报道，12月4日荷兰经济大臣在议会上面对议员们长达数小时的轮番质询，这位挑起事端的看守政府大臣终于承认，中方的制裁手段他打了个“措手不及”，因为他“完全没想到”中方会叫停芯片出口，所以整个安市半导体事件上自己的处理是鲁莽、草率、外行的。
+				{{ news.nrms }}
 			</view>
 		</view>
 	</view>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
+import { getRowById } from '@/api';
+import { to } from '@/utils';
+import constants from '@/utils/constants';
+
+const news = ref();
+const loading = ref(false);
+const rowId = ref();
+
+const getData = async(rowid) => {
+	const params = {
+		appKey: constants.appKey,
+		sign: constants.sign,
+		worksheetId: 'ggxxgl',
+		rowId: rowid,
+	}
+	loading.value = true;
+	const [err, res] = await to(getRowById(params));
+	loading.value = false;
+	if (err || !res.success) {
+		return
+	}
+	news.value = res.data;
+}
+
+const handleReload = () => {
+	if (rowId.value && !news.value && !loading.value) {
+		getData(rowId.value)
+	}
+}
+
+onLoad((options) => {
+	console.log('options', options)
+	if (options.id) {
+		rowId.value = options.id;
+		getData(options.id)
+	}
+})
+</script>
 <style lang="scss">
 .news-detail {
 	padding: 13px;
@@ -27,14 +77,23 @@
 	.news-author {
 		margin-bottom: 40rpx;
 		color: #767a82;
-		& > text {
-			margin-right: 20rpx;
-		}
+		display: flex;
+		align-items: center;
 	}
 	.news-content {
 		text-indent: 2em;
 		line-height: 1.8;
 		font-size: 28rpx;
+	}
+
+	.empty-wrap{
+		justify-content: center;
+		align-items: center;
+		padding-top: 100rpx;
+	}
+	.empty-info{
+		color: #909399;
+		text-align: center;
 	}
 }
 </style>
