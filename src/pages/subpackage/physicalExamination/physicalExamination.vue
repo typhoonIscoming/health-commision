@@ -71,7 +71,6 @@ const list = ref([]);
 
 watch(() => [tjbgList.value, resultList.value], (result) => {
 	const tjList = result[0];
-	console.log('result', result)
 	if (serviceType.value === 'tj') {
 		if (!isEmpty(tjList)) {
 			list.value = tjList;
@@ -116,12 +115,10 @@ const getPageData = () => {
 
 onLoad((options) => {
 	serviceType.value = options.type;
-	console.log('options', options)
 	getData();
 })
 
 onPullDownRefresh(() => {
-	console.log('下拉刷新数据');
 	setTimeout(() => {
 		uni.stopPullDownRefresh();
 	}, 1500);

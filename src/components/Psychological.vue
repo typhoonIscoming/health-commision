@@ -1,9 +1,7 @@
 <template>
 	<view>
-		<view v-if="list.length" class="questionnaire card-radius page-gap">
-			<Title title="问卷调查">
-				<!-- <text style="color: #4a4a4a">更多</text> -->
-			</Title>
+		<view v-if="list.length" class="psychoLogical card-radius page-gap">
+			<Title title="心理测评"></Title>
 			<view class="list-wrapper">
 				<view
 					v-for="(item, i) in list"
@@ -34,11 +32,11 @@ const handleClick = (item) => {
 };
 
 onMounted(() => {
-	getData('问卷调查');
+	getData();
 });
 </script>
 <style lang="scss">
-.questionnaire {
+.psychoLogical {
 	background: white;
 	padding-top: 30rpx;
 	.list-wrapper {

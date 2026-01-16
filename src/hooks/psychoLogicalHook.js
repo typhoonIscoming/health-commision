@@ -1,10 +1,11 @@
 import { ref } from 'vue';
-import { getWorksheetInfo, getWorksheetDetail, getRowDetail } from '@/api';
+import { getWorksheetInfo, getWorksheetDetail } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
 export default () => {
-	const reservationList = ref([]);
+	const list = ref([]);
+
 	// 保存配置
 	const worksheetInfo = ref({});
 
@@ -12,7 +13,7 @@ export default () => {
 		const data = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'tjyyyhmx',
+			worksheetId: 'xlcpjwj',
 		};
 		const [err, res] = await to(getWorksheetInfo(data));
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
@@ -21,11 +22,8 @@ export default () => {
 		worksheetInfo.value = res.data;
 		return res.data;
 	};
-	const getList = async ({ pageIndex, pageSize, refresh = false }) => {
-		const userInfo = uni.getStorageSync('b2cAuth');
-		if (isEmpty(userInfo)) {
-			return;
-		}
+
+	const getData = async (filter = '心理测评') => {
 		let config = {};
 		if (isEmpty(worksheetInfo.value)) {
 			const result = await getWorksheet();
@@ -37,26 +35,21 @@ export default () => {
 			config = worksheetInfo.value;
 		}
 		const { views, controls } = config;
-		console.log('config', config);
 		const view = views.find((item) => item.name === '全部');
-		if (isEmpty(view)) {
-			return;
-		}
+		const control = controls.find((item) => item.alias === 'leixing');
+		const option = control.options.find((item) => item.value === filter);
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'tjyyyhmx',
+			worksheetId: 'xlcpjwj',
 			viewId: view.viewId,
-			pageSize,
-			pageIndex,
 			listType: 1,
-			sortId: sortControl.controlId,
 			isAsc: false,
 			filters: [
 				{
 					controlId: control.controlId,
 					// values: ['62224596'],
-					values: [userInfo.ybbh],
+					values: [option.key],
 					filterType: 2,
 					dataType: 2,
 					spliceType: 1,
@@ -67,17 +60,11 @@ export default () => {
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
-		if (refresh) {
-			reservationList.value = response.data.rows;
-		} else {
-			reservationList.value = reservationList.value.concat(
-				response.data.rows,
-			);
-		}
-		return response.data;
+		list.value = response.data.rows;
 	};
+
 	return {
-		reservationList,
-		getList,
+		list,
+		getData,
 	};
 };

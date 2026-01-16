@@ -19,6 +19,8 @@
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
+		<view style="margin-top: 20px"></view>
+		<Psychological />
 		<Tabbar />
 	</view>
 </template>
@@ -36,6 +38,7 @@ import Questionnaire from '@/components/Questionnaire.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import UserCard from '@/components/UserCard.vue';
 import NoticeBar from '@/components/NoticeBar.vue';
+import Psychological from '@/components/Psychological.vue';
 import { isEmpty } from '@/utils';
 
 const opacity = ref(0);

@@ -1,8 +1,15 @@
 <template>
-	<!-- <web-view
-		src="https://www.2g2b.cn/public/form/914d942b2ca14836b98f20d03625b571?bg=no&submit=center"
-	></web-view> -->
-	<view>第三方页面</view>
+	<web-view :src="pageUrl"></web-view>
 </template>
-<script setup></script>
+<script setup>
+import { onLoad } from '@dcloudio/uni-app';
+
+const pageUrl = ref();
+
+onLoad((options) => {
+	if (options.url) {
+		pageUrl.value = options.url;
+	}
+});
+</script>
 <style lang="scss"></style>

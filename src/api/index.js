@@ -99,3 +99,12 @@ export const getRowById = (data) => {
 	})
 }
 
+// 新建行数据
+export const addRow = (data) => {
+	return request({
+		url:'/api/v2/open/worksheet/addRow',
+		method: 'post',
+		data
+	})
+}
+

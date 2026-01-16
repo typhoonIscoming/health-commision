@@ -12,7 +12,7 @@
 		<Background />
 		<view class="question-header">
 			<view class="header-content">
-				<view class="title">新冠肺炎防控调查问卷</view>
+				<view class="title">{{ title }}</view>
 				<view class="desc flex-center">
 					<text style="margin-right: 5px">北极星</text>
 					<uv-tags text="富有商服" size="mini"></uv-tags>
@@ -35,39 +35,47 @@
 					:id="item.id"
 				>
 					<uv-form-item
-						:label="i + 1 + '、' + item.question"
-						:prop="item.key"
-						borderBottom
+						v-if="item.show"
+						:label="item.controlName"
+						:prop="item.alias"
+						:borderBottom="false"
+						labelWidth="auto"
 					>
-						<template v-if="item.type === 'radio'">
+						<template v-if="item.type === 9">
 							<uv-radio-group
-								v-model="model[item.key]"
+								v-model="model[item.alias]"
 								placement="column"
 							>
 								<uv-radio
 									:customStyle="{ margin: '8px' }"
 									v-for="(option, index) in item.options"
 									:key="index"
-									:label="option"
-									:name="option"
+									:label="option.value"
+									:name="option.value"
 								>
 								</uv-radio>
 							</uv-radio-group>
 						</template>
-						<template v-else-if="item.type === 'checkbox'">
+						<template v-else-if="item.type === 10">
 							<uv-checkbox-group
-								v-model="model[item.key]"
-								shape="circle"
+								v-model="model[item.alias]"
+								shape="square"
 								placement="column"
 							>
 								<uv-checkbox
 									:customStyle="{ margin: '8px' }"
 									v-for="(option, index) in item.options"
 									:key="index"
-									:label="option"
-									:name="option"
+									:label="option.value"
+									:name="option.value"
 								></uv-checkbox>
 							</uv-checkbox-group>
+						</template>
+						<template v-else-if="item.type === 2">
+							<uv-textarea
+								v-model="model[item.alias]"
+								placeholder="请输入内容"
+							></uv-textarea>
 						</template>
 					</uv-form-item>
 				</view>
@@ -87,6 +95,10 @@ import { onPageScroll } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import Background from '@/components/Background.vue';
 import { uuid, isEmpty } from '@/utils';
+import satisfactionHook from '@/hooks/satisfactionHook';
+import parseHtml from '@/utils/html-paser.js';
+
+const { addData, getWorksheet } = satisfactionHook();
 
 const normal = {
 	trigger: 'change',
@@ -104,47 +116,50 @@ const questionForm = ref();
 const model = ref({});
 const rules = ref({});
 
-const temp = [
-	{
-		id: uuid(),
-		question:
-			'您对门诊服务服务台人员的服务效率和服务态度是否满意？（单选）',
-		type: 'radio',
-		options: ['非常满意', '满意', '一般', '不满意', '非常不满意'],
-		key: 'efficiency',
-	},
-	{
-		id: uuid(),
-		question: '您对这里看病过程，等候或者排队的时间满意吗？（单选）',
-		type: 'radio',
-		options: ['满意', '一般', '不满意'],
-		key: 'waitingTime',
-	},
-	{
-		id: uuid(),
-		question: '您对门诊挂号处人员的服务效率和服务态度是否满意（多选）',
-		type: 'checkbox',
-		options: ['非常满意', '满意', '一般', '不满意', '非常不满意'],
-		key: 'outpatient',
-	},
-];
+const title = ref('');
+
 const questionList = ref([]);
 
 const handleBack = () => {
 	uni.navigateBack();
 };
+const loading = ref(false);
 
+const handleSubmit = async () => {
+	const data = questionList.value.map((item) => {
+		const v = model.value[item.alias];
+		return {
+			controlId: item.alias,
+			value: Array.isArray(v) ? JSON.stringify(v) : v,
+		};
+	});
+	loading.value = true;
+	const [err, res] = await to(addData(data));
+	loading.value = false;
+	if (err) {
+		uni.showToast({
+			title: '提交失败',
+			icon: 'error',
+		});
+	}
+	uni.showToast({
+		title: '提交成功',
+		icon: 'success',
+	});
+	setTimeout(() => {
+		uni.navigateBack();
+	}, 2000);
+};
 // 提交
 const submit = () => {
-	console.log('提交问卷内容：', model.value);
+	if (loading.value) {
+		return;
+	}
 	questionForm.value
-		.validate((valid) => {
-			console.log('验证结果：', valid);
+		.validate()
+		.then((valid) => {
 			if (valid) {
-				uni.showToast({
-					title: '提交成功',
-					icon: 'success',
-				});
+				handleSubmit();
 			}
 		})
 		.catch((err) => {
@@ -166,15 +181,59 @@ const submit = () => {
 		});
 };
 
-onMounted(() => {
-	setTimeout(() => {
-		questionList.value = temp;
-		temp.forEach((item) => {
-			rules.value[item.key] = [normal];
-			model.value[item.key] = item.type === 'checkbox' ? [] : '';
+function extractTextFromHtml(html) {
+	const nodes = parseHtml(html);
+	let result = '';
+	function walk(nodes) {
+		nodes.forEach((node) => {
+			if (node.type === 'text') {
+				result += node.text.replace(/\u00a0/g, ''); // 去除 &nbsp;
+			}
+			if (node.children) {
+				walk(node.children);
+			}
 		});
-		console.log('问卷调查页面加载完成', model.value);
-	}, 500);
+	}
+	walk(nodes);
+	return result
+		.replace(/\s*\n\s*/g, '\n')
+		.replace(/\&nbsp;/g, '')
+		.trim();
+}
+const parseData = (config) => {
+	const { controls, name } = config;
+	title.value = name;
+	const result = controls.map((item) => {
+		const { alias, type, dataSource } = item;
+		// 是否需要显示
+		// 不显示的字段[问卷模板名称, 模板日期]
+		const noShowAlias = ['wjmbmc', 'mbrq'];
+		const show = !noShowAlias.includes(alias);
+		// 是否是编辑字段
+		const edit = type !== 10010; // 10010可以当做是label
+		// 是否是多选
+		return {
+			id: uuid(),
+			...item,
+			controlName:
+				type === 10010
+					? extractTextFromHtml(dataSource)
+					: item.controlName,
+			show,
+			edit,
+			multiple: type === 10,
+		};
+	});
+	questionList.value = result;
+};
+
+onMounted(() => {
+	getWorksheet().then((data) => {
+		if (isEmpty(data)) {
+			return;
+		}
+		parseData(data);
+	});
 });
 
 onPageScroll((e) => {
@@ -205,7 +264,7 @@ onPageScroll((e) => {
 			margin-bottom: 20rpx;
 			padding-bottom: 10px;
 			overflow: hidden;
-
+			padding: 10px;
 			.uv-line {
 				display: none;
 			}
