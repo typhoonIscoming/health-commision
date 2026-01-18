@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { getWorksheetInfo, addRow } from '@/api';
+import { getWorksheetInfo, addRow, getRowById } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
@@ -38,9 +38,24 @@ export default () => {
 		}
 		return res;
 	};
+	// 获取行详情
+	const getRowDetail = async (rowId) => {
+		const params = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'cswj',
+			rowId,
+		};
+		const [err, res] = await to(getRowById(params));
+		if (err || !res.success) {
+			return;
+		}
+		return res;
+	};
 	return {
 		worksheetInfo,
 		getWorksheet,
 		addData,
+		getRowDetail,
 	};
 };

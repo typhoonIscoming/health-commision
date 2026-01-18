@@ -53,7 +53,7 @@ const getList = async (fresh) => {
 	loadStatus.value = 'loading';
 	const [_, res] = await to(getData(params));
 	loading.value = false;
-	console.log('evalute res', res)
+	// console.log('evalute res', res)
 	if (!isEmpty(_) || isEmpty(res)) {
 		return
 	}

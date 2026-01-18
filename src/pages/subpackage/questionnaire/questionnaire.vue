@@ -16,6 +16,7 @@
 				<view class="desc flex-center">
 					<text style="margin-right: 5px">北极星</text>
 					<uv-tags text="富有商服" size="mini"></uv-tags>
+					<text style="margin-left: 5px">提供服务</text>
 				</view>
 			</view>
 		</view>
@@ -42,6 +43,7 @@
 							<uv-radio-group
 								v-model="model[item.alias]"
 								placement="column"
+								:disabled="!!rowId"
 							>
 								<uv-radio
 									:customStyle="{ margin: '8px' }"
@@ -58,6 +60,7 @@
 								v-model="model[item.alias]"
 								shape="square"
 								placement="column"
+								:disabled="!!rowId"
 							>
 								<uv-checkbox
 									:customStyle="{ margin: '8px' }"
@@ -71,14 +74,17 @@
 						<template v-else-if="item.type === 2">
 							<uv-textarea
 								v-model="model[item.alias]"
+								:disabled="!!rowId"
 								placeholder="请输入内容"
 							></uv-textarea>
 						</template>
 					</uv-form-item>
 				</view>
 				<uv-button
+					v-if="!rowId"
 					type="primary"
 					text="提交"
+					:disabled="!!rowId"
 					customStyle="margin-top: 10px"
 					@click="submit"
 				></uv-button>
@@ -88,14 +94,14 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { onPageScroll } from '@dcloudio/uni-app';
+import { onPageScroll, onLoad } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import Background from '@/components/Background.vue';
 import { uuid, isEmpty } from '@/utils';
 import satisfactionHook from '@/hooks/satisfactionHook';
 import parseHtml from '@/utils/html-paser.js';
 
-const { addData, getWorksheet } = satisfactionHook();
+const { addData, getWorksheet, getRowDetail } = satisfactionHook();
 
 const normal = {
 	trigger: 'change',
@@ -116,6 +122,8 @@ const rules = ref({});
 const title = ref('');
 
 const questionList = ref([]);
+
+const rowId = ref('');
 
 const handleBack = () => {
 	uni.navigateBack();
@@ -244,6 +252,20 @@ onPageScroll((e) => {
 	const result = Math.min(40, scrollTop);
 	opacity.value = (result / 40).toFixed(1);
 });
+
+// 获取详细信息
+const getDetailData = (id) => {
+	getRowDetail(id).then(res => {
+		model.value = res.data;
+	})
+}
+
+onLoad((options) => {
+	if (options.id) {
+		rowId.value = options.id;
+		getDetailData(options.id)
+	}
+})
 </script>
 <style lang="scss">
 .question {
