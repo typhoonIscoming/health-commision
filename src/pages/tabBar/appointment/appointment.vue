@@ -203,7 +203,8 @@ const handleConfrim = () => {
 		padding: 6rpx;
 		
 		&-wrap{
-			background: #53c21d;
+			// background: #53c21d;
+			background: rgb(87, 190, 173);
 			border: 2rpx solid transparent;
 			border-radius: 10rpx;
 			padding: 5px;

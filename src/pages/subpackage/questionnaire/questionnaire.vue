@@ -17,9 +17,6 @@
 					<text style="margin-right: 5px">北极星</text>
 					<uv-tags text="富有商服" size="mini"></uv-tags>
 				</view>
-				<view style="color: rgba(0, 0, 0, 0.6); margin-top: 10px">
-					2025-12-08 12:30:45
-				</view>
 			</view>
 		</view>
 		<view class="form-wrapper" v-if="questionList.length">
@@ -126,13 +123,19 @@ const handleBack = () => {
 const loading = ref(false);
 
 const handleSubmit = async () => {
+	const userInfo = uni.getStorageSync('b2cUserInfo')
 	const data = questionList.value.map((item) => {
-		const v = model.value[item.alias];
+		let v = model.value[item.alias];
+		if (item.alias === 'rywh') {
+			v = userInfo.rowid
+		}
 		return {
 			controlId: item.alias,
 			value: Array.isArray(v) ? JSON.stringify(v) : v,
 		};
 	});
+	console.log('data', data)
+	// return
 	loading.value = true;
 	const [err, res] = await to(addData(data));
 	loading.value = false;
@@ -207,7 +210,7 @@ const parseData = (config) => {
 		const { alias, type, dataSource } = item;
 		// 是否需要显示
 		// 不显示的字段[问卷模板名称, 模板日期]
-		const noShowAlias = ['wjmbmc', 'mbrq'];
+		const noShowAlias = ['wjmbmc', 'mbrq', 'rywh'];
 		const show = !noShowAlias.includes(alias);
 		// 是否是编辑字段
 		const edit = type !== 10010; // 10010可以当做是label

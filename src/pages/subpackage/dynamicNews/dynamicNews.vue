@@ -25,7 +25,7 @@ const { noticeList, getList } = homeNoticebar();
 
 const loadStatus = ref('');
 const pageIndex = ref(1);
-const pageSize = ref(5);
+const pageSize = ref(10);
 const loading = ref(false);
 
 const getData = async(fresh) => {

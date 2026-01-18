@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { getWorksheetInfo, addRow, getWorksheetDetail } from '@/api';
+import { getWorksheetInfo, addRow } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
@@ -19,7 +19,7 @@ export default () => {
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
-		console.log('getWorksheet', res);
+		// console.log('满意度调查getWorksheet', res);
 		worksheetInfo.value = res.data;
 		return res.data;
 	};

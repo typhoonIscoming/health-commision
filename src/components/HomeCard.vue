@@ -2,7 +2,7 @@
 	<view class="home-card">
 		<view class="page-gap flex-center" @click="handleDetail">
 			<uv-avatar
-				src="https://cdn.uviewui.com/uview/album/1.jpg"
+				:text="userInfo && userInfo.name ? userInfo.name.substr(0, 1) : ''"
 				:size="props.size"
 				style="border: 1px solid white"
 			></uv-avatar>

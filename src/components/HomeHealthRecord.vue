@@ -111,20 +111,20 @@ const handleRoute = (item) => {
 			}
 		}
 		.label{
-			font-size: 38rpx;
+			font-size: 32rpx;
 			font-weight: bold;
 		}
 		.desc{
-			margin-top: 30rpx;
+			margin-top: 10rpx;
 			min-height: 36rpx;
 		}
 		.row-val{
 			color: #808080;
-			font-size: 30rpx;
+			font-size: 32rpx;
 		}
 		.item-count{
 			margin: 0 10rpx;
-			font-size: 38rpx;
+			font-size: 32rpx;
 			font-weight: bold;
 		}
 	}

@@ -1,20 +1,23 @@
 <template>
-	<view class="publicize-wrapper page-gap">
-		<view>
-			<Title title="新闻公告">
-				<text style="color: #4a4a4a" @click="handleMore">更多</text>
-			</Title>
-		</view>
-		<view class="notice">
-			<uv-notice-bar
-				:text="notice"
-				:icon="false"
-				bgColor="#ffffff"
-				color="#1c274c"
-				direction="column"
-				fontSize="13"
-				@click="handleDetail"
-			></uv-notice-bar>
+	<view>
+		<view v-if="props.list.length" class="publicize-wrapper page-gap">
+			<view>
+				<Title title="新闻公告">
+					<text style="color: #4a4a4a" @click="handleMore">更多</text>
+				</Title>
+			</view>
+			<view class="notice">
+				<image src="../static/home/notice.png" mode="widthFix" style="width: 120rpx;margin-left: 20rpx;" />
+				<uv-notice-bar
+					:text="notice"
+					:icon="false"
+					bgColor="#ffffff"
+					color="#1c274c"
+					direction="column"
+					fontSize="13"
+					@click="handleDetail"
+				></uv-notice-bar>
+			</view>
 		</view>
 	</view>
 </template>
@@ -25,8 +28,15 @@ import homeNoticebar from '@/hooks/home-noticebar';
 
 const { noticeList, getList } = homeNoticebar();
 
+const props = defineProps({
+	list: {
+		type: Array,
+		default: () => []
+	}
+})
+
 const notice = computed(() => {
-	return noticeList.value.map((item) => item.biaoti);
+	return props.list.map((item) => item.biaoti);
 });
 
 const loadStatus = ref('');
@@ -35,7 +45,7 @@ const pageSize = ref(5);
 const loading = ref(false);
 
 const handleDetail = (i) => {
-	const item = noticeList.value[i];
+	const item = props.list[i];
 	uni.navigateTo({
 		url: `/pages/subpackage/newsDetail/newsDetail?id=${item.rowid}`,
 	});
@@ -79,7 +89,7 @@ const handleMore = () => {
 
 onMounted(() => {
 	pageIndex.value = 1;
-	getData();
+	// getData();
 });
 </script>
 <style lang="scss">
@@ -90,8 +100,10 @@ onMounted(() => {
 	// background: white;
 	background: #e8f3ff;
 	.notice {
-		margin-top: 40rpx;
-		padding: 0 20rpx;
+		margin: 40rpx 20rpx 0;
+		display: flex;
+		align-items: center;
+		background: #ffffff;
 	}
 }
 </style>

@@ -17,7 +17,7 @@ export default () => {
 		};
 		// 获取配置
 		const [err, res] = await to(getWorksheetInfo(params));
-		console.log('体检预约', res);
+		// console.log('体检预约', res);
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
@@ -37,7 +37,7 @@ export default () => {
 			listType: 1,
 		};
 		const [e, response] = await to(getWorksheetDetail(query));
-		console.log('机构列表', response);
+		// console.log('机构列表', response);
 		if (!isEmpty(e) || !response.success || isEmpty(response.data.rows)) {
 			return;
 		}
@@ -53,10 +53,9 @@ export default () => {
 		}
 	};
 
-
 	// 获取当前医院的预约日期列表
 	const getHospitialDateList = async (currHospitial) => {
-		console.log('getHospitialDateList', currHospitial);
+		// console.log('getHospitialDateList', currHospitial);
 		if (isEmpty(currHospitial)) {
 			return;
 		}
@@ -66,7 +65,7 @@ export default () => {
 			worksheetId: 'tykyysmx',
 		};
 		const [configErr, configRes] = await to(getWorksheetInfo(config));
-		console.log('configRes', configRes);
+		// console.log('configRes', configRes);
 		if (
 			!isEmpty(configErr) ||
 			!configRes.success ||
@@ -88,7 +87,7 @@ export default () => {
 			viewId: view.viewId,
 		};
 		const [e, response] = await to(getWorksheetDetail(query));
-		console.log('配置', response);
+		// console.log('配置', response);
 		const control = tjyyControls.value.find(
 			(item) => item.alias === 'tykyyrqmx',
 		);
@@ -105,7 +104,7 @@ export default () => {
 			rowId: currHospitial.rowid,
 		};
 		const [err, res] = await to(getRelationSheet(paramas));
-		console.log('getHospitialDateList', res);
+		// console.log('getHospitialDateList', res);
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
@@ -114,7 +113,7 @@ export default () => {
 		list = list.sort((a, b) => {
 			return +new Date(a.yyrq) - +new Date(b.yyrq);
 		});
-		console.log('list', list);
+		// console.log('list', list);
 		hospitial.value = hospitial.value.map((item) => {
 			if (item.rowid === currHospitial.rowid) {
 				return {
@@ -130,7 +129,7 @@ export default () => {
 			}
 			return item;
 		});
-		console.log('hospitial', hospitial.value);
+		// console.log('hospitial', hospitial.value);
 	};
 	return {
 		hospitial,

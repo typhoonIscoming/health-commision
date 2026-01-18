@@ -3,18 +3,18 @@
 		<NavBar title="自治区二次补偿信息服务" :opacity="opacity" />
 		<Background />
 		<HomeCard @onClick="handleDetail" />
-		<view style="margin-bottom: 30rpx;position: relative;">
-			<uv-notice-bar :text="notice"></uv-notice-bar>
+		<view v-if="noticeItem" style="margin-bottom: 30rpx;position: relative;">
+			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice"></uv-notice-bar>
 		</view>
-		<view class="satisfaction-wrapper page-gap card-radius flex-center">
+		<!-- <view class="satisfaction-wrapper page-gap card-radius flex-center">
 			<view class="content flex-center">
 				<text>服务完成满意度调查提醒</text>
 				<view class="fill-btn">立即填写</view>
 			</view>
 			<text class="time">2025-12-01</text>
-		</view>
+		</view> -->
 		<HomeHealthRecord />
-		<NoticeBar />
+		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<UserCard ref="userCardModel" />
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
@@ -40,14 +40,46 @@ import UserCard from '@/components/UserCard.vue';
 import NoticeBar from '@/components/NoticeBar.vue';
 import Psychological from '@/components/Psychological.vue';
 import { isEmpty } from '@/utils';
+import homeNoticebar from '@/hooks/home-noticebar';
 
-const opacity = ref(0);
-const notice = ref('需要关注公众号，才能获得推送消息');
+const { noticeList, getList } = homeNoticebar();
+
+const noticeItem = computed(() => {
+	if (isEmpty(noticeList.value)) {
+		return null
+	}
+	return noticeList.value[0];
+});
+// 获取剩余的新闻列表
+const newsRestList = computed(() => {
+	if (isEmpty(noticeList.value)) {
+		return []
+	}
+	return noticeList.value.slice(1);
+});
+
+const opacity = ref(0)
 const paddingBottom = ref(60);
 const userCardModel = ref();
 
+const getNews = () => {
+	getList({
+		pageIndex: 1,
+		pageSize: 5,
+	})
+}
+
+const handleNotice = (i) => {
+	if (isEmpty(noticeItem.value)) {
+		return
+	}
+	uni.navigateTo({
+		url: `/pages/subpackage/newsDetail/newsDetail?id=${noticeItem.value.rowid}`,
+	});
+}
 
 onMounted(() => {
+	getNews();
 	const sysInfo = uni.getWindowInfo();
 	const { safeAreaInsets } = sysInfo;
 	if (isEmpty(safeAreaInsets)) return;

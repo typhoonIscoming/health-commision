@@ -115,7 +115,7 @@ const handleRoute = (type) => {
 	}
 	.menus-item {
 		width: 100%;
-		height: 180rpx;
+		height: 160rpx;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

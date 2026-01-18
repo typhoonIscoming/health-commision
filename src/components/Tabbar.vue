@@ -8,15 +8,16 @@
 				class="tab-item"
 				@click="onSwitchTab(item)"
 			>
-				<view v-if="item.tabName !== 'appointment'" class="tab-icon">
+				<view class="tab-icon">
 					<uni-icons
 						custom-prefix="iconfont"
 						:type="`icon-${item.className}`"
 						size="36rpx"
-						:color="currentTab === item.tabName ? '#D67E5A' : '#999'"
+						:color="currentTab === item.tabName ? 'rgb(87, 190, 173)' : '#999'"
 					/>
 				</view>
-				<view v-else style="height: 36rpx;width: 100%;position: relative;">
+				<!--'#D67E5A'-->
+				<!-- <view v-else style="height: 36rpx;width: 100%;position: relative;">
 					<view class="appointItem-wrap">
 						<view class="appointItem">
 							<uni-icons
@@ -27,7 +28,7 @@
 							/>
 						</view>
 					</view>
-				</view>
+				</view> -->
 				<text
 					class="tab-text"
 					:class="{ active: currentTab === item.tabName }"
@@ -136,11 +137,11 @@ const initTabList = () => {
 			width: 100%;
 			> text {
 				text-align: center;
-				color: #333;
+				color: #999;
 				font-size: 20rpx;
 			}
 			.active {
-				color: red;
+				color: rgb(87, 190, 173);
 			}
 			.tab-icon{
 				font-size: 0;

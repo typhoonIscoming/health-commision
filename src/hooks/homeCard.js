@@ -43,11 +43,11 @@ export default () => {
 		};
 		// 获取人员详细信息
 		const [e, response] = await to(getWorksheetDetail(params));
-		// console.log('人员维护详细信息', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
 		const row = response.data.rows[0];
+		uni.setStorageSync('b2cUserInfo', row);
 		onWorksheetInfo(row);
 	};
 	const onWorksheetInfo = async (person, personParams) => {
