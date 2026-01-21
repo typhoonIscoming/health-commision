@@ -12,16 +12,24 @@
 				<view class="label">{{ item.label }}</view>
 				<view class="desc">
 					<view v-if="item.name === 'tj'" class="row-val">
-						共<text class="item-count">{{ item.count }}</text>份报告
+						共
+						<text class="item-count">{{ item.count }}</text>
+						份报告
 					</view>
 					<view v-else-if="item.name === 'mz'" class="row-val">
-						共<text class="item-count">{{ item.count }}</text>条记录
+						共
+						<text class="item-count">{{ item.count }}</text>
+						条记录
 					</view>
 					<view v-else-if="item.name === 'mzmb'" class="row-val">
-						共<text class="item-count">{{ item.count }}</text>条记录
+						共
+						<text class="item-count">{{ item.count }}</text>
+						条记录
 					</view>
 					<view v-else-if="item.name === 'zy'" class="row-val">
-						共<text class="item-count">{{ item.count }}</text>条记录
+						共
+						<text class="item-count">{{ item.count }}</text>
+						条记录
 					</view>
 				</view>
 			</view>
@@ -45,32 +53,32 @@ const service = ref([
 	{ label: '住院', count: 0, name: 'zy' },
 ]);
 
-watch(() => [tjbgNum.value, resultList.value], (list) => {
-	service.value = service.value.map(item => {
-		if (item.name === 'tj') {
-			return { ...item, count: list[0] }
-		}
-		const oItem = list[1].find(fItem => fItem.name === item.name);
-		return { ...item, count: oItem.count }
-	})
-}, { deep: true, immediate: true })
+watch(
+	() => [tjbgNum.value, resultList.value],
+	(list) => {
+		service.value = service.value.map((item) => {
+			if (item.name === 'tj') {
+				return { ...item, count: list[0] };
+			}
+			const oItem = list[1].find((fItem) => fItem.name === item.name);
+			return { ...item, count: oItem.count };
+		});
+	},
+	{ deep: true, immediate: true },
+);
 
 const handleRoute = (item) => {
 	checkLogin.checkAuthInfo(() => {
 		uni.navigateTo({
-			url: `/pages/subpackage/physicalExamination/physicalExamination?type=${item.name}`
+			url: `/pages/subpackage/physicalExamination/physicalExamination?type=${item.name}`,
 		});
 	});
 };
-
 </script>
 <style lang="scss">
 .HomeHealthRecord {
-	background: white;
-	padding: 30rpx 0;
 	.content {
 		width: 100%;
-		padding: 0 12rpx;
 		flex-wrap: wrap;
 		margin-top: 20rpx;
 		justify-content: space-between;
@@ -85,44 +93,48 @@ const handleRoute = (item) => {
 		&.tj {
 			background: url('../static/home/tj.png') no-repeat;
 			background-size: cover;
-			.label, .item-count{
-				color: #307EF2;
+			.label,
+			.item-count {
+				color: #307ef2;
 			}
 		}
 		&.mz {
 			background: url('../static/home/mz.png') no-repeat;
 			background-size: cover;
-			.label, .item-count{
-				color: #CF7B4A;
+			.label,
+			.item-count {
+				color: #cf7b4a;
 			}
 		}
 		&.mzmb {
 			background: url('../static/home/zy.png') no-repeat;
 			background-size: cover;
-			.label, .item-count{
-				color: #F340E9;
+			.label,
+			.item-count {
+				color: #f340e9;
 			}
 		}
 		&.zy {
 			background: url('../static/home/jc.png') no-repeat;
 			background-size: cover;
-			.label, .item-count{
-				color: #59B47E;
+			.label,
+			.item-count {
+				color: #59b47e;
 			}
 		}
-		.label{
+		.label {
 			font-size: 32rpx;
 			font-weight: bold;
 		}
-		.desc{
+		.desc {
 			margin-top: 10rpx;
 			min-height: 36rpx;
 		}
-		.row-val{
+		.row-val {
 			color: #808080;
 			font-size: 32rpx;
 		}
-		.item-count{
+		.item-count {
 			margin: 0 10rpx;
 			font-size: 32rpx;
 			font-weight: bold;
