@@ -58,7 +58,7 @@
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
-				<view style="margin-top: 20rpx;">
+				<view style="margin-top: 20rpx">
 					<uv-button
 						class="authorized-btn"
 						color="#f81b1a"
@@ -224,7 +224,7 @@ const handleLogin = (code) => {
 		js_code: code,
 		appKey: constants.appKey,
 		sign: constants.sign,
-		login_type: 'weixin'
+		login_type: 'weixin',
 	})
 		.then((res) => {
 			uni.setStorageSync('b2cWechatCode', code);
@@ -243,11 +243,16 @@ const handleLogin = (code) => {
 };
 const handleFastLoginCheck = async (data) => {
 	// 检查用户是否已经授权，如果没有授权，就跳转授权页
-	const [err, res] = await to(checkUserAuth({ open_id: data.openid, token: data.token }));
+	const [err, res] = await to(
+		checkUserAuth({ open_id: data.openid, token: data.token }),
+	);
 	if (!isEmpty(err)) {
 		return;
 	}
-	const { user_id } = res;
+	let { user_id } = res;
+	// #ifdef H5
+	user_id = 'oAHxr7e4Accb6y1zO4ot2Co7JAVg';
+	// #endif
 	uni.setStorageSync('b2cOpenid', data.openid);
 	uni.setStorageSync('b2cToken', { expires: +new Date(), token: data.token });
 	if (!user_id) {
@@ -310,40 +315,67 @@ const getVerify = () => {
 		.catch((err) => {
 			// eslint-disable-next-line no-console
 			console.log('获取验证码失败：', err);
-			uni.showToast({ icon: 'none', title: '获取验证码失败，请稍后重试' });
+			uni.showToast({
+				icon: 'none',
+				title: '获取验证码失败，请稍后重试',
+			});
 		});
 };
 
 const onLogin = () => {
 	console.log('---', form.value.validate);
-	form.value.validate().then(valid => {
-		console.log('validate---', valid);
-		if (valid) {
-			if (isPrivacy.value !== 1) {
-				showAgreementPop.value = true;
-				return;
+	form.value
+		.validate()
+		.then((valid) => {
+			console.log('validate---', valid);
+			if (valid) {
+				if (isPrivacy.value !== 1) {
+					showAgreementPop.value = true;
+					return;
+				}
+				loginByPhone();
+			} else {
+				uni.showToast({ icon: 'none', title: '请填写完整信息' });
+				return false;
 			}
-			loginByPhone();
-		} else {
+		})
+		.catch(() => {
 			uni.showToast({ icon: 'none', title: '请填写完整信息' });
 			return false;
-		}
-	}).catch(() => {
-		uni.showToast({ icon: 'none', title: '请填写完整信息' });
-		return false;
-	})
+		});
 };
 // 通过手机号登录
 const loginByPhone = async () => {
 	// #ifdef H5
-	const token = {"expires":1768101136169,"token":"27a7a0b6-65c8-4b1c-a542-d47d180ede4e"}
-	const info = {"msg":"已绑定","code":"已绑定","user_id":"U20248711472","name":"白振声","mob_num":"+8616601762764","age":"88","birthday":"","zjnx":"离休一般离休干部无年限限制","car_id":"650103193011031830","ryzt":"离休","ybbh":"62224596","sex":"男","dyjb":"","gwyjb":"","tx":""}
-	uni.setStorageSync('b2cAuth', info)
-	uni.setStorageSync('b2cToken', token)
+	const token = {
+		expires: 1768101136169,
+		token: '27a7a0b6-65c8-4b1c-a542-d47d180ede4e',
+	};
+	const info = {
+		msg: '已绑定',
+		code: '已绑定',
+		user_id: 'U20248711472',
+		name: '白振声',
+		mob_num: '+8616601762764',
+		age: '88',
+		birthday: '',
+		zjnx: '离休一般离休干部无年限限制',
+		car_id: '650103193011031830',
+		ryzt: '离休',
+		ybbh: '62224596',
+		sex: '男',
+		dyjb: '',
+		gwyjb: '',
+		tx: '',
+	};
+	uni.setStorageSync('b2cAuth', info);
+	uni.setStorageSync('b2cToken', token);
 	// #endif
-	const [err, res] = await to(checkUserAuth({
-		mob_num: model.value.phone,
-	}));
+	const [err, res] = await to(
+		checkUserAuth({
+			mob_num: model.value.phone,
+		}),
+	);
 	if (!isEmpty(err) || isEmpty(res.user_id)) {
 		return;
 	}

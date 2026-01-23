@@ -37,8 +37,10 @@ export default () => {
 			config = worksheetInfo.value;
 		}
 		const { views, controls } = config;
-		console.log('config', config);
-		const view = views.find((item) => item.name === '全部');
+		const view = views.find((item) => item.name.indexOf('全部') > -1);
+		const dateControl = controls.find((item) => item.alias === 'yyrq');
+		const ybbhControl = controls.find((item) => item.alias === 'ybbh');
+		const statusControl = controls.find((item) => item.alias === 'yyzt');
 		if (isEmpty(view)) {
 			return;
 		}
@@ -50,16 +52,22 @@ export default () => {
 			pageSize,
 			pageIndex,
 			listType: 1,
-			sortId: sortControl.controlId,
+			sortId: dateControl.controlId,
 			isAsc: false,
 			filters: [
 				{
-					controlId: control.controlId,
-					// values: ['62224596'],
-					values: [userInfo.ybbh],
-					filterType: 2,
-					dataType: 2,
+					isGroup: true,
 					spliceType: 1,
+					groupFilters: [
+						{
+							controlId: ybbhControl.controlId,
+							dataType: 2,
+							spliceType: 1,
+							filterType: 2,
+							dynamicSource: [],
+							values: [userInfo.ybbh],
+						},
+					],
 				},
 			],
 		};
@@ -67,12 +75,16 @@ export default () => {
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
+		const list = response.data.rows.map((item) => {
+			const v = item[statusControl.controlId];
+			return {
+				...item,
+			};
+		});
 		if (refresh) {
-			reservationList.value = response.data.rows;
+			reservationList.value = list;
 		} else {
-			reservationList.value = reservationList.value.concat(
-				response.data.rows,
-			);
+			reservationList.value = reservationList.value.concat(list);
 		}
 		return response.data;
 	};

@@ -45,7 +45,11 @@
 				<PhysicalItem v-for="(item, i) in list" :item="item" :key="i" />
 			</template>
 			<template v-else>
-				<PhysicalItemRecord v-for="(item, i) in list" :item="item" :key="i" />
+				<PhysicalItemRecord
+					v-for="(item, i) in list"
+					:item="item"
+					:key="i"
+				/>
 			</template>
 		</view>
 		<uv-load-more :status="loadStatus" @loadmore="getPageData" />
@@ -69,20 +73,24 @@ const loadStatus = ref('noMore');
 
 const list = ref([]);
 
-watch(() => [tjbgList.value, resultList.value], (result) => {
-	const tjList = result[0];
-	if (serviceType.value === 'tj') {
-		if (!isEmpty(tjList)) {
-			list.value = tjList;
+watch(
+	() => [tjbgList.value, resultList.value],
+	(result) => {
+		const tjList = result[0];
+		if (serviceType.value === 'tj') {
+			if (!isEmpty(tjList)) {
+				list.value = tjList;
+			}
+		} else {
+			const val = result[1];
+			const current = val.find((item) => item.name === serviceType.value);
+			if (!isEmpty(current)) {
+				list.value = current.list;
+			}
 		}
-	} else {
-		const val = result[1];
-		const current = val.find(item => item.name === serviceType.value);
-		if (!isEmpty(current)) {
-			list.value = current.list;
-		}
-	}
-}, { deep: true, immediate: true })
+	},
+	{ deep: true, immediate: true },
+);
 
 const handleClick = (sortType) => {
 	if (!type.value) {
@@ -113,10 +121,21 @@ const getPageData = () => {
 	}, 1500);
 };
 
+const service = ref([
+	{ label: '体检报告', count: 0, name: 'tj' },
+	{ label: '一般门诊', count: 0, name: 'mz' },
+	{ label: '门诊慢病', count: 0, name: 'mzmb' },
+	{ label: '住院', count: 0, name: 'zy' },
+]);
+
 onLoad((options) => {
 	serviceType.value = options.type;
 	getData();
-})
+	const option = service.value.find((item) => item.name === options.type);
+	if (!isEmpty(option)) {
+		uni.setNavigationBarTitle({ title: `${option.label}记录` });
+	}
+});
 
 onPullDownRefresh(() => {
 	setTimeout(() => {

@@ -28,6 +28,31 @@
 					>
 					</uv-input>
 				</uv-form-item>
+				<uv-form-item prop="verify" label="手机验证码" borderBottom>
+					<uv-input
+						v-model="model.verify"
+						type="number"
+						border="none"
+						placeholder="请输入手机验证码"
+						:placeholderStyle="{ color: '#7C7C7C' }"
+					>
+						<template v-slot:suffix>
+							<uv-code
+								ref="uCode"
+								@change="codeChange"
+								seconds="20"
+								changeText="X秒重新获取"
+							></uv-code>
+							<uv-button
+								:text="verifyText"
+								type="primary"
+								size="mini"
+							>
+								获取验证码
+							</uv-button>
+						</template>
+					</uv-input>
+				</uv-form-item>
 				<uv-form-item prop="idCard" label="身份证号" borderBottom>
 					<uv-input
 						v-model="model.idCard"
@@ -39,19 +64,34 @@
 					</uv-input>
 				</uv-form-item>
 				<uv-form-item prop="recognition">
-					<view style="font-weight: bold;font-size: 32rpx;margin: 40rpx 0;">
-						人脸识别功能验证你的身份信息，
-						<view style="font-weight: bold;font-size: 32rpx;">请确保为本人操作</view>
+					<view
+						style="
+							font-weight: bold;
+							font-size: 32rpx;
+							margin: 40rpx 0;
+						"
+					>
+						为确保信息安全，需由本人进行验证
+						<!-- <view style="font-weight: bold; font-size: 32rpx">
+						</view> -->
 					</view>
-					<view class="flex recognition-box" @click="handleStartSoterAuthentication">
+					<view
+						class="flex recognition-box"
+						@click="handleStartSoterAuthentication"
+					>
 						<uni-icons
 							custom-prefix="iconfont"
 							type="icon-Gc_101_line-FaceRecognition"
 							size="42rpx"
 							color="#2D8AF8"
 						/>
-						<text style="margin-left: 10rpx;font-size: 28rpx;">请进行人脸识别</text>
-						<view v-if="model.recognition" style="margin-left: 40rpx;"> 
+						<text style="margin-left: 10rpx; font-size: 28rpx">
+							请进行人脸识别
+						</text>
+						<view
+							v-if="model.recognition"
+							style="margin-left: 40rpx"
+						>
 							<text v-if="model.recognition === 'success'">
 								<uni-icons
 									type="checkmarkempty"
@@ -68,16 +108,17 @@
 							</text>
 						</view>
 						<view class="arrow-wrap">
-							<uni-icons type="right" size="20" color="#7c7c7c"></uni-icons>
+							<uni-icons
+								type="right"
+								size="20"
+								color="#7c7c7c"
+							></uni-icons>
 						</view>
 					</view>
 				</uv-form-item>
 			</uv-form>
-			<view style="margin-top: 60rpx;"> 
-				<uv-button
-					type="primary"
-					@click="handleSubmit"
-				>
+			<view style="margin-top: 60rpx">
+				<uv-button type="primary" @click="handleSubmit">
 					提交
 				</uv-button>
 			</view>
@@ -89,12 +130,14 @@ import { ref } from 'vue';
 import faceVerify from '@/utils/faceVerify';
 import { bindUserAuth } from '@/api/index.js';
 
+const verifyText = ref('获取验证码');
 const form = ref(null);
 const model = ref({
 	name: '',
 	phone: '',
 	idCard: '',
-	recognition: '',
+	verify: '',
+	recognition: 'success',
 });
 const rules = ref({
 	name: [
@@ -129,37 +172,44 @@ const rules = ref({
 			trigger: 'blur',
 		},
 	],
-	recognition: [
-		{
-			validator: (_, v, c) => {
-				console.log('人脸识别结果', v);
-				if (!v) {
-					c(new Error('请进行人脸识别'));
-					return;
-				}
-				if (v && v === 'success') {
-					c();
-				} else {
-					c(new Error('人脸识别未通过，请重新识别'));
-				}
-			},
-			trigger: 'blur',
-		},
-	],
+	// recognition: [
+	// 	{
+	// 		validator: (_, v, c) => {
+	// 			console.log('人脸识别结果', v);
+	// 			if (!v) {
+	// 				c(new Error('请进行人脸识别'));
+	// 				return;
+	// 			}
+	// 			if (v && v === 'success') {
+	// 				c();
+	// 			} else {
+	// 				c(new Error('人脸识别未通过，请重新识别'));
+	// 			}
+	// 		},
+	// 		trigger: 'blur',
+	// 	},
+	// ],
 });
 
+const codeChange = (text) => {
+	verifyText.value = text;
+};
+
 const handleSubmit = () => {
-	form.value.validate().then(valid => {
-		if (valid) {
-			// 绑定用户信息
-			handleBindUserInfo();
-		}
-	}).catch(() => {
-		uni.showToast({
-			title: '表单填写有误',
-			icon: 'error',
+	form.value
+		.validate()
+		.then((valid) => {
+			if (valid) {
+				// 绑定用户信息
+				handleBindUserInfo();
+			}
+		})
+		.catch(() => {
+			uni.showToast({
+				title: '表单填写有误',
+				icon: 'error',
+			});
 		});
-	});
 };
 // 人脸识别
 const handleStartSoterAuthentication = () => {
@@ -202,48 +252,51 @@ const handleBindUserInfo = () => {
 		open_id: uni.getStorageSync('b2cOpenid'),
 		token: uni.getStorageSync('b2cToken')?.token,
 		xcx_code: uni.getStorageSync('b2cWechatCode'),
-	}).then((res) => {
-		if (!res || res.code !== 'S200') {
+	})
+		.then((res) => {
+			console.log('bindUserAuth', res);
+			if (!res || res.code !== 'S200') {
+				uni.showToast({
+					title: '绑定失败',
+					icon: 'error',
+				});
+				return;
+			}
+			uni.setStorageSync('b2cAuth', res);
 			uni.showToast({
-				title: '绑定失败',
+				title: '绑定成功',
+				icon: 'success',
+				duration: 2000,
+			});
+			setTimeout(() => {
+				uni.reLaunch({
+					url: '/pages/tabBar/index/index',
+				});
+			}, 2000);
+		})
+		.catch((err) => {
+			uni.showToast({
+				title: err.message || '绑定失败',
 				icon: 'error',
 			});
-			return;
-		}
-		uni.setStorageSync('b2cAuth', res);
-		uni.showToast({
-			title: '绑定成功',
-			icon: 'success',
-			duration: 2000,
 		});
-		setTimeout(() => {
-			uni.reLaunch({
-				url: '/pages/tabBar/index/index',
-			});
-		}, 2000);
-	}).catch((err) => {
-		uni.showToast({
-			title: err.message || '绑定失败',
-			icon: 'error',
-		});
-	});
-}
+};
 </script>
 <style lang="scss">
 .userAuth {
 	.form-wrap {
 		width: 90%;
 		margin: 0 auto;
-		.recognition-box{
+		.recognition-box {
 			padding: 20rpx;
-			color: #7C7C7C;
-			border: 1px solid #E0E0E0;
+			color: #7c7c7c;
+			border: 1px solid #e0e0e0;
 			border-radius: 16rpx;
 			width: 100%;
 			margin-top: 10rpx;
 			text-align: center;
 			position: relative;
-			.arrow-wrap{
+			.arrow-wrap {
 				position: absolute;
 				right: 20rpx;
 				top: 50%;

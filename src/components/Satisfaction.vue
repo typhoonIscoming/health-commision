@@ -1,15 +1,29 @@
 <template>
-	<view class="satisfaction card-radius page-gap">
-		<Title title="满意度调查">
-		</Title>
-		<view class="list-wrapper">
-			<view class="satisfaction-item" @click="handleClick">
-				<view style="display: flex;justify-content: space-between;">
-					<view class="label">{{ worksheetInfo.name }}</view>
-					<view style="display: flex;align-items: center;">
-						<text style="color:#606266;margin-right: 10rpx">去填写</text>
-						<uv-icon name="arrow-right" size="16"></uv-icon>
-					</view>
+	<view>
+		<view
+			v-if="evaluteList.length"
+			class="satisfaction card-radius page-gap"
+		>
+			<Title title="满意度调查"></Title>
+			<view class="list-wrapper">
+				<view
+					v-for="(item, i) in evaluteList"
+					:key="i"
+					class="satisfaction-item"
+					style="display: flex; justify-content: space-between"
+					@click="handleClick(item)"
+				>
+					<!-- <view style="display: flex; justify-content: space-between">
+						<view class="label">{{ worksheetInfo.name }}</view>
+						<view style="display: flex; align-items: center">
+							<text style="color: #606266; margin-right: 10rpx">
+								去填写
+							</text>
+							<uv-icon name="arrow-right" size="16"></uv-icon>
+						</view>
+					</view> -->
+					<view class="name">{{ item.jcjl }}</view>
+					<view>去填报</view>
 				</view>
 			</view>
 		</view>
@@ -19,18 +33,21 @@
 import { ref, onMounted } from 'vue';
 import Title from './Title.vue';
 import satisfactionHook from '@/hooks/satisfactionHook';
+import evaluteHook from '@/hooks/evaluteHook';
+
+const { evaluteList, getData } = evaluteHook();
 
 const { worksheetInfo, getWorksheet } = satisfactionHook();
 
-const handleClick = () => {
+const handleClick = (item) => {
 	uni.navigateTo({
-		url: '/pages/subpackage/questionnaire/questionnaire'
-	})
-}
+		url: `/pages/subpackage/questionnaire/questionnaire?id=${item.rowid}&type=edit`,
+	});
+};
 
 onMounted(() => {
-	getWorksheet()
-})
+	getData({ pageSize: 5 });
+});
 </script>
 <style lang="scss">
 .satisfaction {

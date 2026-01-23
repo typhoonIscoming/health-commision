@@ -12,7 +12,7 @@ export const fastLogin = (data) => {
 // 判断当前用户是否已经认证
 export const checkUserAuth = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookAuthCheck}`,
+		url: `/api/workflow/hooks/${constants.hookNewAuthCheck}`,
 		method: 'GET',
 		data,
 	});
@@ -21,8 +21,8 @@ export const checkUserAuth = (data) => {
 // 绑定用户信息
 export const bindUserAuth = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookAuthBind}`,
-		method: 'POST',
+		url: `/api/workflow/hooks/${constants.hookNewAuthBind}`,
+		method: 'post',
 		data,
 	});
 };
@@ -43,7 +43,7 @@ export const getWorksheetInfo = (data) => {
 		method: 'POST',
 		data,
 	});
-}
+};
 
 // 获取工作表详情
 export const getWorksheetDetail = (data) => {
@@ -59,52 +59,59 @@ export const getRowDetail = (data) => {
 	return request({
 		url: '/api/v2/open/worksheet/getRowByIdPost',
 		method: 'POST',
-		data
-	})
-}
+		data,
+	});
+};
 
 // 获取体检报告的下载地址
 export const getReportUrl = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${ constants.hookDownloadReport }`,
+		url: `/api/workflow/hooks/${constants.hookDownloadReport}`,
 		method: 'POST',
 		data,
-	})
-}
+	});
+};
 
 // 获取关联表
 export const getRelationSheet = (data) => {
 	return request({
 		url: '/api/v2/open/worksheet/getRowRelations',
 		method: 'post',
-		data
-	})
-}
+		data,
+	});
+};
 
 // 预约接口
 export const makeAppointment = (data) => {
 	return request({
-		url: `/api/workflow/hooks2/${ constants.hookMakeAppointment }`,
+		url: `/api/workflow/hooks2/${constants.hookMakeAppointment}`,
 		method: 'post',
-		data
-	})
-}
+		data,
+	});
+};
 
 // 获取行数据详情
 export const getRowById = (data) => {
 	return request({
-		url:'/api/v2/open/worksheet/getRowById',
+		url: '/api/v2/open/worksheet/getRowById',
 		method: 'get',
-		data
-	})
-}
+		data,
+	});
+};
 
 // 新建行数据
 export const addRow = (data) => {
 	return request({
-		url:'/api/v2/open/worksheet/addRow',
+		url: '/api/v2/open/worksheet/addRow',
 		method: 'post',
-		data
-	})
-}
-
+		data,
+	});
+};
+// 更新行记录
+export const editRow = (data) => {
+	return request({
+		url: '/api/v2/open/worksheet/editRow',
+		method: 'post',
+		data,
+	});
+};

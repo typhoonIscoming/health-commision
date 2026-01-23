@@ -16,13 +16,33 @@
 				<view class="title">机构地址：</view>
 				<view class="value">{{ info.jgdz }}</view>
 			</view>
+
 			<view class="row flex">
 				<view class="title">预约日期：</view>
 				<view class="value" style="font-size: 32rpx; font-weight: bold">
 					{{ info.yyrq }}
 				</view>
 			</view>
-			<view class="row flex" style="align-items: center;">
+			<view class="row flex">
+				<view class="title">预约状态：</view>
+				<view
+					class="value"
+					style="font-size: 36rpx; font-weight: bold"
+					:class="{
+						success: info.yyzt && info.yyzt.indexOf('成功') > -1,
+						fail: info.yyzt && info.yyzt.indexOf('失败') > -1,
+					}"
+				>
+					{{ info.yyzt }}
+				</view>
+			</view>
+			<view v-if="info.yybz" class="row flex">
+				<view class="title">备注：</view>
+				<view class="value" style="font-size: 28rpx">
+					{{ info.yybz }}
+				</view>
+			</view>
+			<!-- <view class="row flex" style="align-items: center">
 				<view class="title">预约号：</view>
 				<view
 					class="value"
@@ -30,7 +50,7 @@
 				>
 					{{ info.tjyyh }}
 				</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -68,6 +88,12 @@ const info = computed(() => props.item);
 		.value {
 			word-break: break-all;
 			flex: 1;
+			&.success {
+				color: #5ac725;
+			}
+			&.fail {
+				color: rgb(228, 86, 86);
+			}
 		}
 	}
 	.right {

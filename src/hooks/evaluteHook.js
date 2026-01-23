@@ -13,7 +13,7 @@ export default () => {
 		const data = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'cswj',
+			worksheetId: 'myddc',
 		};
 		const [err, res] = await to(getWorksheetInfo(data));
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
@@ -23,7 +23,11 @@ export default () => {
 		worksheetInfo.value = res.data;
 		return res.data;
 	};
-	const getData = async ({ pageIndex, pageSize, refresh = false }) => {
+	const getData = async ({
+		pageIndex = 1,
+		pageSize = 10,
+		refresh = false,
+	}) => {
 		const userInfo = uni.getStorageSync('b2cAuth');
 		const b2cUserInfo = uni.getStorageSync('b2cUserInfo');
 		if (isEmpty(userInfo) || isEmpty(b2cUserInfo)) {
@@ -48,7 +52,7 @@ export default () => {
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'cswj',
+			worksheetId: 'myddc',
 			viewId: view.viewId,
 			pageSize,
 			pageIndex,
@@ -71,7 +75,7 @@ export default () => {
 			],
 		};
 		const [err, res] = await to(getWorksheetDetail(params));
-		// console.log('获取用户填写的问卷', res);
+		console.log('满意度调查列表数据', res);
 		if (err || !res.success || isEmpty(res.data)) {
 			return;
 		}

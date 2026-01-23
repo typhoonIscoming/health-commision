@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { getWorksheetInfo, addRow, getRowById } from '@/api';
+import { getWorksheetInfo, editRow, getRowById } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
@@ -13,7 +13,7 @@ export default () => {
 		const data = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'cswj',
+			worksheetId: 'myddc',
 		};
 		const [err, res] = await to(getWorksheetInfo(data));
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
@@ -24,15 +24,22 @@ export default () => {
 		return res.data;
 	};
 
-	const addData = async (data) => {
+	const addData = async (data, id) => {
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'cswj',
-			triggerWorkflow: true,
+			worksheetId: 'myddc',
+			// triggerWorkflow: true,
+			rowId: id,
 			controls: data,
+			// controls: [
+			// 	{
+			// 		controlId: 'ndbctjsjdap',
+			// 		value: '一般',
+			// 	},
+			// ],
 		};
-		const [err, res] = await to(addRow(params));
+		const [err, res] = await to(editRow(params));
 		if (err || !res.success) {
 			return;
 		}
@@ -43,7 +50,7 @@ export default () => {
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
-			worksheetId: 'cswj',
+			worksheetId: 'myddc',
 			rowId,
 		};
 		const [err, res] = await to(getRowById(params));

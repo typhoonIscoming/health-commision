@@ -19,7 +19,7 @@ export default (auto = true) => {
 		};
 		// 获取视图配置
 		const [err, res] = await to(getWorksheetInfo(params));
-		// console.log('retiredData', res);
+		console.log('离退休人员编号', res);
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
@@ -73,7 +73,7 @@ export default (auto = true) => {
 				mb.push(item);
 			}
 		});
-		console.log('=====', zy);
+		console.log('住院=====', zy);
 		list.value = list.value.map((item) => {
 			const { name } = item;
 			if (name === 'mz') {
@@ -144,7 +144,7 @@ export default (auto = true) => {
 				return resolve();
 			}
 			const status = userInfo.ryzt;
-			if (status === '离休') {
+			if (['离休', '退休'].includes(status)) {
 				retiredData().finally(() => {
 					resolve();
 				});

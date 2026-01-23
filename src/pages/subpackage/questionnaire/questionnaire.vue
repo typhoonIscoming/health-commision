@@ -43,7 +43,7 @@
 							<uv-radio-group
 								v-model="model[item.alias]"
 								placement="column"
-								:disabled="!!rowId"
+								:disabled="disabled"
 							>
 								<uv-radio
 									:customStyle="{ margin: '8px' }"
@@ -60,7 +60,7 @@
 								v-model="model[item.alias]"
 								shape="square"
 								placement="column"
-								:disabled="!!rowId"
+								:disabled="disabled"
 							>
 								<uv-checkbox
 									:customStyle="{ margin: '8px' }"
@@ -74,17 +74,16 @@
 						<template v-else-if="item.type === 2">
 							<uv-textarea
 								v-model="model[item.alias]"
-								:disabled="!!rowId"
+								:disabled="disabled"
 								placeholder="请输入内容"
 							></uv-textarea>
 						</template>
 					</uv-form-item>
 				</view>
 				<uv-button
-					v-if="!rowId"
 					type="primary"
 					text="提交"
-					:disabled="!!rowId"
+					:disabled="disabled"
 					customStyle="margin-top: 10px"
 					@click="submit"
 				></uv-button>
@@ -125,33 +124,45 @@ const questionList = ref([]);
 
 const rowId = ref('');
 
+const openType = ref();
+
+const disabled = computed(() => {
+	if (openType.value === 'detail') {
+		return true;
+	}
+	return false;
+});
+
 const handleBack = () => {
 	uni.navigateBack();
 };
 const loading = ref(false);
 
 const handleSubmit = async () => {
-	const userInfo = uni.getStorageSync('b2cUserInfo')
+	const userInfo = uni.getStorageSync('b2cUserInfo');
 	const data = questionList.value.map((item) => {
 		let v = model.value[item.alias];
 		if (item.alias === 'rywh') {
-			v = userInfo.rowid
+			v = userInfo.rowid;
 		}
 		return {
 			controlId: item.alias,
 			value: Array.isArray(v) ? JSON.stringify(v) : v,
+			valueType: 1,
 		};
 	});
-	console.log('data', data)
+	console.log('data', data);
 	// return
 	loading.value = true;
-	const [err, res] = await to(addData(data));
+	const [err, res] = await to(addData(data, rowId.value));
+	console.log('提交接口', res);
 	loading.value = false;
-	if (err) {
+	if (err || !res) {
 		uni.showToast({
 			title: '提交失败',
 			icon: 'error',
 		});
+		return;
 	}
 	uni.showToast({
 		title: '提交成功',
@@ -214,27 +225,32 @@ function extractTextFromHtml(html) {
 const parseData = (config) => {
 	const { controls, name } = config;
 	title.value = name;
-	const result = controls.map((item) => {
-		const { alias, type, dataSource } = item;
-		// 是否需要显示
-		// 不显示的字段[问卷模板名称, 模板日期]
-		const noShowAlias = ['wjmbmc', 'mbrq', 'rywh'];
-		const show = !noShowAlias.includes(alias);
-		// 是否是编辑字段
-		const edit = type !== 10010; // 10010可以当做是label
-		// 是否是多选
-		return {
-			id: uuid(),
-			...item,
-			controlName:
-				type === 10010
-					? extractTextFromHtml(dataSource)
-					: item.controlName,
-			show,
-			edit,
-			multiple: type === 10,
-		};
-	});
+	const result = controls
+		.filter((item) => {
+			const { type } = item;
+			return [9, 2].includes(type);
+		})
+		.map((item) => {
+			const { alias, type, dataSource } = item;
+			// 是否需要显示
+			// 不显示的字段[问卷模板名称, 模板日期]
+			const noShowAlias = ['wjmbmc', 'mbrq', 'rywh'];
+			const show = !noShowAlias.includes(alias);
+			// 是否是编辑字段
+			const edit = type !== 10010; // 10010可以当做是label
+			// 是否是多选
+			return {
+				id: uuid(),
+				...item,
+				controlName:
+					type === 10010
+						? extractTextFromHtml(dataSource)
+						: item.controlName,
+				show,
+				edit,
+				multiple: type === 10,
+			};
+		});
 	questionList.value = result;
 };
 
@@ -255,17 +271,20 @@ onPageScroll((e) => {
 
 // 获取详细信息
 const getDetailData = (id) => {
-	getRowDetail(id).then(res => {
+	getRowDetail(id).then((res) => {
 		model.value = res.data;
-	})
-}
+	});
+};
 
 onLoad((options) => {
 	if (options.id) {
 		rowId.value = options.id;
-		getDetailData(options.id)
+		getDetailData(options.id);
 	}
-})
+	if (options.type) {
+		openType.value = options.type;
+	}
+});
 </script>
 <style lang="scss">
 .question {
