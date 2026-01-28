@@ -39,46 +39,78 @@
 						:borderBottom="false"
 						labelWidth="auto"
 					>
-						<template v-if="item.type === 9">
-							<uv-radio-group
-								v-model="model[item.alias]"
-								placement="column"
-								:disabled="disabled"
+						<view style="width: 100%">
+							<view>
+								<template v-if="item.type === 9">
+									<uv-radio-group
+										v-model="model[item.alias]"
+										placement="column"
+										:disabled="disabled"
+									>
+										<uv-radio
+											:customStyle="{ margin: '8px' }"
+											v-for="(
+												option, index
+											) in item.options"
+											:key="index"
+											:label="option.value"
+											:name="option.value"
+										>
+										</uv-radio>
+									</uv-radio-group>
+								</template>
+								<template v-else-if="item.type === 10">
+									<uv-checkbox-group
+										v-model="model[item.alias]"
+										shape="square"
+										placement="column"
+										:disabled="disabled"
+									>
+										<uv-checkbox
+											:customStyle="{ margin: '8px' }"
+											v-for="(
+												option, index
+											) in item.options"
+											:key="index"
+											:label="option.value"
+											:name="option.value"
+										></uv-checkbox>
+									</uv-checkbox-group>
+								</template>
+								<template v-else-if="item.type === 2">
+									<uv-textarea
+										v-model="model[item.alias]"
+										:disabled="disabled"
+										placeholder="请输入内容"
+									></uv-textarea>
+								</template>
+							</view>
+							<view
+								v-if="showInput(item.alias, model[item.alias])"
+								class="reason"
+								style="width: 100%; margin-top: 10px"
 							>
-								<uv-radio
-									:customStyle="{ margin: '8px' }"
-									v-for="(option, index) in item.options"
-									:key="index"
-									:label="option.value"
-									:name="option.value"
-								>
-								</uv-radio>
-							</uv-radio-group>
-						</template>
-						<template v-else-if="item.type === 10">
-							<uv-checkbox-group
-								v-model="model[item.alias]"
-								shape="square"
-								placement="column"
-								:disabled="disabled"
-							>
-								<uv-checkbox
-									:customStyle="{ margin: '8px' }"
-									v-for="(option, index) in item.options"
-									:key="index"
-									:label="option.value"
-									:name="option.value"
-								></uv-checkbox>
-							</uv-checkbox-group>
-						</template>
-						<template v-else-if="item.type === 2">
-							<uv-textarea
-								v-model="model[item.alias]"
-								:disabled="disabled"
-								placeholder="请输入内容"
-							></uv-textarea>
-						</template>
+								<uv-textarea
+									v-model="model[`${item.alias}_other`]"
+									:disabled="disabled"
+									placeholder="请输入不满意原因"
+								></uv-textarea>
+							</view>
+						</view>
 					</uv-form-item>
+					<!-- <uv-form-item
+						v-if="showInput(item.alias, model[item.alias])"
+						label="请输入原因"
+						:prop="`${item.alias}_other`"
+						:borderBottom="false"
+						labelWidth="auto"
+					>
+						<uv-textarea
+							v-model="model[`${item.alias}_other`]"
+							:disabled="disabled"
+							placeholder="请输入内容"
+						></uv-textarea>
+					</uv-form-item> -->
 				</view>
 				<uv-button
 					type="primary"
@@ -121,13 +153,15 @@ const rules = ref({});
 const title = ref('');
 
 const questionList = ref([]);
+// 原始的表单配置
+const originQuestionList = ref([]);
 
 const rowId = ref('');
 
 const openType = ref();
 
 const disabled = computed(() => {
-	if (openType.value === 'detail') {
+	if (openType.value === 'detail' || model.value['sftx'] == 1) {
 		return true;
 	}
 	return false;
@@ -145,17 +179,24 @@ const handleSubmit = async () => {
 		if (item.alias === 'rywh') {
 			v = userInfo.rowid;
 		}
+		// 如果当前type=9(单选)，如果选择的是不满意
+		if (item.type === 9) {
+			const findOption = item.options.find((oItem) => oItem.value === v);
+			if (!isEmpty(findOption) && findOption.key === 'other') {
+				// 查询填写的不满意原因
+				const unlikereason = model.value[`${item.alias}_other`] || '';
+				v = `${findOption.key}:${unlikereason}`;
+			}
+		}
 		return {
 			controlId: item.alias,
 			value: Array.isArray(v) ? JSON.stringify(v) : v,
 			valueType: 1,
 		};
 	});
-	console.log('data', data);
-	// return
 	loading.value = true;
-	const [err, res] = await to(addData(data, rowId.value));
-	console.log('提交接口', res);
+	const result = data.concat([{ controlId: 'sftx', value: 1 }]);
+	const [err, res] = await to(addData(result, rowId.value));
 	loading.value = false;
 	if (err || !res) {
 		uni.showToast({
@@ -202,6 +243,22 @@ const submit = () => {
 			// });
 		});
 };
+// 判断是否显示当前不满意的输入框
+const showInput = (alias, value) => {
+	const findItem = originQuestionList.value.find(
+		(item) => item.alias === alias,
+	);
+	if (!isEmpty(findItem) && !isEmpty(findItem.options)) {
+		const isOther = findItem.options.find((item) => item.value === value);
+		if (
+			!isEmpty(isOther) &&
+			(isOther.key === 'other' || isOther.value === '不满意')
+		) {
+			return true;
+		}
+	}
+	return false;
+};
 
 function extractTextFromHtml(html) {
 	const nodes = parseHtml(html);
@@ -228,7 +285,7 @@ const parseData = (config) => {
 	const result = controls
 		.filter((item) => {
 			const { type } = item;
-			return [9, 2].includes(type);
+			return [10, 9, 2].includes(type);
 		})
 		.map((item) => {
 			const { alias, type, dataSource } = item;
@@ -252,6 +309,9 @@ const parseData = (config) => {
 			};
 		});
 	questionList.value = result;
+	originQuestionList.value = controls;
+	// console.log('解析满意度调查表单', controls);
+	return result;
 };
 
 onMounted(() => {
@@ -259,7 +319,10 @@ onMounted(() => {
 		if (isEmpty(data)) {
 			return;
 		}
-		parseData(data);
+		const result = parseData(data);
+		if (rowId.value) {
+			getDetailData(rowId.value, result);
+		}
 	});
 });
 
@@ -270,16 +333,34 @@ onPageScroll((e) => {
 });
 
 // 获取详细信息
-const getDetailData = (id) => {
+const getDetailData = (id, config) => {
 	getRowDetail(id).then((res) => {
 		model.value = res.data;
+		config.forEach((item) => {
+			const { type, alias, options } = item;
+			const v = res.data[alias];
+			if (type === 9 && !isEmpty(v)) {
+				// 如果当前的值不属于options
+				const findItem = options.find((oItem) => oItem.value === v);
+				const other = options.find((oItem) => oItem.key === 'other');
+				const otherReg = '其他:';
+				const real = v.indexOf(otherReg) > -1;
+				if (isEmpty(findItem) && real) {
+					// 如果当前值是[其他:***]
+					// 那么就是选择的不满意
+					model.value[alias] = other.value;
+					model.value[`${alias}_other`] =
+						v.slice(otherReg.length) || '';
+				}
+			}
+		});
+		// console.log('满意度调查的详细数据', res.data, config);
 	});
 };
 
 onLoad((options) => {
 	if (options.id) {
 		rowId.value = options.id;
-		getDetailData(options.id);
 	}
 	if (options.type) {
 		openType.value = options.type;

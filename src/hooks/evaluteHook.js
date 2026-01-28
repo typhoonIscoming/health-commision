@@ -75,7 +75,7 @@ export default () => {
 			],
 		};
 		const [err, res] = await to(getWorksheetDetail(params));
-		console.log('满意度调查列表数据', res);
+		console.log('满意度调查列表数据', params, res);
 		if (err || !res.success || isEmpty(res.data)) {
 			return;
 		}

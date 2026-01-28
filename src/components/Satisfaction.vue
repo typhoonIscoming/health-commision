@@ -13,15 +13,6 @@
 					style="display: flex; justify-content: space-between"
 					@click="handleClick(item)"
 				>
-					<!-- <view style="display: flex; justify-content: space-between">
-						<view class="label">{{ worksheetInfo.name }}</view>
-						<view style="display: flex; align-items: center">
-							<text style="color: #606266; margin-right: 10rpx">
-								去填写
-							</text>
-							<uv-icon name="arrow-right" size="16"></uv-icon>
-						</view>
-					</view> -->
 					<view class="name">{{ item.jcjl }}</view>
 					<view>去填报</view>
 				</view>

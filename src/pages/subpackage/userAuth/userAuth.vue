@@ -64,55 +64,55 @@
 					</uv-input>
 				</uv-form-item>
 				<uv-form-item prop="recognition">
-					<view
-						style="
-							font-weight: bold;
-							font-size: 32rpx;
-							margin: 40rpx 0;
-						"
-					>
-						为确保信息安全，需由本人进行验证
-						<!-- <view style="font-weight: bold; font-size: 32rpx">
-						</view> -->
-					</view>
-					<view
-						class="flex recognition-box"
-						@click="handleStartSoterAuthentication"
-					>
-						<uni-icons
-							custom-prefix="iconfont"
-							type="icon-Gc_101_line-FaceRecognition"
-							size="42rpx"
-							color="#2D8AF8"
-						/>
-						<text style="margin-left: 10rpx; font-size: 28rpx">
-							请进行人脸识别
-						</text>
+					<view style="width: 100%">
 						<view
-							v-if="model.recognition"
-							style="margin-left: 40rpx"
+							style="
+								font-weight: bold;
+								font-size: 32rpx;
+								margin: 40rpx 0;
+							"
 						>
-							<text v-if="model.recognition === 'success'">
-								<uni-icons
-									type="checkmarkempty"
-									size="30rpx"
-									color="#2D8AF8"
-								/>
-							</text>
-							<text v-else-if="model.recognition === 'fail'">
-								<uni-icons
-									type="closeempty"
-									size="30rpx"
-									color="#2D8AF8"
-								/>
-							</text>
+							为确保信息安全，需由本人进行验证
 						</view>
-						<view class="arrow-wrap">
+						<view
+							class="flex recognition-box"
+							@click="handleStartSoterAuthentication"
+						>
 							<uni-icons
-								type="right"
-								size="20"
-								color="#7c7c7c"
-							></uni-icons>
+								custom-prefix="iconfont"
+								type="icon-Gc_101_line-FaceRecognition"
+								size="42rpx"
+								color="#2D8AF8"
+							/>
+							<text style="margin-left: 10rpx; font-size: 28rpx">
+								请进行人脸识别
+							</text>
+							<view
+								v-if="model.recognition"
+								style="margin-left: 40rpx"
+							>
+								<text v-if="model.recognition === 'success'">
+									<uni-icons
+										type="checkmarkempty"
+										size="30rpx"
+										color="#2D8AF8"
+									/>
+								</text>
+								<text v-else-if="model.recognition === 'fail'">
+									<uni-icons
+										type="closeempty"
+										size="30rpx"
+										color="#2D8AF8"
+									/>
+								</text>
+							</view>
+							<view class="arrow-wrap">
+								<uni-icons
+									type="right"
+									size="20"
+									color="#7c7c7c"
+								></uni-icons>
+							</view>
 						</view>
 					</view>
 				</uv-form-item>

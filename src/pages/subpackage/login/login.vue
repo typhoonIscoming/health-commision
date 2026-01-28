@@ -214,10 +214,20 @@ const handlePreLogin = () => {
 	});
 	// #endif
 	// #ifndef MP-WEIXIN
+	handleH5Login();
 	uni.navigateTo({
 		url: '/pages/subpackage/userAuth/userAuth',
 	});
 	// #endif
+};
+// H5模拟登录
+const handleH5Login = () => {
+	uni.setStorageSync('b2cWechatCode', '0f360Sll2Mxl6h4gOfol2czfS5060Slm');
+	uni.setStorageSync('b2cOpenid', 'oAHxr7e4Accb6y1zO4ot2Co7JAVg');
+	uni.setStorageSync('b2cToken', {
+		expires: +new Date(),
+		token: 'b49a39b1-581c-4bbe-8c12-3505ef7d14a7',
+	});
 };
 const handleLogin = (code) => {
 	fastLogin({
@@ -348,25 +358,27 @@ const onLogin = () => {
 const loginByPhone = async () => {
 	// #ifdef H5
 	const token = {
-		expires: 1768101136169,
-		token: '27a7a0b6-65c8-4b1c-a542-d47d180ede4e',
+		expires: 1769102486226,
+		token: '9af286c4-3177-4099-9d3f-c2d7a49ba20e',
 	};
 	const info = {
-		msg: '已绑定',
-		code: '已绑定',
-		user_id: 'U20248711472',
-		name: '白振声',
+		msg: '绑定成功',
+		birthday: '1985-01-01',
+		dyjb: '处级正职',
+		gwyjb: '六级公务员',
+		code: 'S200',
+		zjnx: '退休厅级10年以上',
 		mob_num: '+8616601762764',
-		age: '88',
-		birthday: '',
-		zjnx: '离休一般离休干部无年限限制',
-		car_id: '650103193011031830',
-		ryzt: '离休',
-		ybbh: '62224596',
+		tx: 'https://www.2g2b.cn/file/mdpic/aa59881e-0936-4e06-a0b9-aa627b124541/cabace3c-e25e-4020-add2-14bae997e3ee/695fbdff1544a42694699177/20260123/dG0m5xfI06dg1S1V8x366Gc116b1e75a07aF5Nftfl7u657Z5he1eX2La9c8fr3E.jpeg?attname=fb1036faa4a0d0ed6496fcab03aa659b.jpeg&e=1769530858&token=mdstorage:0krx-13-v25KOIs4-9xiFv7s_HY=',
 		sex: '男',
-		dyjb: '',
-		gwyjb: '',
-		tx: '',
+		jlzt: '正常',
+		ryzt: '退休',
+		user_id: 'U20248736652',
+		ybbh: '62196250',
+		name: '测试2',
+		yhdw: '新疆维吾尔自治区商务厅',
+		car_id: '65232219850101101X',
+		age: '41',
 	};
 	uni.setStorageSync('b2cAuth', info);
 	uni.setStorageSync('b2cToken', token);
