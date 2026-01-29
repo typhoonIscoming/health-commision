@@ -6,19 +6,19 @@ export default {
 		...mapState(useLoginStore, ['getLoginState']),
 	},
 	onLaunch: function () {
-		console.log('App Launch');
+		// console.log('App Launch');
 	},
 	onShow: function () {
 		// #ifdef MP-WEIXIN
 		uni.hideTabBar();
 		// #endif
-		console.log('App Show', this.getLoginState);
+		// console.log('App Show', this.getLoginState);
 		if (!this.getLoginState) {
 			// this.login();
 		}
 	},
 	onHide: function () {
-		console.log('App Hide');
+		// console.log('App Hide');
 	},
 	methods: {
 		...mapActions(useLoginStore, ['setLogin']),
@@ -46,9 +46,9 @@ export default {
 /*每个页面公共css */
 view,
 text {
-	font-family: serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif,
-		'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
-		Arial, sans-serif;
+	font-family:
+		serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Trebuchet MS',
+		'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	font-size: 13px;
 	box-sizing: border-box;
 }

@@ -1,26 +1,26 @@
 <template>
-	<view class="home" :style="{width: '100%', paddingBottom: `${paddingBottom}px`}">
-		<NavBar title="自治区二次补偿信息服务" :opacity="opacity" />
-		<Background />
-		<HomeCard @onClick="handleDetail" />
-		<view v-if="noticeItem" style="margin-bottom: 30rpx;position: relative;">
-			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice"></uv-notice-bar>
+	<view
+		class="home"
+		:style="{ width: '100%', paddingBottom: `${paddingBottom}px` }"
+	>
+		<NavBar title="自治区二次补偿信息服务" :opacity="1" />
+		<!-- <Background /> -->
+		<UserInfoCard @onClick="handleDetail" />
+		<!-- <HomeCard @onClick="handleDetail" /> -->
+		<view
+			v-if="noticeItem"
+			style="margin-bottom: 30rpx; position: relative"
+		>
+			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice" />
 		</view>
-		<!-- <view class="satisfaction-wrapper page-gap card-radius flex-center">
-			<view class="content flex-center">
-				<text>服务完成满意度调查提醒</text>
-				<view class="fill-btn">立即填写</view>
-			</view>
-			<text class="time">2025-12-01</text>
-		</view> -->
 		<HomeHealthRecord />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<UserCard ref="userCardModel" />
+		<Psychological />
+		<view style="margin-top: 20px"></view>
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
-		<view style="margin-top: 20px"></view>
-		<Psychological />
 		<Tabbar />
 	</view>
 </template>
@@ -39,6 +39,7 @@ import Tabbar from '@/components/Tabbar.vue';
 import UserCard from '@/components/UserCard.vue';
 import NoticeBar from '@/components/NoticeBar.vue';
 import Psychological from '@/components/Psychological.vue';
+import UserInfoCard from '@/components/UserInfoCard.vue';
 import { isEmpty } from '@/utils';
 import homeNoticebar from '@/hooks/home-noticebar';
 
@@ -46,19 +47,19 @@ const { noticeList, getList } = homeNoticebar();
 
 const noticeItem = computed(() => {
 	if (isEmpty(noticeList.value)) {
-		return null
+		return null;
 	}
 	return noticeList.value[0];
 });
 // 获取剩余的新闻列表
 const newsRestList = computed(() => {
 	if (isEmpty(noticeList.value)) {
-		return []
+		return [];
 	}
 	return noticeList.value.slice(1);
 });
 
-const opacity = ref(0)
+const opacity = ref(0);
 const paddingBottom = ref(60);
 const userCardModel = ref();
 
@@ -66,17 +67,17 @@ const getNews = () => {
 	getList({
 		pageIndex: 1,
 		pageSize: 5,
-	})
-}
+	});
+};
 
 const handleNotice = (i) => {
 	if (isEmpty(noticeItem.value)) {
-		return
+		return;
 	}
 	uni.navigateTo({
 		url: `/pages/subpackage/newsDetail/newsDetail?id=${noticeItem.value.rowid}`,
 	});
-}
+};
 
 onMounted(() => {
 	getNews();
@@ -94,7 +95,7 @@ onPageScroll((e) => {
 
 const handleDetail = () => {
 	userCardModel.value?.open();
-}
+};
 </script>
 
 <style lang="scss">
