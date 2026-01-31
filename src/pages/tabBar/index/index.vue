@@ -4,9 +4,7 @@
 		:style="{ width: '100%', paddingBottom: `${paddingBottom}px` }"
 	>
 		<NavBar title="自治区二次补偿信息服务" :opacity="1" />
-		<!-- <Background /> -->
 		<UserInfoCard @onClick="handleDetail" />
-		<!-- <HomeCard @onClick="handleDetail" /> -->
 		<view
 			v-if="noticeItem"
 			style="margin-bottom: 30rpx; position: relative"
@@ -26,12 +24,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { onShow, onPageScroll, onLoad } from '@dcloudio/uni-app';
-import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import { ref, onMounted } from 'vue';
+import { onPageScroll } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
-import Background from '@/components/Background.vue';
-import HomeCard from '@/components/HomeCard.vue';
 import HomeHealthRecord from '@/components/HomeHealthRecord';
 import Satisfaction from '@/components/Satisfaction';
 import Questionnaire from '@/components/Questionnaire.vue';

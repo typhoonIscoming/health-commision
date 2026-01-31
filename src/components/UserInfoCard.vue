@@ -33,9 +33,9 @@
 					</view>
 					<view class="row">
 						<view class="label">身份证号：</view>
-						<view class="value">{{
-							formatIdCard(userInfo.car_id)
-						}}</view>
+						<view class="value">
+							{{ formatIdCard(userInfo.car_id) }}
+						</view>
 					</view>
 				</view>
 				<view style="height: 100%">

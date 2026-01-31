@@ -13,7 +13,11 @@
 						custom-prefix="iconfont"
 						:type="`icon-${item.className}`"
 						size="36rpx"
-						:color="currentTab === item.tabName ? 'rgb(87, 190, 173)' : '#999'"
+						:color="
+							currentTab === item.tabName
+								? 'rgb(87, 190, 173)'
+								: '#999'
+						"
 					/>
 				</view>
 				<!--'#D67E5A'-->
@@ -57,7 +61,7 @@ const tabBarList = ref([
 		className: 'shouye',
 	},
 	{
-		text: '门诊预约',
+		text: '体检预约',
 		url: '/pages/tabBar/appointment/appointment',
 		tabName: 'appointment',
 		className: 'yuyuetijian',
@@ -143,10 +147,10 @@ const initTabList = () => {
 			.active {
 				color: rgb(87, 190, 173);
 			}
-			.tab-icon{
+			.tab-icon {
 				font-size: 0;
 			}
-			.appointItem-wrap{
+			.appointItem-wrap {
 				margin: auto;
 				width: 100rpx;
 				height: 50rpx;
@@ -158,7 +162,7 @@ const initTabList = () => {
 				position: relative;
 				display: flex;
 				justify-content: center;
-				&::before{
+				&::before {
 					content: '';
 					display: block;
 					position: absolute;
@@ -169,10 +173,9 @@ const initTabList = () => {
 					height: 100rpx;
 					width: 100rpx;
 					border-radius: 50%;
-
 				}
 			}
-			.appointItem{
+			.appointItem {
 				position: absolute;
 				top: 3px;
 				left: 0;

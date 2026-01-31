@@ -14,58 +14,73 @@
 		>
 			<text style="font-size: 28rpx"> 请选择您要预约的医院及时间 </text>
 		</view>
-		<uv-vtabs
-			:chain="false"
-			:list="list"
-			:height="height"
-			hdHeight="100rpx"
-			barWidth="200rpx"
-			@change="change"
-		>
-			<uv-vtabs-item>
-				<view class="flex flex-wrap" style="flex-wrap: wrap">
-					<view
-						class="item"
-						v-for="(item2, index2) in currentList"
-						:key="index2"
-						style="white-space: nowrap"
-						:class="{
-							active:
-								hospitalIndex === currentIndex &&
-								timeIndex === index2,
-							disabled: !item2.num,
-						}"
-						@click="handleSelected(index2)"
-					>
-						<view class="item-wrap">
-							<view class="item-content">
-								<text class="item-date">{{ item2.date }}</text>
-							</view>
-							<view class="item-num-content">
-								<text class="text"> 剩余: </text>
-								<uv-count-to
-									:startVal="0"
-									:endVal="item2.num"
-									:fontSize="17"
-									:duration="1000"
-									color="white"
-								></uv-count-to>
+		<view style="padding: 20rpx">
+			<uv-form
+				labelPosition="top"
+				labelWidth="auto"
+				:model="model"
+				:rules="rules"
+				ref="form"
+			>
+				<uv-form-item
+					label="选择医院"
+					prop="name"
+					:borderBottom="false"
+				>
+					<uni-data-select
+						v-model="model.name"
+						:localdata="list"
+						@change="change"
+					></uni-data-select>
+				</uv-form-item>
+				<uv-form-item
+					label="请选择预约日期"
+					prop="date"
+					:borderBottom="false"
+				>
+					<view class="flex flex-wrap" style="flex-wrap: wrap">
+						<view
+							class="item"
+							v-for="(item2, index2) in currentList"
+							:key="index2"
+							style="white-space: nowrap"
+							:class="{
+								active:
+									hospitalIndex === currentIndex &&
+									timeIndex === index2,
+								disabled: !item2.num,
+							}"
+							@click="handleSelected(index2)"
+						>
+							<view class="item-wrap">
+								<view class="item-content">
+									<text class="item-date">
+										{{ item2.date }}
+									</text>
+								</view>
+								<view class="item-num-content">
+									<text class="text"> 剩余: </text>
+									<uv-count-to
+										:startVal="0"
+										:endVal="item2.num"
+										:fontSize="17"
+										:duration="1000"
+										color="white"
+									></uv-count-to>
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
-				<view class="gap">
-					<view style="margin-top: 40rpx; width: 100%"></view>
-					<uv-gap bg-color="#f1f1f1" height="4"></uv-gap>
-					<view style="margin-top: 40rpx; width: 100%"></view>
-					<uv-button
-						type="primary"
-						text="确定"
-						@click="handleConfrim"
-					></uv-button>
-				</view>
-			</uv-vtabs-item>
-		</uv-vtabs>
+				</uv-form-item>
+			</uv-form>
+			<view class="submit-wrap" style="margin-top: 20px">
+				<uv-button
+					type="primary"
+					text="确定"
+					@click="handleConfrim"
+				></uv-button>
+			</view>
+		</view>
 
 		<Tabbar current-tab="appointment" />
 	</view>
@@ -83,6 +98,16 @@ import { onShow } from '@dcloudio/uni-app';
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } =
 	appointmentHook();
 
+const model = ref({
+	name: '',
+	date: '',
+});
+const rules = ref({
+	name: [{ required: true, message: '请选择医院' }],
+	date: [{ required: true, message: '请选择日期' }],
+});
+const form = ref();
+
 onMounted(() => {
 	const userInfo = uni.getStorageSync('b2cAuth');
 	if (isEmpty(userInfo)) {
@@ -91,35 +116,13 @@ onMounted(() => {
 	getHospitial();
 });
 
-const getSevenDayLater = () => {
-	const now = new Date();
-	now.setHours(23, 59, 59, 999);
-	let dateFormatPostcssSourceMap = (date) => {
-		const year = date.getFullYear();
-		const month = (date.getMonth() + 1).toString().padStart(2, '0');
-		const day = date.getDate().toString().padStart(2, '0');
-		return `${year}-${month}-${day}`;
-	};
-	let list = [];
-	// 判断当前小时
-	let startOffset = new Date().getHours() >= 14 ? 1 : 0;
-	for (let i = 0; i < 7; i++) {
-		const tempDate = new Date(
-			now.getTime() + (i + startOffset) * 24 * 60 * 60 * 1000,
-		);
-		const temp = {
-			date: dateFormatPostcssSourceMap(tempDate),
-			num: Math.floor(Math.random() * 200) + 1,
-		};
-		list.push(temp);
-	}
-	return list;
-};
-
 const list = computed(() => {
-	return hospitial.value.map((item) => ({
+	const result = hospitial.value.map((item) => ({
 		...item,
+		text: item.name,
+		value: item.rowid,
 	}));
+	return result;
 });
 const height = computed(() => {
 	return uni.getSystemInfoSync().windowHeight - uni.upx2px(200);
@@ -129,11 +132,11 @@ const currentList = computed(() => {
 	return list.value[currentIndex.value]?.children || [];
 });
 
-const change = (index) => {
-	console.log('当前选中tab索引：', index);
-	if (index === currentIndex.value) {
+const change = (id) => {
+	if (id === model.value.name) {
 		return;
 	}
+	const index = list.value.findIndex((item) => item.value === id);
 	currentIndex.value = index;
 	timeIndex.value = null;
 	const item = list.value[index];
@@ -152,44 +155,44 @@ const handleSelected = (index) => {
 	}
 	if (timeIndex.value !== index) {
 		timeIndex.value = index;
+		model.value.date = selected.rowid;
 	} else {
 		timeIndex.value = null;
+		model.value.date = null;
 	}
+};
 
-	hospitalIndex.value = currentIndex.value;
+const onSubmit = async (userInfo) => {
+	const selectedHospital = list.value[hospitalIndex.value];
+	const selectedTime = selectedHospital.children[timeIndex.value];
+
+	const params = {
+		row_id: selectedTime.rowid,
+		ybbh: userInfo.ybbh,
+	};
+	const [err, res] = await to(makeAppointment(params));
+	if (!isEmpty(err) || isEmpty(res)) {
+		return;
+	}
+	const { code, msg } = res;
+	if (code !== 'S200') {
+		uni.showToast({ icon: 'none', title: msg || '预约失败' });
+		return;
+	}
+	getHospitial();
+	uni.showModal({
+		title: '提交成功',
+		content: `您已预约${selectedHospital.name}，预约时间为${selectedTime.date}，请等待机构人员确认后按时前往体检！`,
+		showCancel: false,
+	});
 };
 // 提交事件
 const handleConfrim = () => {
-	checkLogin.checkAuthInfo(async (userInfo) => {
-		if (isEmpty(timeIndex.value)) {
-			uni.showToast({
-				title: '请选择预约时间',
-				icon: 'none',
-			});
-			return;
-		}
-		const selectedHospital = list.value[hospitalIndex.value];
-		const selectedTime = selectedHospital.children[timeIndex.value];
-		console.log('selectedTime', selectedTime);
-
-		const params = {
-			row_id: selectedTime.rowid,
-			ybbh: userInfo.ybbh,
-		};
-		const [err, res] = await to(makeAppointment(params));
-		if (!isEmpty(err) || isEmpty(res)) {
-			return;
-		}
-		const { code, msg } = res;
-		if (code !== 'S200') {
-			uni.showToast({ icon: 'none', title: msg || '预约失败' });
-			return;
-		}
-		getHospitial();
-		uni.showModal({
-			title: '提交成功',
-			content: `您已预约${selectedHospital.name}，预约时间为${selectedTime.date}，请等待机构人员确认后按时前往体检！`,
-			showCancel: false,
+	checkLogin.checkAuthInfo((userInfo) => {
+		form.value.validate().then((valid) => {
+			if (valid) {
+				onSubmit(userInfo);
+			}
 		});
 	});
 };
@@ -203,7 +206,7 @@ const handleConfrim = () => {
 		color: #333;
 	}
 	.item {
-		width: 33%;
+		width: 33.3%;
 		padding: 6rpx;
 
 		&-wrap {
@@ -252,6 +255,9 @@ const handleConfrim = () => {
 	}
 	.gap {
 		padding: 0 30rpx;
+	}
+	.uni-select__selector-item {
+		line-height: 1.5;
 	}
 }
 </style>
