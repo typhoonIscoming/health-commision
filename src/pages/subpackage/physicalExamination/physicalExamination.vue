@@ -64,7 +64,7 @@ import homeCardHook from '@/hooks/homeCard';
 import homeCardFee from '@/hooks/homeCardFee';
 import { isEmpty } from '@/utils';
 
-const { tjbgList } = homeCardHook();
+const { tjbgList, onPersonList } = homeCardHook();
 const { list: resultList, getData } = homeCardFee(false);
 
 const serviceType = ref('');
@@ -115,10 +115,17 @@ const arrowColor = (sortType, direction) => {
 		return '#E5E5E5';
 	}
 };
-const getPageData = () => {
-	setTimeout(() => {
-		loadStatus.value = 'noMore';
-	}, 1500);
+const pageIndex = ref(1);
+const pageSize = ref(20);
+// 获取数据
+const getPageData = (isfresh) => {
+	if (serviceType.value === 'tj') {
+		onPersonList({
+			isfresh,
+			pageIndex: pageIndex.value,
+			pageSize: pageSize.value,
+		});
+	}
 };
 
 const service = ref([

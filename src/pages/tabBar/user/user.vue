@@ -36,9 +36,9 @@ import { onShow } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import useLoginStore from '@/store/login';
 import Background from '@/components/Background.vue';
-import { to } from '@/utils';
 import HomeCard from '@/components/HomeCard.vue';
 import Tabbar from '@/components/Tabbar.vue';
+import { isEmpty, to, checkLogin } from '@/utils';
 
 defineOptions({
 	options: {
@@ -91,9 +91,11 @@ const handleRoute = (type) => {
 		reservation: '/pages/subpackage/reservation/reservation',
 	};
 	const route = routeMap[type];
-	if (route) {
-		uni.navigateTo({ url: route });
-	}
+	checkLogin.checkAuthInfo(() => {
+		if (route) {
+			uni.navigateTo({ url: route });
+		}
+	});
 };
 </script>
 <style lang="scss">

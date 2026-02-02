@@ -94,7 +94,6 @@ export default (auto = true) => {
 		};
 		// 获取视图配置
 		const [err, res] = await to(getWorksheetInfo(params));
-		console.log('====', res);
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
@@ -102,7 +101,6 @@ export default (auto = true) => {
 			(item) => item.name.indexOf('二次补偿列表') > -1,
 		);
 		const control = res.data.controls.find((item) => item.alias === 'grbh');
-		console.log('controlcontrol', control);
 		if (isEmpty(view) || isEmpty(control)) {
 			return;
 		}
@@ -118,8 +116,8 @@ export default (auto = true) => {
 			filters: [
 				{
 					controlId: control.controlId,
-					value: '62052661',
-					// value: userInfo.ybbh,
+					// value: '62052661',
+					value: userInfo.ybbh,
 					filterType: 2,
 					dataType: 2,
 					spliceType: 1,

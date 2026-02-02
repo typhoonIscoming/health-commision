@@ -6,6 +6,9 @@ import constants from '@/utils/constants';
 export default () => {
 	const num = ref(0);
 	const list = ref([]);
+
+	const personInfo = ref();
+	const worksheetInfo = ref();
 	// 人员维护信息
 	const onPersonList = async () => {
 		const data = {
@@ -48,6 +51,7 @@ export default () => {
 		}
 		const row = response.data.rows[0];
 		uni.setStorageSync('b2cUserInfo', row);
+		personInfo.value = row;
 		onWorksheetInfo(row);
 	};
 	const onWorksheetInfo = async (person, personParams) => {
@@ -127,5 +131,6 @@ export default () => {
 	return {
 		tjbgNum: num, // 体检报告数量
 		tjbgList: list,
+		onPersonList,
 	};
 };
