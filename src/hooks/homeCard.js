@@ -3,7 +3,7 @@ import { getWorksheetInfo, getWorksheetDetail, getRowDetail } from '@/api';
 import { to, isEmpty } from '@/utils';
 import constants from '@/utils/constants';
 
-export default () => {
+export default (auto) => {
 	const num = ref(0);
 	const list = ref([]);
 
@@ -52,9 +52,9 @@ export default () => {
 		const row = response.data.rows[0];
 		uni.setStorageSync('b2cUserInfo', row);
 		personInfo.value = row;
-		onWorksheetInfo(row);
+		return row;
 	};
-	const onWorksheetInfo = async (person, personParams) => {
+	const onWorksheetInfo = async () => {
 		const data = {
 			appKey: constants.appKey,
 			sign: constants.sign,
@@ -64,9 +64,29 @@ export default () => {
 		if (!isEmpty(err) || isEmpty(res) || !res.success) {
 			return;
 		}
-		onWorkDetail(res.data, person);
+		worksheetInfo.value = res.data;
+		return res.data;
 	};
-	const onWorkDetail = async (config, person) => {
+	const getList = async ({
+		pageIndex = 1,
+		pageSize = 20,
+		isfresh,
+		sorts = {},
+	}) => {
+		let person = personInfo.value;
+		let config = worksheetInfo.value;
+		if (isEmpty(person)) {
+			person = await onPersonList();
+			if (isEmpty(person)) {
+				return;
+			}
+		}
+		if (isEmpty(config)) {
+			config = await onWorksheetInfo();
+			if (isEmpty(config)) {
+				return;
+			}
+		}
 		const view = config.views.find((item) => item.name === '全部');
 		const control = config.controls.find(
 			(item) => item.controlName === '参保人员',
@@ -87,8 +107,9 @@ export default () => {
 				sign: constants.sign,
 				worksheetId: 'tjbg',
 				viewId: view.viewId,
-				pageSize: 20,
-				pageIndex: 1,
+				pageSize,
+				pageIndex,
+				...sorts, // 排序条件[isAsc是否升序， sortId排序id]
 				filters: [
 					{
 						controlId: control.controlId,
@@ -103,34 +124,26 @@ export default () => {
 		if (!isEmpty(err) || !res.success) {
 			return;
 		}
-		list.value = res.data.rows.map((item) => {
+		const result = res.data.rows.map((item) => {
 			const row = item[urlControl.controlId];
 			return { ...item, url: row };
 		});
-		num.value = res.data.total;
-		// onRowDetail(person);
-		// console.log('获取工作表详情成功', res, num.value);
-	};
-	// 获取行记录详情
-	const onRowDetail = async (config) => {
-		const params = {
-			appKey: constants.appKey,
-			sign: constants.sign,
-			worksheetId: 'txrydqrlb',
-			rowId: config.rowid,
-		};
-		const [err, res] = await to(getRowDetail(params));
-		if (isEmpty(err)) {
-			return;
+		if (isfresh) {
+			list.value = result;
+		} else {
+			list.value = list.value.concat(result);
 		}
-		// console.log('onRowDetail', res);
+		num.value = res.data.total;
+		return res.data;
 	};
 	onMounted(() => {
-		onPersonList();
+		if (auto) {
+			getList({});
+		}
 	});
 	return {
 		tjbgNum: num, // 体检报告数量
 		tjbgList: list,
-		onPersonList,
+		getList,
 	};
 };

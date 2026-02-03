@@ -43,8 +43,8 @@ import { checkLogin } from '@/utils/index.js';
 import homeCardHook from '../hooks/homeCard';
 import homeCardFee from '../hooks/homeCardFee';
 
-const { tjbgNum } = homeCardHook();
-const { list: resultList } = homeCardFee();
+const { tjbgNum } = homeCardHook(true);
+const { list: resultList } = homeCardFee(true);
 
 const service = ref([
 	{ label: '体检报告', count: 0, name: 'tj' },

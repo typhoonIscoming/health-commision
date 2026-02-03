@@ -2,7 +2,13 @@
 	<view class="physical">
 		<view class="physical-dropdown-wrapper">
 			<view class="physical-dropdown flex-center flex-between">
-				<view class="dropdown-item flex-center">
+				<view
+					class="dropdown-item flex-center"
+					:style="{
+						'justify-content':
+							serviceType !== 'tj' ? 'center' : 'flex-start',
+					}"
+				>
 					<text>按时间倒序</text>
 					<view
 						class="sort-wrapper flex-col"
@@ -20,7 +26,10 @@
 						/>
 					</view>
 				</view>
-				<view class="dropdown-item flex-center">
+				<view
+					v-if="serviceType !== 'tj'"
+					class="dropdown-item flex-center"
+				>
 					<text>服务时间</text>
 					<view
 						class="sort-wrapper flex-col"
@@ -64,12 +73,12 @@ import homeCardHook from '@/hooks/homeCard';
 import homeCardFee from '@/hooks/homeCardFee';
 import { isEmpty } from '@/utils';
 
-const { tjbgList, onPersonList } = homeCardHook();
+const { tjbgList, getList } = homeCardHook();
 const { list: resultList, getData } = homeCardFee(false);
 
 const serviceType = ref('');
 const type = ref('');
-const loadStatus = ref('noMore');
+const loadStatus = ref('nomore');
 
 const list = ref([]);
 
@@ -103,6 +112,8 @@ const handleClick = (sortType) => {
 	} else {
 		type.value = `${sortType}_down`;
 	}
+	pageIndex.value = 1;
+	getPageData(true);
 };
 const arrowColor = (sortType, direction) => {
 	if (!type.value) {
@@ -119,13 +130,63 @@ const pageIndex = ref(1);
 const pageSize = ref(20);
 // 获取数据
 const getPageData = (isfresh) => {
+	const [currentType, currentOrder] = type.value.split('_');
+	let sorts = {};
+	if (currentType) {
+		if (currentType === 'time') {
+			sorts = { ...sorts, sortId: 'bgrq' };
+		}
+	}
+	if (currentOrder) {
+		if (currentOrder === 'up') {
+			sorts = { ...sorts, isAsc: false };
+		} else {
+			sorts = { ...sorts, isAsc: true };
+		}
+	}
+	loadStatus.value = 'loading';
 	if (serviceType.value === 'tj') {
-		onPersonList({
+		getList({
 			isfresh,
 			pageIndex: pageIndex.value,
 			pageSize: pageSize.value,
+			sorts,
+		}).then((res) => {
+			if (!isEmpty(res)) {
+				const { total } = res;
+				if (pageIndex.value * pageSize.size < Number(total)) {
+					loadStatus.value = 'loadmore';
+				} else {
+					loadStatus.value = 'nomore';
+				}
+				pageIndex.value = pageIndex.value + 1;
+				return;
+			}
+			loadStatus.value = 'nomore';
 		});
+		return;
 	}
+	getData({
+		isfresh,
+		pageIndex: pageIndex.value,
+		pageSize: pageSize.value,
+		sorts,
+	}).then((list) => {
+		if (!isEmpty(list)) {
+			const { total } = list;
+			const current = list.find(
+				(item) => item.name === serviceType.value,
+			);
+			if (pageIndex.value * pageSize.size < current.length) {
+				loadStatus.value = 'loadmore';
+			} else {
+				loadStatus.value = 'nomore';
+			}
+			pageIndex.value = pageIndex.value + 1;
+			return;
+		}
+		loadStatus.value = 'nomore';
+	});
 };
 
 const service = ref([
@@ -137,7 +198,7 @@ const service = ref([
 
 onLoad((options) => {
 	serviceType.value = options.type;
-	getData();
+	getPageData();
 	const option = service.value.find((item) => item.name === options.type);
 	if (!isEmpty(option)) {
 		uni.setNavigationBarTitle({ title: `${option.label}记录` });
@@ -145,9 +206,9 @@ onLoad((options) => {
 });
 
 onPullDownRefresh(() => {
-	setTimeout(() => {
+	getPageData(true).then(() => {
 		uni.stopPullDownRefresh();
-	}, 1500);
+	});
 });
 onReachBottom(() => {
 	if (loadStatus.value === 'noMore') {
@@ -168,7 +229,7 @@ onReachBottom(() => {
 			flex: 1;
 			justify-content: center;
 			position: relative;
-			&:nth-last-child(1) {
+			&:nth-child(2) {
 				&::before {
 					content: '';
 					position: absolute;
