@@ -11,7 +11,7 @@
 		>
 			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice" />
 		</view>
-		<HomeHealthRecord />
+		<HomeHealthRecord type="tj" />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<UserCard ref="userCardModel" />
 		<Psychological />
@@ -19,6 +19,8 @@
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
+		<view style="margin-top: 20px" />
+		<HomeHealthRecord title="其他体检项" type="other" />
 		<Tabbar />
 	</view>
 </template>
