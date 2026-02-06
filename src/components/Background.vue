@@ -1,8 +1,8 @@
 <template>
 	<view class="page-bg">
 		<view class="right-circle"></view>
-		<view class="right-bottom-circle"></view>
-		<view class="left-bottom-circle"></view>
+		<!-- <view class="right-bottom-circle"></view>
+		<view class="left-bottom-circle"></view> -->
 	</view>
 </template>
 <style lang="scss">

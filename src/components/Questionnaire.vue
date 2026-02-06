@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view v-if="list.length" class="questionnaire card-radius page-gap">
+		<view v-if="list.length" class="questionnaire page-gap">
 			<Title title="问卷调查">
 				<!-- <text style="color: #4a4a4a">更多</text> -->
 			</Title>
@@ -39,8 +39,11 @@ onMounted(() => {
 </script>
 <style lang="scss">
 .questionnaire {
-	background: white;
+	// background: white;
 	padding-top: 30rpx;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 20rpx;
+	overflow: hidden;
 	.list-wrapper {
 		padding: 20rpx;
 		.satisfaction-item {
@@ -53,7 +56,7 @@ onMounted(() => {
 				color: #a6a6a6;
 			}
 			.label {
-				margin-bottom: 20rpx;
+				margin-bottom: 10rpx;
 				font-size: 28rpx;
 				font-weight: bold;
 			}

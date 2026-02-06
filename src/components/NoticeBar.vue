@@ -3,11 +3,20 @@
 		<view v-if="props.list.length" class="publicize-wrapper page-gap">
 			<view>
 				<Title title="新闻公告">
-					<text style="color: #4a4a4a" @click="handleMore">更多</text>
+					<view style="display: flex; align-items: center">
+						<text style="color: #4a4a4a" @click="handleMore">
+							更多
+						</text>
+						<uv-icon name="arrow-right" size="15"></uv-icon>
+					</view>
 				</Title>
 			</view>
 			<view class="notice">
-				<image src="../static/home/notice.png" mode="widthFix" style="width: 120rpx;margin-left: 20rpx;" />
+				<image
+					src="../static/home/notice.png"
+					mode="widthFix"
+					style="width: 120rpx; margin-left: 20rpx"
+				/>
 				<uv-notice-bar
 					:text="notice"
 					:icon="false"
@@ -31,9 +40,9 @@ const { noticeList, getList } = homeNoticebar();
 const props = defineProps({
 	list: {
 		type: Array,
-		default: () => []
-	}
-})
+		default: () => [],
+	},
+});
 
 const notice = computed(() => {
 	return props.list.map((item) => item.biaoti);
@@ -95,15 +104,19 @@ onMounted(() => {
 <style lang="scss">
 .publicize-wrapper {
 	margin-top: 40rpx;
-	margin-bottom: 40rpx;
+	// margin-bottom: 40rpx;
 	padding: 20rpx 0;
 	// background: white;
-	background: #e8f3ff;
+	// background: #e8f3ff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 20rpx;
+	overflow: hidden;
+	background: #ffffff;
 	.notice {
-		margin: 40rpx 20rpx 0;
+		// margin: 40rpx 20rpx 0;
+		margin-top: 16px;
 		display: flex;
 		align-items: center;
-		background: #ffffff;
 	}
 }
 </style>

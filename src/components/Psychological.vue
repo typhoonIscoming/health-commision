@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view v-if="list.length" class="psychoLogical card-radius page-gap">
+		<view v-if="list.length" class="psychoLogical page-gap">
 			<Title title="心理测评"></Title>
 			<view class="list-wrapper">
 				<view
@@ -39,6 +39,9 @@ onMounted(() => {
 .psychoLogical {
 	background: white;
 	padding-top: 30rpx;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 20rpx;
+	overflow: hidden;
 	.list-wrapper {
 		padding: 20rpx;
 		.satisfaction-item {

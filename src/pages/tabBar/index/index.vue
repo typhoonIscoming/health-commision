@@ -14,13 +14,14 @@
 		<HomeHealthRecord type="tj" />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<UserCard ref="userCardModel" />
+		<view style="margin-top: 20px"></view>
 		<Psychological />
 		<view style="margin-top: 20px"></view>
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
 		<view style="margin-top: 20px" />
-		<HomeHealthRecord title="其他体检项" type="other" />
+		<HomeHealthRecord title="其他服务记录" type="other" />
 		<Tabbar />
 	</view>
 </template>

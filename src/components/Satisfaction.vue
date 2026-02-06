@@ -1,9 +1,6 @@
 <template>
 	<view>
-		<view
-			v-if="evaluteList.length"
-			class="satisfaction card-radius page-gap"
-		>
+		<view v-if="evaluteList.length" class="satisfaction page-gap">
 			<Title title="满意度调查"></Title>
 			<view class="list-wrapper">
 				<view
@@ -42,8 +39,11 @@ onMounted(() => {
 </script>
 <style lang="scss">
 .satisfaction {
-	background: white;
+	// background: white;
 	padding-top: 30rpx;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 20rpx;
+	overflow: hidden;
 	.list-wrapper {
 		padding: 20rpx;
 		.satisfaction-item {
