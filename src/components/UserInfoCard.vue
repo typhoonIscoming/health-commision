@@ -58,7 +58,7 @@ const userInfo = ref();
 
 onShow(() => {
 	const auth = uni.getStorageSync('b2cAuth');
-	console.log('user-info-card onshow', auth);
+	// console.log('user-info-card onshow', auth);
 	if (!isEmpty(auth)) {
 		userInfo.value = auth;
 		return;

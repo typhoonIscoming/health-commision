@@ -115,3 +115,10 @@ export const editRow = (data) => {
 		data,
 	});
 };
+
+// 获取微信token
+export const getWechatToken = () => {
+	return request({
+		url: `/api/workflow/hooks/${constants.hookGetAccessToken}`,
+	});
+};

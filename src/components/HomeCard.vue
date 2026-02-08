@@ -2,13 +2,18 @@
 	<view class="home-card">
 		<view class="page-gap flex-center" @click="handleDetail">
 			<uv-avatar
-				:text="userInfo && userInfo.name ? userInfo.name.substr(0, 1) : ''"
+				:text="
+					userInfo && userInfo.name ? userInfo.name.substr(0, 1) : ''
+				"
 				:size="props.size"
+				bg-color="rgb(152, 209, 238)"
 				style="border: 1px solid white"
 			></uv-avatar>
 			<view class="person-detail">
 				<view class="name-wrapper flex-center">
-					<text class="name">{{ userInfo ? userInfo.name : '去登录' }}</text>
+					<text class="name">{{
+						userInfo ? userInfo.name : '去登录'
+					}}</text>
 					<view v-if="userInfo" class="status">已绑定</view>
 				</view>
 				<view class="phone">{{ userInfo?.mob_num }}</view>
@@ -53,7 +58,7 @@ const handleOnShow = () => {
 	// 可以在这里获取和更新用户信息
 	const auth = uni.getStorageSync('b2cAuth');
 	if (isEmpty(auth)) {
-		userInfo.value = null
+		userInfo.value = null;
 		return;
 	}
 	userInfo.value = auth;
@@ -67,6 +72,7 @@ onShow(() => {
 .home-card {
 	margin-bottom: 30rpx;
 	padding: 40rpx 0;
+	background: linear-gradient(to right, #e5f6f5, #c3ede7);
 	.person-detail {
 		margin-left: 16px;
 		min-height: 80rpx;

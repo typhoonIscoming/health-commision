@@ -1,11 +1,15 @@
 <template>
 	<view class="user">
-		<NavBar title="我的" />
-		<Background />
+		<NavBar
+			title="我的"
+			bgColor="#09C3AD"
+			:titleStyle="{ color: '#ffffff' }"
+		/>
+		<!-- <Background /> -->
 		<HomeCard :size="60" />
 		<view class="entry-wrapper">
 			<view class="menus-wrapper">
-				<view
+				<!-- <view
 					v-for="(item, i) in menus"
 					:key="i"
 					:class="item.label"
@@ -24,7 +28,40 @@
 							size="42rpx"
 						/>
 					</view>
-				</view>
+				</view> -->
+				<uv-list>
+					<uv-list-item
+						v-for="(item, i) in menus"
+						:key="i"
+						clickable
+						:border="i !== 0"
+						show-arrow
+						:thumb="item.icon"
+						:title="item.name"
+						@click="handleRoute(item.label)"
+					>
+						<template #header>
+							<view
+								class="service-row-icon iconfont"
+								:class="`icon-${item.icon} ${item.label}`"
+								style="margin-right: 20rpx"
+							>
+							</view>
+						</template>
+						<template #footer>
+							<view
+								style="
+									display: flex;
+									align-items: center;
+									justify-content: flex-end;
+									color: #a7a7a7;
+								"
+							>
+								{{ item.desc }}
+							</view>
+						</template>
+					</uv-list-item>
+				</uv-list>
 			</view>
 		</view>
 		<Tabbar current-tab="user" />
@@ -102,18 +139,49 @@ const handleRoute = (type) => {
 .user {
 	position: relative;
 	.entry-wrapper {
-		padding: 0 16px;
+		margin: 0 16px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		border-radius: 20rpx;
+		padding: 16px 0;
+		background: #ffffff;
 		.uv-line {
 			display: none;
 		}
+		.uv-list-item__container {
+			padding-right: 0 !important;
+		}
+		.service-row-icon {
+			// color: #09c3ad;
+			width: 55rpx;
+			height: 55rpx;
+			border-radius: 50%;
+			// border: 1px solid #e7e6e4;
+			// border: 1px solid #09c3ad;
+			// border: 1px dashed rgba(0, 0, 0, 0.25);
+			position: relative;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: white;
+			&.record {
+				font-size: 38rpx;
+				background: linear-gradient(to bottom, #ff6168, #fe8489);
+			}
+			&.evaluate {
+				background: linear-gradient(to bottom, #67b9e0, #54d2d8);
+			}
+			&.reservation {
+				background: linear-gradient(to bottom, #f9a556, #fabf8d);
+			}
+		}
 	}
 	.menus-wrapper {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		justify-content: space-between;
+		// display: flex;
+		// flex-wrap: wrap;
+		// gap: 10px;
+		// justify-content: space-between;
 		position: relative;
-		z-index: 9;
+		width: 100%;
 	}
 	.menus-item {
 		width: 100%;

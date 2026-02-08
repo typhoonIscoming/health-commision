@@ -1,10 +1,11 @@
 <template>
 	<view class="navbar">
 		<uv-navbar
-			:bgColor="`rgba(255,255,255,${opacity})`"
+			:bgColor="bgColor ? bgColor : `rgba(255,255,255,${opacity})`"
 			:title="props.title"
 			placeholder
 			:safeAreaInsetTop="true"
+			:titleStyle="titleStyle"
 		>
 			<template v-slot:left><slot name="left" /></template>
 		</uv-navbar>
@@ -21,6 +22,14 @@ const props = defineProps({
 	opacity: {
 		type: [Number, String],
 		default: 0,
+	},
+	bgColor: {
+		type: String,
+		default: '',
+	},
+	titleStyle: {
+		type: Object,
+		default: () => ({}),
 	},
 });
 

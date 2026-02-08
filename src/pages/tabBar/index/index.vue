@@ -13,7 +13,8 @@
 		</view>
 		<HomeHealthRecord type="tj" />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
-		<UserCard ref="userCardModel" />
+		<view style="margin-top: 20px"></view>
+		<HealthEducation />
 		<view style="margin-top: 20px"></view>
 		<Psychological />
 		<view style="margin-top: 20px"></view>
@@ -22,6 +23,7 @@
 		<Questionnaire />
 		<view style="margin-top: 20px" />
 		<HomeHealthRecord title="其他服务记录" type="other" />
+		<UserCard ref="userCardModel" />
 		<Tabbar />
 	</view>
 </template>
@@ -40,6 +42,7 @@ import Psychological from '@/components/Psychological.vue';
 import UserInfoCard from '@/components/UserInfoCard.vue';
 import { isEmpty } from '@/utils';
 import homeNoticebar from '@/hooks/home-noticebar';
+import HealthEducation from '@/components/HealthEducation.vue';
 
 const { noticeList, getList } = homeNoticebar();
 

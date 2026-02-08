@@ -10,6 +10,7 @@ export default {
 	hookDownloadReport: 'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
 	hookMakeAppointment: 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
 	mobileVerifyCodeKey: 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi',
+	hookGetAccessToken: 'Njk4NWExOGZmOThkZGFkZjdjYWRmMjc1', // 获取公众号token
 
 	// 表名
 	rylb: '人员列表', // 人员列表视图名称

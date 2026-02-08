@@ -19,7 +19,7 @@ export default () => {
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
-		console.log('满意度调查getWorksheet', res);
+		// console.log('满意度调查getWorksheet', res);
 		worksheetInfo.value = res.data;
 		return res.data;
 	};
@@ -75,7 +75,7 @@ export default () => {
 			],
 		};
 		const [err, res] = await to(getWorksheetDetail(params));
-		console.log('满意度调查列表数据', params, res);
+		// console.log('满意度调查列表数据', params, res);
 		if (err || !res.success || isEmpty(res.data)) {
 			return;
 		}
