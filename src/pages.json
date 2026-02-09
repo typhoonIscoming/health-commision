@@ -111,6 +111,12 @@
 					"style": {
 						"navigationBarTitleText": "服务协议"
 					}
+				},
+				{
+					"path": "education/education",
+					"style": {
+						"navigationBarTitleText": "健康宣教列表"
+					}
 				}
 			]
 		}

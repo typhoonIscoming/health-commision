@@ -49,7 +49,7 @@ export default () => {
 		});
 		const curr = hospitial.value[currentIndex.value];
 		if (!isEmpty(curr)) {
-			getHospitialDateList(curr);
+			// getHospitialDateList(curr);
 		}
 	};
 
@@ -108,12 +108,42 @@ export default () => {
 		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
 			return;
 		}
-		let list = res.data.rows;
-		// 排序--将当天及以后7天的数据返回
-		list = list.sort((a, b) => {
-			return +new Date(a.yyrq) - +new Date(b.yyrq);
+		let list = res.data.rows || [];
+		// 先按日期合并（相同日期合并剩余预约数），再排序并取前 9 条
+		const mergedMap = {};
+		list.forEach((row) => {
+			const date = row.yyrq;
+			if (!date) return;
+			const num = row.dqhsyyys ? Number(row.dqhsyyys) : 0;
+			if (!mergedMap[date]) {
+				mergedMap[date] = {
+					...row,
+					dqhsyyys: num,
+				};
+			} else {
+				mergedMap[date].dqhsyyys =
+					(mergedMap[date].dqhsyyys || 0) + num;
+			}
 		});
-		// console.log('list', list);
+		// 根据当前时间确定起始日期：
+		// - 若当前时间 >= 14:00，则从第二天开始取
+		// - 否则包含今天（从今天开始取）
+		const now = new Date();
+		const baseDate = new Date();
+		baseDate.setHours(0, 0, 0, 0);
+		if (now.getHours() >= 14) {
+			baseDate.setDate(baseDate.getDate() + 1);
+		}
+		list = Object.keys(mergedMap)
+			.filter((key) => {
+				const d = new Date(key);
+				d.setHours(0, 0, 0, 0);
+				return d.getTime() >= baseDate.getTime();
+			})
+			.sort((a, b) => +new Date(a) - +new Date(b))
+			.map((key) => mergedMap[key])
+			.slice(0, 9);
+		// console.log('merged list', list);
 		hospitial.value = hospitial.value.map((item) => {
 			if (item.rowid === currHospitial.rowid) {
 				return {

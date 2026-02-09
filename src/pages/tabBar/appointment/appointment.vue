@@ -34,6 +34,7 @@
 					></uni-data-select>
 				</uv-form-item>
 				<uv-form-item
+					v-if="currentList.length"
 					label="请选择预约日期"
 					prop="date"
 					:borderBottom="false"
@@ -133,9 +134,6 @@ const currentList = computed(() => {
 });
 
 const change = (id) => {
-	if (id === model.value.name) {
-		return;
-	}
 	const index = list.value.findIndex((item) => item.value === id);
 	currentIndex.value = index;
 	timeIndex.value = null;
@@ -165,7 +163,10 @@ const handleSelected = (index) => {
 const onSubmit = async (userInfo) => {
 	const selectedHospital = list.value[hospitalIndex.value];
 	const selectedTime = selectedHospital.children[timeIndex.value];
-
+	if (isEmpty(selectedTime)) {
+		uni.showToast({ icon: 'none', title: '请选择预约时间' });
+		return;
+	}
 	const params = {
 		row_id: selectedTime.rowid,
 		ybbh: userInfo.ybbh,
@@ -258,6 +259,9 @@ const handleConfrim = () => {
 	}
 	.uni-select__selector-item {
 		line-height: 1.5;
+		& ~ .uni-select__selector-item {
+			margin-top: 30rpx;
+		}
 	}
 }
 </style>

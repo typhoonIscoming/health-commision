@@ -62,7 +62,7 @@
 						@click="handleRoute(item)"
 					>
 						<template #header>
-							<view class="service-row-icon">
+							<view class="service-row-icon" :class="item.name">
 								<image
 									:src="item.icon"
 									mode="aspectFill"
@@ -100,9 +100,9 @@ import { checkLogin } from '@/utils/index.js';
 import homeCardHook from '../hooks/homeCard';
 import homeCardFee from '../hooks/homeCardFee';
 
-import zhuyuan from '../static/card/zhuyuan.png';
-import menzhen from '../static/card/menzhen.png';
-import manbing from '../static/card/manbing.png';
+import zhuyuan from '@/static/card/zhuyuan.png';
+import menzhen from '@/static/card/menzhen.png';
+import manbing from '@/static/card/manbing.png';
 
 const props = defineProps({
 	title: {
@@ -238,21 +238,15 @@ const handleRoute = (item) => {
 		.uv-list-item__container {
 			padding-right: 0 !important;
 		}
-		.uv-list-item {
-			&:nth-child(3n-2) {
-				.service-row-icon {
-					background: #fa6e6b;
-				}
+		.service-row-icon {
+			&.mz {
+				background: #fa6e6b;
 			}
-			&:nth-child(3n-1) {
-				.service-row-icon {
-					background: #52b9ef;
-				}
+			&.mzmb {
+				background: #52b9ef;
 			}
-			&:nth-child(3n) {
-				.service-row-icon {
-					background: #fda658;
-				}
+			&.zy {
+				background: #fda658;
 			}
 		}
 		.item-count {

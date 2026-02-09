@@ -122,3 +122,12 @@ export const getWechatToken = () => {
 		url: `/api/workflow/hooks/${constants.hookGetAccessToken}`,
 	});
 };
+
+// 获取微信公众号文章列表
+export const getWechatArticle = (token, data) => {
+	return request({
+		url: `https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token=${token}`,
+		method: 'post',
+		data,
+	});
+};
