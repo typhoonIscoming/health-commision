@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="education page-gap">
+		<view v-if="list.length" class="education page-gap">
 			<TitleRow title="健康宣教" />
 			<view class="education-wrap"> </view>
 		</view>
@@ -10,7 +10,7 @@
 import TitleRow from './Title.vue';
 import educationHook from '../hooks/education';
 
-const {} = educationHook();
+const { list } = educationHook();
 </script>
 <style lang="scss">
 .education {

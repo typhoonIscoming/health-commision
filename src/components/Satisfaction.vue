@@ -22,14 +22,17 @@ import { ref, onMounted } from 'vue';
 import Title from './Title.vue';
 import satisfactionHook from '@/hooks/satisfactionHook';
 import evaluteHook from '@/hooks/evaluteHook';
+import { checkLogin } from '@/utils/index.js';
 
 const { evaluteList, getData } = evaluteHook();
 
 const { worksheetInfo, getWorksheet } = satisfactionHook();
 
 const handleClick = (item) => {
-	uni.navigateTo({
-		url: `/pages/subpackage/questionnaire/questionnaire?id=${item.rowid}&type=edit`,
+	checkLogin.checkAuthInfo(() => {
+		uni.navigateTo({
+			url: `/pages/subpackage/questionnaire/questionnaire?id=${item.rowid}&type=edit`,
+		});
 	});
 };
 

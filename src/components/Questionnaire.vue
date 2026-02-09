@@ -22,13 +22,16 @@
 import { ref, onMounted } from 'vue';
 import Title from './Title.vue';
 import psychoLogicalHook from '@/hooks/psychoLogicalHook';
+import { checkLogin } from '@/utils/index.js';
 
 const { list, getData } = psychoLogicalHook();
 
 const handleClick = (item) => {
 	if (item.ymdz) {
-		uni.navigateTo({
-			url: `/pages/subpackage/thridParty/thridParty?url=${item.ymdz}`,
+		checkLogin.checkAuthInfo(() => {
+			uni.navigateTo({
+				url: `/pages/subpackage/thridParty/thridParty?url=${item.ymdz}`,
+			});
 		});
 	}
 };
