@@ -119,7 +119,12 @@ export const editRow = (data) => {
 // 获取微信token
 export const getWechatToken = () => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookGetAccessToken}`,
+		url: `/api/workflow/hooks2/${constants.hookGetAccessToken}`,
+		method: 'post',
+		data: {
+			appKey: constants.appKey,
+			sign: constants.sign,
+		},
 	});
 };
 
@@ -127,6 +132,24 @@ export const getWechatToken = () => {
 export const getWechatArticle = (token, data) => {
 	return request({
 		url: `https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token=${token}`,
+		method: 'post',
+		data,
+	});
+};
+
+// 获取微信公众号素材列表
+export const getMaterialList = (token, data) => {
+	return request({
+		url: `https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=${token}`,
+		method: 'post',
+		data,
+	});
+};
+
+// 获取群发的文章
+export const getArtical = (token, data) => {
+	return request({
+		url: `https://api.weixin.qq.com/cgi-bin/datacube/getarticlesummary?access_token=${token}`,
 		method: 'post',
 		data,
 	});

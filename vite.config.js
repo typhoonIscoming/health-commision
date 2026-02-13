@@ -20,6 +20,11 @@ export default defineConfig({
 				changeOrigin: true,
 				// rewrite: (path) => path.replace(/^\/api/, '/api'),
 			},
+			'/cgi-bin': {
+				target: 'https://api.weixin.qq.com',
+				changeOrigin: true,
+				// rewrite: (path) => path.replace(/^\/api/, '/api'),
+			},
 		},
 	},
 });
