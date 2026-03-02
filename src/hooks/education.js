@@ -53,13 +53,16 @@ export default () => {
 			}
 			accessToken.value = result;
 		}
-		const [err, res] = await to(getMaterialList(accessToken.value, data));
+		const [err, res] = await to(
+			getMaterialList({ ...data, access_token: accessToken.value }),
+		);
 		console.log('getMaterialData', res);
 		if (!isEmpty(err)) {
 			return;
 		}
 		const { total_count, item } = res;
-		const result = item.map((o) => ({
+		const parseItem = item ? JSON.parse(item) : [];
+		const result = parseItem.map((o) => ({
 			...o,
 			name: o.name ? o.name : '未命名公众号文章',
 			type: data.type,

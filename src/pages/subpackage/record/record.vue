@@ -134,7 +134,7 @@
 </template>
 <script setup>
 import { onShow } from '@dcloudio/uni-app';
-import { ref, defineOptions } from 'vue';
+import { ref, defineOptions, computed } from 'vue';
 
 defineOptions({
 	options: {
@@ -173,22 +173,45 @@ const handleUnbind = () => {
 			});
 		},
 	});
-}
+};
 // 获取用户信息
 const fetchUserInfo = () => {
 	const auth = uni.getStorageSync('b2cAuth') || {};
 	model.value.name = auth.name || '';
-	model.value.phone = auth.mob_num || '';
 	model.value.age = auth.age || '';
 	model.value.gender = auth.sex || '';
+	let phone = auth.mob_num || '';
+	if (phone.startsWith('+86')) {
+		phone = phone.slice(3);
+	}
+	if (phone.length < 7) {
+		model.value.phone = phone;
+	} else {
+		model.value.phone =
+			'+86' +
+			phone.substring(0, 3) +
+			'*'.repeat(phone.length - 7) +
+			phone.substring(phone.length - 4);
+	}
 	// 生日优先取auth.birthday，否则根据car_id推算
 	let birthday = auth.birthday;
 	if (!birthday && auth.car_id) {
 		const id = auth.car_id + '';
 		if (id.length === 18) {
-			birthday = id.substring(6, 10) + '-' + id.substring(10, 12) + '-' + id.substring(12, 14);
+			birthday =
+				id.substring(6, 10) +
+				'-' +
+				id.substring(10, 12) +
+				'-' +
+				id.substring(12, 14);
 		} else if (id.length === 15) {
-			birthday = '19' + id.substring(6, 8) + '-' + id.substring(8, 10) + '-' + id.substring(10, 12);
+			birthday =
+				'19' +
+				id.substring(6, 8) +
+				'-' +
+				id.substring(8, 10) +
+				'-' +
+				id.substring(10, 12);
 		}
 	}
 	model.value.birthday = birthday || '';
@@ -197,9 +220,17 @@ const fetchUserInfo = () => {
 	model.value.personStatus = auth.ryzt || '';
 	model.value.civilServantLevel = auth.gwyjb || '';
 	model.value.treatmentLevel = auth.dyjb || '';
-	model.value.idCard = auth.car_id || '';
+	const id = auth.car_id || '';
+	if (id.length < 8) {
+		model.value.idCard = id || '';
+	}
+	const result =
+		id.substring(0, 4) +
+		'*'.repeat(id.length - 8) +
+		id.substring(id.length - 4);
+	model.value.idCard = result;
 	console.log('用户信息：', auth, model.value);
-}
+};
 
 onShow(() => {
 	fetchUserInfo();

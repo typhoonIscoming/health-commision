@@ -11,6 +11,7 @@ export default {
 	hookMakeAppointment: 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
 	mobileVerifyCodeKey: 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi',
 	hookGetAccessToken: 'Njk4NWExOGZmOThkZGFkZjdjYWRmMjc1', // 获取公众号token
+	hookMeterialList: 'Njk5ZTY1NThiNzdmYTU2MDliNWQwM2M5', // 获取物料列表
 
 	// 表名
 	rylb: '人员列表', // 人员列表视图名称

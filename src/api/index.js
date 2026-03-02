@@ -138,11 +138,16 @@ export const getWechatArticle = (token, data) => {
 };
 
 // 获取微信公众号素材列表
-export const getMaterialList = (token, data) => {
+export const getMaterialList = (data) => {
 	return request({
-		url: `https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=${token}`,
+		url: `/api/workflow/hooks2/${constants.hookMeterialList}`,
+		// url: `https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=${token}`,
 		method: 'post',
-		data,
+		data: {
+			...data,
+			appKey: constants.appKey,
+			sign: constants.sign,
+		},
 	});
 };
 
