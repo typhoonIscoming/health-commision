@@ -1,5 +1,21 @@
 <template>
 	<view class="userAuth">
+		<view class="user-auth-tip flex flex-center" style="padding: 0 10rpx">
+			<image
+				src="@/static/home/verify.png"
+				mode="aspectFit"
+				style="width: 30rpx; height: 30rpx"
+			/>
+			<text
+				style="
+					margin-left: 10rpx;
+					color: var(--uni-primary-text-color);
+					font-size: 28rpx;
+				"
+			>
+				用于身份认证，请填写您的真实信息
+			</text>
+		</view>
 		<view class="form-wrap">
 			<uv-form
 				labelPosition="left"
@@ -9,116 +25,183 @@
 				label-width="100"
 				:label-style="{ color: '#303030' }"
 			>
-				<uv-form-item prop="name" label="姓名" borderBottom>
-					<uv-input
-						v-model="model.name"
-						border="none"
-						placeholder="请输入姓名"
-						:placeholderStyle="{ color: '#7C7C7C' }"
-					>
-					</uv-input>
-				</uv-form-item>
-				<uv-form-item prop="phone" label="手机号码" borderBottom>
-					<uv-input
-						v-model="model.phone"
-						type="number"
-						border="none"
-						placeholder="请输入手机号"
-						:placeholderStyle="{ color: '#7C7C7C' }"
-					>
-					</uv-input>
-				</uv-form-item>
-				<uv-form-item prop="verify" label="手机验证码" borderBottom>
-					<uv-input
-						v-model="model.verify"
-						type="number"
-						border="none"
-						placeholder="请输入手机验证码"
-						:placeholderStyle="{ color: '#7C7C7C' }"
-					>
-						<template v-slot:suffix>
-							<uv-code
-								ref="uCode"
-								@change="codeChange"
-								seconds="20"
-								changeText="X秒重新获取"
-							></uv-code>
-							<uv-button
-								:text="verifyText"
-								type="primary"
-								size="mini"
-							>
-								获取验证码
-							</uv-button>
+				<view class="base-info-wrap">
+					<uv-form-item prop="name" label="姓名" borderBottom>
+						<uv-input
+							v-model="model.name"
+							placeholderClass="place-holder"
+							inputAlign="right"
+							border="none"
+							placeholder="请输入姓名"
+							placeholderStyle="color: #7C7C7C"
+						>
+						</uv-input>
+					</uv-form-item>
+					<uv-form-item prop="phone" label="手机号码" borderBottom>
+						<uv-input
+							v-model="model.phone"
+							placeholderClass="place-holder"
+							inputAlign="right"
+							type="number"
+							border="none"
+							placeholder="请输入手机号"
+							placeholderStyle="color: #7C7C7C"
+						>
+						</uv-input>
+					</uv-form-item>
+					<uv-form-item prop="verify" label="手机验证码" borderBottom>
+						<uv-input
+							v-model="model.verify"
+							placeholderClass="place-holder"
+							inputAlign="right"
+							type="number"
+							border="none"
+							placeholder="请输入手机验证码"
+							placeholderStyle="color: #7C7C7C"
+						>
+							<template v-slot:suffix>
+								<uv-code
+									ref="uCode"
+									@change="codeChange"
+									seconds="20"
+									changeText="X秒重新获取"
+								></uv-code>
+								<uv-button
+									:text="verifyText"
+									type="primary"
+									size="mini"
+									shape="circle"
+									color="#58B384"
+								>
+									发送验证码
+								</uv-button>
+							</template>
+						</uv-input>
+					</uv-form-item>
+					<uv-form-item label="证件类型" borderBottom>
+						<uv-input
+							v-model="model.idCardType"
+							readonly
+							placeholderClass="place-holder"
+							inputAlign="right"
+							type="idcard"
+							border="none"
+							placeholder="请选择证件类型"
+							placeholderStyle="color: #7C7C7C"
+						>
+						</uv-input>
+						<template v-slot:right>
+							<uv-icon name="arrow-right"></uv-icon>
 						</template>
-					</uv-input>
-				</uv-form-item>
-				<uv-form-item prop="idCard" label="身份证号" borderBottom>
-					<uv-input
-						v-model="model.idCard"
-						type="idcard"
-						border="none"
-						placeholder="请输入身份证号"
-						:placeholderStyle="{ color: '#7C7C7C' }"
-					>
-					</uv-input>
-				</uv-form-item>
-				<uv-form-item prop="recognition">
-					<view style="width: 100%">
-						<view
-							style="
-								font-weight: bold;
-								font-size: 32rpx;
-								margin: 40rpx 0;
-							"
+					</uv-form-item>
+					<uv-form-item prop="idCard" label="证件号码">
+						<uv-input
+							v-model="model.idCard"
+							placeholderClass="place-holder"
+							inputAlign="right"
+							type="idcard"
+							border="none"
+							placeholder="请输入身份证号"
+							placeholderStyle="color: #7C7C7C"
 						>
-							为确保信息安全，需由本人进行验证
-						</view>
+						</uv-input>
+					</uv-form-item>
+				</view>
+				<view class="face-verify-wrap">
+					<uv-form-item prop="recognition">
 						<view
-							class="flex recognition-box"
-							@click="handleStartSoterAuthentication"
+							class="flex-col flex-between flex-center"
+							style="width: 100%"
 						>
-							<uni-icons
-								custom-prefix="iconfont"
-								type="icon-Gc_101_line-FaceRecognition"
-								size="42rpx"
-								color="#2D8AF8"
-							/>
-							<text style="margin-left: 10rpx; font-size: 28rpx">
-								请进行人脸识别
-							</text>
-							<view
-								v-if="model.recognition"
-								style="margin-left: 40rpx"
+							<!-- <view
+								style="
+									font-weight: bold;
+									font-size: 32rpx;
+									margin: 40rpx 0;
+								"
 							>
-								<text v-if="model.recognition === 'success'">
-									<uni-icons
-										type="checkmarkempty"
-										size="30rpx"
-										color="#2D8AF8"
-									/>
-								</text>
-								<text v-else-if="model.recognition === 'fail'">
-									<uni-icons
-										type="closeempty"
-										size="30rpx"
-										color="#2D8AF8"
-									/>
-								</text>
+								为确保信息安全，需由本人进行验证
+							</view> -->
+							<image
+								src="@/static/home/verify-icon.png"
+								mode="aspectFit"
+								style="width: 140rpx; height: 140rpx"
+							/>
+							<view>
+								<uv-button
+									type="primary"
+									color="#68D7AA"
+									shape="circle"
+									style="margin-top: 30rpx"
+									:customStyle="{
+										padding: '10rpx 50rpx',
+										lineHeight: '1',
+										fontSize: '24rpx',
+										height: '60rpx',
+									}"
+									@click="handleStartSoterAuthentication"
+								>
+									人脸识别
+								</uv-button>
 							</view>
-							<view class="arrow-wrap">
+							<!-- <view
+								class="flex recognition-box"
+								@click="handleStartSoterAuthentication"
+							>
 								<uni-icons
-									type="right"
-									size="20"
-									color="#7c7c7c"
-								></uni-icons>
-							</view>
+									custom-prefix="iconfont"
+									type="icon-Gc_101_line-FaceRecognition"
+									size="42rpx"
+									color="#2D8AF8"
+								/>
+								<text
+									style="margin-left: 10rpx; font-size: 28rpx"
+								>
+									请进行人脸识别
+								</text>
+								<view
+									v-if="model.recognition"
+									style="margin-left: 40rpx"
+								>
+									<text
+										v-if="model.recognition === 'success'"
+									>
+										<uni-icons
+											type="checkmarkempty"
+											size="30rpx"
+											color="#2D8AF8"
+										/>
+									</text>
+									<text
+										v-else-if="model.recognition === 'fail'"
+									>
+										<uni-icons
+											type="closeempty"
+											size="30rpx"
+											color="#2D8AF8"
+										/>
+									</text>
+								</view>
+								<view class="arrow-wrap">
+									<uni-icons
+										type="right"
+										size="20"
+										color="#7c7c7c"
+									></uni-icons>
+								</view>
+							</view> -->
 						</view>
-					</view>
-				</uv-form-item>
+					</uv-form-item>
+				</view>
 			</uv-form>
+
 			<view style="margin-top: 60rpx">
-				<uv-button type="primary" @click="handleSubmit">
+				<uv-button
+					type="primary"
+					color="#58B384"
+					shape="circle"
+					@click="handleSubmit"
+				>
 					提交
 				</uv-button>
 			</view>
@@ -136,6 +219,7 @@ const model = ref({
 	name: '',
 	phone: '',
 	idCard: '',
+	idCardType: '身份证',
 	verify: '',
 	recognition: 'success',
 });
@@ -284,9 +368,38 @@ const handleBindUserInfo = () => {
 </script>
 <style lang="scss">
 .userAuth {
+	padding: 20rpx;
+	min-height: 100vh;
+	background-color: #f7f7f7;
 	.form-wrap {
-		width: 90%;
-		margin: 0 auto;
+		margin-top: 30rpx;
+		.base-info-wrap {
+			background-color: #ffffff;
+			border-radius: 16rpx;
+			padding: 20rpx;
+		}
+		.uv-form-item__body__left__content__label {
+			color: #3d3d3d !important;
+			font-weight: bold;
+		}
+		.uv-form-item__body__right__message {
+			text-align: right;
+		}
+		.place-holder {
+			color: red;
+		}
+		.uni-input-input {
+			// color: #999999;
+			&:placeholder {
+				color: #999999;
+			}
+		}
+		.face-verify-wrap {
+			background-color: #ffffff;
+			border-radius: 16rpx;
+			padding: 0 20rpx 20rpx;
+			margin-top: 30rpx;
+		}
 		.recognition-box {
 			padding: 20rpx;
 			color: #7c7c7c;

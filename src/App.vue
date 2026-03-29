@@ -59,6 +59,7 @@ page {
 /* h5低版本浏览兼容 */
 page {
 	--mall4j-safe-area-inset-bottom: env(safe-area-inset-bottom);
+	--uni-primary-text-color: #58b383; // 主要文字颜色
 }
 /* #ifdef H5 */
 page {
