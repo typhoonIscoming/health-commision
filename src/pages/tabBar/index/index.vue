@@ -101,6 +101,7 @@ const handleDetail = () => {
 
 <style lang="scss">
 .home {
+	min-height: 100vh;
 	padding-bottom: 16px;
 	.satisfaction-wrapper {
 		margin-bottom: 40rpx;

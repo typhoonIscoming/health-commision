@@ -117,6 +117,12 @@
 					"style": {
 						"navigationBarTitleText": "健康宣教列表"
 					}
+				},
+				{
+					"path": "publicize/publicize",
+					"style": {
+						"navigationBarTitleText": "健康宣教详情"
+					}
 				}
 			]
 		}

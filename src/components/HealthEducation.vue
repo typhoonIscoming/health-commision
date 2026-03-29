@@ -50,7 +50,8 @@ const handleMore = () => {
 
 const handleDetail = (item) => {
 	uni.navigateTo({
-		url: `/pages/subpackage/thridParty/thridParty?url=${item.url}`,
+		// url: `/pages/subpackage/thridParty/thridParty?url=${item.url}`,
+		url: `/pages/subpackage/publicize/publicize?url=${item.url}`,
 	});
 };
 </script>

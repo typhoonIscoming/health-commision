@@ -1,34 +1,17 @@
 <template>
-	<view class="user">
-		<NavBar
-			title="我的"
-			bgColor="#09C3AD"
-			:titleStyle="{ color: '#ffffff' }"
-		/>
-		<!-- <Background /> -->
-		<HomeCard :size="60" />
+	<view
+		class="user"
+		:style="{
+			backgroundImage: `url(${navBg})`,
+			backgroundSize: '100% auto',
+			backgroundRepeat: 'no-repeat',
+			backgroundPositionY: `${0}px`,
+			paddingBottom: `${safeInsetBottom}px`,
+		}"
+	>
+		<NavBar title="我的" :bgImage="navBg" />
 		<view class="entry-wrapper">
 			<view class="menus-wrapper">
-				<!-- <view
-					v-for="(item, i) in menus"
-					:key="i"
-					:class="item.label"
-					class="menus-item"
-					@click="handleRoute(item.label)"
-				>
-					<view class="menus-detail">
-						<view class="menus-name">{{ item.name }}</view>
-						<view class="menus-desc">{{ item.desc }}</view>
-					</view>
-					<view class="menus-icon">
-						<uni-icons
-							custom-prefix="iconfont"
-							:type="`icon-${item.icon}`"
-							:color="item.color"
-							size="42rpx"
-						/>
-					</view>
-				</view> -->
 				<uv-list>
 					<uv-list-item
 						v-for="(item, i) in menus"
@@ -76,6 +59,7 @@ import Background from '@/components/Background.vue';
 import HomeCard from '@/components/HomeCard.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
+import navBg from '@/static/home/nav-bg.png';
 
 defineOptions({
 	options: {
@@ -134,16 +118,23 @@ const handleRoute = (type) => {
 		}
 	});
 };
+const safeInsetBottom = ref(0);
+onBeforeMount(() => {
+	const systemInfo = uni.getSystemInfoSync();
+	// #ifdef MP-WEIXIN
+	safeInsetBottom.value = systemInfo.safeAreaInsets.bottom + 51;
+	// #endif
+});
 </script>
 <style lang="scss">
 .user {
-	position: relative;
+	min-height: 100vh;
 	.entry-wrapper {
 		margin: 0 16px;
+		margin-top: 500rpx;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		border-radius: 20rpx;
 		padding: 16px 0;
-		background: #ffffff;
 		.uv-line {
 			display: none;
 		}

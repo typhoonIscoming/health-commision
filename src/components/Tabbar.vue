@@ -20,19 +20,6 @@
 						"
 					/>
 				</view>
-				<!--'#D67E5A'-->
-				<!-- <view v-else style="height: 36rpx;width: 100%;position: relative;">
-					<view class="appointItem-wrap">
-						<view class="appointItem">
-							<uni-icons
-								custom-prefix="iconfont"
-								:type="`icon-${item.className}`"
-								size="42rpx"
-								:color="currentTab === item.tabName ? '#D67E5A' : '#999'"
-							/>
-						</view>
-					</view>
-				</view> -->
 				<text
 					class="tab-text"
 					:class="{ active: currentTab === item.tabName }"
@@ -69,7 +56,7 @@ const tabBarList = ref([
 	{
 		text: '我的',
 		url: '/pages/tabBar/user/user',
-		tabName: 'user',
+		tabName: 'userTab',
 		className: 'gerenzhongxin',
 	},
 ]);
@@ -120,7 +107,7 @@ const initTabList = () => {
 	left: 0px;
 	width: 100%;
 	background-color: #f7f7fa;
-	padding-bottom: var(--mall4j-safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -130,6 +117,7 @@ const initTabList = () => {
 	.tab-con {
 		width: 100%;
 		display: flex;
+		flex-direction: row;
 		.tab-item {
 			position: relative;
 			flex: 1;
