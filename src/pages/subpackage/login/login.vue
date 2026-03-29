@@ -1,18 +1,35 @@
 <template>
-	<view class="page-container">
-		<view class="logo">
-			<image src="@/static/home/logo.png" mode="heightFix" />
+	<view
+		class="page-container"
+		:style="{
+			backgroundImage: `url(${navBg})`,
+			backgroundSize: '100% auto',
+			backgroundRepeat: 'no-repeat',
+			backgroundPositionY: `${0}px`,
+			paddingBottom: `${safeInsetBottom}px`,
+		}"
+	>
+		<NavBar :bgImage="navBg" />
+
+		<view class="logo flex-col flex-center">
+			<image
+				src="@/static/home/login-logo.png"
+				mode="heightFix"
+				style="height: 60rpx"
+			/>
+			<image
+				src="@/static/home/login-icon.png"
+				mode="heightFix"
+				style="height: 300rpx; width: 100%; margin-top: 20rpx"
+			/>
 		</view>
 		<view class="login-form">
 			<view v-if="loginStatus === 'fastLogin'" class="fast-login">
-				<!-- <button
-					open-type="getPhoneNumber"
-					class="authorized-btn"
-					@getphonenumber="onGetPhoneNumberLogin"
+				<uv-button
+					@click="handlePreLogin"
+					shape="circle"
+					color="#58B384"
 				>
-					手机号快速登录
-				</button> -->
-				<uv-button @click="handlePreLogin" color="#f81b1a">
 					微信快速登录
 				</uv-button>
 			</view>
@@ -58,10 +75,11 @@
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
-				<view style="margin-top: 20rpx">
+				<view style="margin-top: 40rpx">
 					<uv-button
 						class="authorized-btn"
-						color="#f81b1a"
+						color="var(--uni-primary-text-color)"
+						shape="circle"
 						@click="onLogin"
 					>
 						登录
@@ -69,21 +87,22 @@
 				</view>
 			</view>
 		</view>
-		<view class="service-wrap">
-			<label class="statement-label" @tap.stop="onHandlePrivacyClick">
-				<uv-checkbox
-					:checked="isPrivacy === 1"
-					:size="20"
-					activeColor="#f81a1a"
-					@change="onHandlePrivacyClick"
-				></uv-checkbox>
-				<view style="color: #999999" class="statement-content">
-					若手机号未注册将进入注册流程，注册即视为同意
-					<text @tap.stop="onToTermsOfService('serviceTerms')">
-						《服务条款》
-					</text>
-				</view>
-			</label>
+		<view class="other-login">
+			<view
+				class="login-item flex-center"
+				style="gap: 10rpx"
+				@tap="otherLogin"
+			>
+				<text>
+					{{
+						loginStatus === 'fastLogin' ? '验证码' : '微信快速'
+					}}登录
+				</text>
+				<uv-icon
+					name="arrow-rightward"
+					color="var(--uni-primary-text-color)"
+				/>
+			</view>
 		</view>
 		<view v-if="showAgreementPop" class="agreement-pop">
 			<view class="mask" />
@@ -104,28 +123,21 @@
 			</view>
 		</view>
 		<view class="footer">
-			<view class="other-login-text"> 其他登录方式 </view>
-			<view class="other-login">
-				<view
-					v-if="loginStatus === 'phoneLogin'"
-					class="login-item"
-					@tap="otherLogin('fastLogin')"
-				>
-					<image
-						src="../../../static/home/fast-login.png"
-						mode="heightFix"
-					/>
-				</view>
-				<view
-					v-else-if="loginStatus === 'fastLogin'"
-					class="login-item"
-					@tap="otherLogin('phoneLogin')"
-				>
-					<image
-						src="../../../static/home/mobile-phone.png"
-						mode="heightFix"
-					/>
-				</view>
+			<view class="service-wrap">
+				<label class="statement-label" @tap.stop="onHandlePrivacyClick">
+					<uv-checkbox
+						:checked="isPrivacy === 1"
+						:size="20"
+						activeColor="var(--uni-primary-text-color)"
+						@change="onHandlePrivacyClick"
+					></uv-checkbox>
+					<view style="color: #999999" class="statement-content">
+						若手机号未注册将进入注册流程，注册即视为同意
+						<text @tap.stop="onToTermsOfService('serviceTerms')">
+							《服务条款》
+						</text>
+					</view>
+				</label>
 			</view>
 		</view>
 	</view>
@@ -135,6 +147,11 @@ import { ref, defineOptions } from 'vue';
 import { fastLogin, checkUserAuth, getMobileVerifyCode } from '@/api';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
+import NavBar from '@/components/NavBar.vue';
+import navBg from '@/static/home/nav-bg.png';
+import safeInset from '@/hooks/safeInset';
+
+const { safeInsetBottom } = safeInset();
 
 defineOptions({
 	options: {
@@ -142,7 +159,7 @@ defineOptions({
 	},
 });
 
-const loginStatus = ref('fastLogin');
+const loginStatus = ref('fastLogin'); // fastLogin-快速登录，phoneLogin-手机号登录
 
 const model = ref({
 	phone: '',
@@ -178,8 +195,9 @@ const form = ref();
 
 let timer = null;
 
-const otherLogin = (type) => {
-	loginStatus.value = type;
+const otherLogin = () => {
+	loginStatus.value =
+		loginStatus.value === 'fastLogin' ? 'phoneLogin' : 'fastLogin';
 };
 
 const onGetPhoneNumberLogin = (e) => {
@@ -425,20 +443,17 @@ const onToTermsOfService = () => {
 .page-container {
 	padding-top: 100rpx;
 	background: white;
-	min-height: 100vh;
 	box-sizing: border-box;
 	padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 	position: relative;
 	/* #ifdef H5 */
-	min-height: calc(100vh - constant(safe-area-inset-top));
-	min-height: calc(100vh - 44px);
+	min-height: calc(100vh - env(safe-area-inset-bottom));
 	/* #endif */
+	min-height: 100vh;
 	.logo {
 		display: flex;
 		width: 100%;
 		justify-content: center;
-		height: 99rpx;
-		margin-bottom: 101rpx;
 		object-fit: contain;
 		image {
 			display: block;
@@ -452,25 +467,28 @@ const onToTermsOfService = () => {
 	}
 	.authorized-btn {
 		width: 100%;
-		height: 88rpx;
-		line-height: 88rpx;
 		margin: 0 auto;
 		text-align: center;
-		background-color: #f81b1a;
-		border: 1rpx solid #f81b1a;
-		color: #fff;
-		border-radius: 14rpx;
-		font-size: 30rpx;
-		margin-top: 80rpx;
+	}
+	.fast-login {
+		margin-top: 60rpx;
 	}
 	.phone-login {
 		.uv-form-item {
-			padding: 0 10px;
+			border-radius: 40px;
 			& ~ .uv-form-item {
-				margin-top: 40rpx;
+				margin-top: 30rpx;
 			}
-			border: 1px solid #e1e1e1;
-			border-radius: 14rpx;
+			.uv-form-item__body {
+				border: 1px solid #e1e1e1;
+				border-radius: 40rpx;
+				background: #ffffff;
+				padding: 10px 20rpx;
+				margin-bottom: 10px;
+			}
+			// border: 1px solid #e1e1e1;
+			// background: #ffffff;
+			position: relative;
 		}
 		.prefix {
 			position: relative;
@@ -488,41 +506,24 @@ const onToTermsOfService = () => {
 			}
 		}
 		.suffix {
-			color: #f81a1a;
+			color: var(--uni-primary-text-color);
+		}
+	}
+	.other-login {
+		display: flex;
+		justify-content: center;
+		.login-item {
+			color: var(--uni-primary-text-color);
+			font-size: 28rpx;
 		}
 	}
 	.footer {
 		position: absolute;
 		left: 0;
 		right: 0;
-		bottom: calc(160rpx + env(safe-area-inset-bottom));
+		bottom: calc(100rpx + env(safe-area-inset-bottom));
 		margin: auto;
 		width: 100%;
-		.other-login-text {
-			display: flex;
-			justify-content: center;
-			margin-bottom: 40rpx;
-			color: #999;
-			&::before {
-				content: '——————';
-				color: #e1e1e1;
-				margin-right: 16rpx;
-			}
-			&::after {
-				content: '——————';
-				color: #e1e1e1;
-				margin-left: 16rpx;
-			}
-		}
-		.other-login {
-			display: flex;
-			justify-content: center;
-			image {
-				width: 80rpx;
-				height: 80rpx;
-				margin-bottom: 10rpx;
-			}
-		}
 	}
 
 	.agreement-pop {
@@ -563,7 +564,7 @@ const onToTermsOfService = () => {
 				padding: 30rpx 0;
 				line-height: 1.5;
 				> text {
-					color: #f81a1a;
+					color: env(--uni-primary-text-color);
 				}
 			}
 			.btn-con {
@@ -572,10 +573,10 @@ const onToTermsOfService = () => {
 				justify-content: space-between;
 				.btn {
 					padding: 10rpx 60rpx;
-					border: 1rpx solid #f81a1a;
+					border: 1rpx solid var(--uni-primary-text-color);
 					border-radius: 40rpx;
 					font-size: 26rpx;
-					background-color: #f81a1a;
+					background-color: var(--uni-primary-text-color);
 					color: #fff;
 				}
 				.btn.plain {
@@ -600,7 +601,7 @@ const onToTermsOfService = () => {
 				font-size: 28rpx;
 			}
 			text {
-				color: #f81a1a;
+				color: env(--uni-primary-text-color);
 				cursor: pointer;
 				font-size: 28rpx;
 			}
