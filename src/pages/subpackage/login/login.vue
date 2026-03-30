@@ -2,7 +2,7 @@
 	<view
 		class="page-container"
 		:style="{
-			backgroundImage: `url(${navBg})`,
+			background: `url(${navBg})`,
 			backgroundSize: '100% auto',
 			backgroundRepeat: 'no-repeat',
 			backgroundPositionY: `${0}px`,
@@ -10,7 +10,6 @@
 		}"
 	>
 		<NavBar :bgImage="navBg" />
-
 		<view class="logo flex-col flex-center">
 			<image
 				src="@/static/home/login-logo.png"
@@ -148,7 +147,7 @@ import { fastLogin, checkUserAuth, getMobileVerifyCode } from '@/api';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
 import NavBar from '@/components/NavBar.vue';
-import navBg from '@/static/home/nav-bg.png';
+import navBg from '@/static/home/login-nav.jpg';
 import safeInset from '@/hooks/safeInset';
 
 const { safeInsetBottom } = safeInset();
@@ -442,7 +441,6 @@ const onToTermsOfService = () => {
 <style lang="scss">
 .page-container {
 	padding-top: 100rpx;
-	background: white;
 	box-sizing: border-box;
 	padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 	position: relative;

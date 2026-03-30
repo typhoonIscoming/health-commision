@@ -1,19 +1,28 @@
 <template>
 	<view class="home-card">
-		<view class="page-gap flex-center" @click="handleDetail">
+		<view
+			class="page-gap user-wrapper"
+			:class="[
+				userInfo
+					? 'has-user-info'
+					: 'no-user-info flex-col flex-between flex-center',
+			]"
+			@click="handleDetail"
+		>
 			<uv-avatar
 				:text="
 					userInfo && userInfo.name ? userInfo.name.substr(0, 1) : ''
 				"
+				:src="initAvatar"
 				:size="props.size"
 				bg-color="rgb(152, 209, 238)"
-				style="border: 1px solid white"
+				style="border: 1px solid transparent"
 			></uv-avatar>
 			<view class="person-detail">
 				<view class="name-wrapper flex-center">
-					<text class="name">{{
-						userInfo ? userInfo.name : '去登录'
-					}}</text>
+					<text class="name">
+						{{ userInfo ? userInfo.name : '登录/注册' }}
+					</text>
 					<view v-if="userInfo" class="status">已绑定</view>
 				</view>
 				<view class="phone">{{ userInfo?.mob_num }}</view>
@@ -25,6 +34,8 @@
 import { defineProps } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import { isEmpty } from '@/utils';
+import initAvatar from '@/static/home/avatar.png';
+
 const props = defineProps({
 	size: {
 		type: [Number, String],
@@ -70,14 +81,25 @@ onShow(() => {
 </script>
 <style lang="scss">
 .home-card {
-	margin-bottom: 30rpx;
-	padding: 40rpx 0;
-	background: linear-gradient(to right, #e5f6f5, #c3ede7);
+	// background: linear-gradient(to right, #e5f6f5, #c3ede7);
+	.user-wrapper {
+		gap: 12rpx;
+	}
+	.has-user-info {
+		.person-detail {
+			margin-left: 16px;
+		}
+	}
+	.no-user-info {
+		.person-detail {
+			.name {
+				color: #4d4d4d;
+			}
+		}
+	}
 	.person-detail {
-		margin-left: 16px;
-		min-height: 80rpx;
 		.name {
-			font-size: 28rpx;
+			font-size: 16px;
 			font-weight: bold;
 		}
 		.status {

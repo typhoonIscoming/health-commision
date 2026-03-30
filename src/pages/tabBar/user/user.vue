@@ -9,7 +9,14 @@
 			paddingBottom: `${safeInsetBottom}px`,
 		}"
 	>
-		<NavBar title="我的" :bgImage="navBg" />
+		<NavBar :bgImage="navBg">
+			<template #left>
+				<text class="nav-title" style="color: #fff">新疆保健服务</text>
+			</template>
+		</NavBar>
+		<view class="user-info-wrap">
+			<HomeCard />
+		</view>
 		<view class="entry-wrapper">
 			<view class="menus-wrapper">
 				<uv-list>
@@ -25,10 +32,14 @@
 					>
 						<template #header>
 							<view
-								class="service-row-icon iconfont"
-								:class="`icon-${item.icon} ${item.label}`"
+								class="service-row-icon"
 								style="margin-right: 20rpx"
 							>
+								<image
+									:src="item.iconName"
+									mode="aspectFit"
+									style="width: 40rpx; height: 40rpx"
+								/>
 							</view>
 						</template>
 						<template #footer>
@@ -54,25 +65,22 @@
 import { ref, computed, defineOptions } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
-import useLoginStore from '@/store/login';
-import Background from '@/components/Background.vue';
 import HomeCard from '@/components/HomeCard.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
-import navBg from '@/static/home/nav-bg.png';
+import navBg from '@/static/home/home-bg.png';
+
+import beianxinxi from '@/static/home/beianxinxi.png';
+import wodepingjia from '@/static/home/wodepingjia.png';
+import wodeyuyue from '@/static/home/wodeyuyue.png';
 
 defineOptions({
 	options: {
 		styleIsolation: 'shared',
 	},
 });
+const userInfo = ref(null);
 
-const cellStyle = ref({
-	background: 'white',
-	paddingTop: '15px',
-	paddingBottom: '15px',
-	marginBottom: '20px',
-});
 const menus = ref([
 	{
 		name: '备案信息',
@@ -80,6 +88,7 @@ const menus = ref([
 		label: 'record',
 		icon: 'beianxinxi',
 		color: '#FDA062',
+		iconName: beianxinxi,
 	},
 	{
 		name: '我的评价',
@@ -87,6 +96,7 @@ const menus = ref([
 		label: 'evaluate',
 		icon: 'pingjia',
 		color: '#67B5F9',
+		iconName: wodepingjia,
 	},
 	// {
 	// 	name: '我的问卷',
@@ -101,6 +111,7 @@ const menus = ref([
 		label: 'reservation',
 		icon: 'wodeyuyue',
 		color: '#FC668B',
+		iconName: wodeyuyue,
 	},
 ]);
 
@@ -118,6 +129,16 @@ const handleRoute = (type) => {
 		}
 	});
 };
+
+const handleOnShow = () => {
+	// 可以在这里获取和更新用户信息
+	const auth = uni.getStorageSync('b2cAuth');
+	if (isEmpty(auth)) {
+		userInfo.value = null;
+		return;
+	}
+	userInfo.value = auth;
+};
 const safeInsetBottom = ref(0);
 onBeforeMount(() => {
 	const systemInfo = uni.getSystemInfoSync();
@@ -125,16 +146,24 @@ onBeforeMount(() => {
 	safeInsetBottom.value = systemInfo.safeAreaInsets.bottom + 51;
 	// #endif
 });
+
+onShow(() => {
+	// 可以在这里获取和更新用户信息
+	handleOnShow();
+});
 </script>
 <style lang="scss">
 .user {
 	min-height: 100vh;
+	.user-info-wrap {
+		padding: 10rpx 16px;
+	}
 	.entry-wrapper {
 		margin: 0 16px;
-		margin-top: 500rpx;
+		margin-top: 20rpx;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		border-radius: 20rpx;
-		padding: 16px 0;
+		overflow: hidden;
 		.uv-line {
 			display: none;
 		}
@@ -142,13 +171,9 @@ onBeforeMount(() => {
 			padding-right: 0 !important;
 		}
 		.service-row-icon {
-			// color: #09c3ad;
 			width: 55rpx;
 			height: 55rpx;
 			border-radius: 50%;
-			// border: 1px solid #e7e6e4;
-			// border: 1px solid #09c3ad;
-			// border: 1px dashed rgba(0, 0, 0, 0.25);
 			position: relative;
 			display: flex;
 			justify-content: center;
@@ -167,12 +192,16 @@ onBeforeMount(() => {
 		}
 	}
 	.menus-wrapper {
-		// display: flex;
-		// flex-wrap: wrap;
-		// gap: 10px;
-		// justify-content: space-between;
 		position: relative;
 		width: 100%;
+		padding-right: 12px;
+		background-color: #fff;
+		// #ifdef H5
+		padding-right: 0;
+		// #endif
+		.uv-icon-wrapper {
+			padding-right: 15px !important;
+		}
 	}
 	.menus-item {
 		width: 100%;
