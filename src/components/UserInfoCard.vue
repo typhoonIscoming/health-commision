@@ -12,7 +12,8 @@
 			</view>
 		</view>
 		<view style="position: relative; height: 120px">
-			<view v-if="!userInfo" class="unlogin">
+			<HomeCard />
+			<!-- <view v-if="!userInfo" class="unlogin">
 				<view class="circle-icon" @click="handleLogin">
 					<uv-icon name="plus"></uv-icon>
 				</view>
@@ -45,13 +46,15 @@
 						style="width: 80px; height: 100%"
 					/>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="card-bottom">中华人民共和国国家卫生委员会监制</view>
 	</view>
 </template>
 <script setup>
 import { ref } from 'vue';
+import HomeCard from '@/components/HomeCard.vue';
+
 const emits = defineEmits(['onClick']);
 
 const userInfo = ref();
@@ -90,11 +93,11 @@ const handleDetail = () => {
 .UserInfoCard {
 	margin: 16px;
 	padding: 10px;
-	background: #e3eab5 url('../static/home/card-bg.png') no-repeat;
+	// background: #e3eab5 url('../static/home/card-bg.png') no-repeat;
+	background: linear-gradient(134deg, #ffffff 0%, #dcf9ed 85%);
 	background-size: contain;
 	background-position-x: 50%;
 	border-radius: 8px;
-	// min-height: 150px;
 	position: relative;
 	display: flex;
 	flex-direction: column;

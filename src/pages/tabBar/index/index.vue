@@ -1,9 +1,32 @@
 <template>
 	<view
 		class="home"
-		:style="{ width: '100%', paddingBottom: `${paddingBottom}px` }"
+		:style="{
+			// background: `url(${navBg})`,
+			backgroundSize: '100% auto',
+			backgroundRepeat: 'no-repeat',
+			backgroundPositionY: `${0}px`,
+			paddingBottom: `${safeInsetBottom + 20}px`,
+		}"
 	>
-		<NavBar title="自治区二次补偿信息服务" :opacity="1" />
+		<NavBar :bgImage="navBg">
+			<template #left>
+				<text class="nav-title" style="color: #fff"
+					>自治区二次补偿信息服务</text
+				>
+			</template>
+		</NavBar>
+		<image
+			:src="navBg"
+			mode="widthFix"
+			class="page-bg__base"
+			:style="{
+				position: 'absolute',
+				top: `${0}px`,
+				left: 0,
+				width: '100%',
+			}"
+		/>
 		<UserInfoCard @onClick="handleDetail" />
 		<view
 			v-if="noticeItem"
@@ -23,6 +46,8 @@
 		<Questionnaire />
 		<view style="margin-top: 20px" />
 		<HomeHealthRecord title="其他服务记录" type="other" />
+		<view style="margin-top: 20px" />
+		<PsychologicalCard />
 		<UserCard ref="userCardModel" />
 		<Tabbar />
 	</view>
@@ -43,6 +68,11 @@ import UserInfoCard from '@/components/UserInfoCard.vue';
 import { isEmpty } from '@/utils';
 import homeNoticebar from '@/hooks/home-noticebar';
 import HealthEducation from '@/components/HealthEducation.vue';
+import navBg from '@/static/home/home-bg.png';
+import PsychologicalCard from '@/components/PsychologicalCard.vue';
+import safeInset from '@/hooks/safeInset';
+
+const { safeInsetBottom } = safeInset();
 
 const { noticeList, getList } = homeNoticebar();
 
@@ -103,6 +133,7 @@ const handleDetail = () => {
 .home {
 	min-height: 100vh;
 	padding-bottom: 16px;
+	position: relative;
 	.satisfaction-wrapper {
 		margin-bottom: 40rpx;
 		padding: 20rpx;
