@@ -37,15 +37,17 @@
 		<HomeHealthRecord type="tj" />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<view style="margin-top: 20px"></view>
-		<HealthEducation />
-		<view style="margin-top: 20px"></view>
-		<Psychological />
+		<!-- <HealthEducation />
+		<view style="margin-top: 20px"></view> -->
+		<!-- <Psychological />
 		<view style="margin-top: 20px"></view>
 		<Satisfaction />
 		<view style="margin-top: 20px"></view>
 		<Questionnaire />
 		<view style="margin-top: 20px" />
-		<HomeHealthRecord title="其他服务记录" type="other" />
+		<HomeHealthRecord title="其他服务记录" type="other" /> -->
+		<view style="margin-top: 20px" />
+		<FamousDoctor />
 		<view style="margin-top: 20px" />
 		<PsychologicalCard />
 		<UserCard ref="userCardModel" />
@@ -70,6 +72,7 @@ import homeNoticebar from '@/hooks/home-noticebar';
 import HealthEducation from '@/components/HealthEducation.vue';
 import navBg from '@/static/home/home-bg.png';
 import PsychologicalCard from '@/components/PsychologicalCard.vue';
+import FamousDoctor from '@/components/FamousDoctor.vue';
 import safeInset from '@/hooks/safeInset';
 
 const { safeInsetBottom } = safeInset();

@@ -1,6 +1,9 @@
 <template>
 	<view class="title-wrapper">
-		<text style="font-weight: bold; font-size: 32rpx">
+		<text
+			class="title-text"
+			style="font-weight: bold; font-size: 32rpx; color: #3d3d3d"
+		>
 			{{ props.title }}
 		</text>
 		<slot />
@@ -19,21 +22,24 @@ const props = defineProps({
 <style lang="scss">
 .title-wrapper {
 	position: relative;
-	padding-left: 20rpx;
-	padding-right: 20rpx;
+	// padding-left: 20rpx;
+	// padding-right: 20rpx;
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
-	&::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 2px;
-		height: 100%;
-		background: #0f62fb;
-		border-radius: 5px;
-		overflow: hidden;
+	.title-text {
+		position: relative;
+		&::before {
+			content: '';
+			position: absolute;
+			left: 2px;
+			bottom: 0;
+			width: 60rpx;
+			height: 4px;
+			background: #58b384;
+			border-radius: 5px;
+			overflow: hidden;
+		}
 	}
 }
 </style>

@@ -4,12 +4,18 @@
 		<view
 			style="
 				height: 60rpx;
-				background: #ecf5ff;
-				color: #909193;
+				background: linear-gradient(
+					to right,
+					#e1f5e9,
+					#ebfae5 50%,
+					#e7fadf 100%
+				);
+				color: #58b384;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				text-align: center;
+				padding: 40rpx 0;
 			"
 		>
 			<text style="font-size: 28rpx"> 请选择您要预约的医院及时间 </text>
@@ -22,16 +28,17 @@
 				:rules="rules"
 				ref="form"
 			>
-				<uv-form-item
-					label="选择医院"
-					prop="name"
-					:borderBottom="false"
-				>
-					<uni-data-select
-						v-model="model.name"
-						:localdata="list"
-						@change="change"
-					></uni-data-select>
+				<uv-form-item label="" prop="name" :borderBottom="false">
+					<view style="width: 100%">
+						<view style="margin-bottom: 20rpx">
+							<Title title="选择医院" />
+						</view>
+						<uni-data-select
+							v-model="model.name"
+							:localdata="list"
+							@change="change"
+						></uni-data-select>
+					</view>
 				</uv-form-item>
 				<uv-form-item
 					v-if="currentList.length"
@@ -94,6 +101,7 @@ import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
 import appointmentHook from '@/hooks/appointment';
 import { makeAppointment } from '@/api';
+import Title from '@/components/Title.vue';
 import { onShow } from '@dcloudio/uni-app';
 
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } =
