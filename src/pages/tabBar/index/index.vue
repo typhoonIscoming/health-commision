@@ -34,7 +34,8 @@
 		>
 			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice" />
 		</view>
-		<HomeHealthRecord type="tj" />
+		<!-- <HomeHealthRecord type="tj" /> -->
+		<HealthService />
 		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
 		<view style="margin-top: 20px"></view>
 		<!-- <HealthEducation />
@@ -70,6 +71,7 @@ import UserInfoCard from '@/components/UserInfoCard.vue';
 import { isEmpty } from '@/utils';
 import homeNoticebar from '@/hooks/home-noticebar';
 import HealthEducation from '@/components/HealthEducation.vue';
+import HealthService from '@/components/HealthService.vue';
 import navBg from '@/static/home/home-bg.png';
 import PsychologicalCard from '@/components/PsychologicalCard.vue';
 import FamousDoctor from '@/components/FamousDoctor.vue';

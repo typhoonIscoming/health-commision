@@ -170,6 +170,9 @@ onShow(() => {
 		.uv-list-item__container {
 			padding-right: 0 !important;
 		}
+		.uv-list-item__container {
+			padding-right: 0 !important;
+		}
 		.service-row-icon {
 			width: 55rpx;
 			height: 55rpx;
