@@ -2,6 +2,7 @@
 	<view class="psychological-card page-gap">
 		<view
 			class="card-content psychological-test flex flex-center flex-between"
+			@click="handleClick('xinli')"
 		>
 			<image
 				src="@/static/home/xinliceping.png"
@@ -13,7 +14,10 @@
 				<view class="desc">心理健康状况测评</view>
 			</view>
 		</view>
-		<view class="card-content questionnaire flex flex-center flex-between">
+		<view
+			class="card-content questionnaire flex flex-center flex-between"
+			@click="handleClick('wenjuan')"
+		>
 			<image
 				src="@/static/home/wenjuandiaocha.png"
 				mode="aspectFit"
@@ -27,7 +31,32 @@
 	</view>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import psychoLogicalHook from '@/hooks/psychoLogicalHook';
+const { list, getData } = psychoLogicalHook();
+
+const handleClick = (type) => {
+	let url = '';
+	if (type === 'xinli') {
+		const item = list.value.find((i) => i.ymdz);
+		url = item ? item.ymdz : '';
+	} else if (type === 'wenjuan') {
+		const item = list.value.find((i) => i.ymdz);
+		url = item ? item.ymdz : '';
+	}
+	if (url) {
+		checkLogin.checkAuthInfo(() => {
+			uni.navigateTo({
+				url: `/pages/subpackage/thridParty/thridParty?url=${url}`,
+			});
+		});
+	}
+};
+
+onMounted(() => {
+	getData();
+});
+</script>
 <style lang="scss" scoped>
 .psychological-card {
 	display: flex;

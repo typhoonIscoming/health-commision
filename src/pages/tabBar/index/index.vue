@@ -42,7 +42,7 @@
 		</view>
 		<!-- <HomeHealthRecord type="tj" /> -->
 		<HealthService />
-		<NoticeBar v-if="newsRestList.length" :list="newsRestList" />
+		<!-- <NoticeBar v-if="newsRestList.length" :list="newsRestList" /> -->
 		<view style="margin-top: 20px"></view>
 		<!-- <HealthEducation />
 		<view style="margin-top: 20px"></view> -->

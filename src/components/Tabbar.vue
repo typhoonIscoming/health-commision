@@ -9,7 +9,7 @@
 				@click="onSwitchTab(item)"
 			>
 				<view class="tab-icon">
-					<uni-icons
+					<!-- <uni-icons
 						custom-prefix="iconfont"
 						:type="`icon-${item.className}`"
 						size="36rpx"
@@ -18,6 +18,14 @@
 								? 'rgb(87, 190, 173)'
 								: '#999'
 						"
+					/> -->
+					<uv-icon
+						:name="
+							currentTab === item.tabName
+								? item.iconActive
+								: item.icon
+						"
+						size="24"
 					/>
 				</view>
 				<text
@@ -32,6 +40,12 @@
 </template>
 
 <script setup>
+import home from '@/static/tabbar/home.png';
+import homeActive from '@/static/tabbar/homeActive.png';
+import appointment from '@/static/tabbar/yuyue.png';
+import appointmentActive from '@/static/tabbar/yuyueActive.png';
+import user from '@/static/tabbar/user.png';
+import userActive from '@/static/tabbar/userActive.png';
 defineProps({
 	currentTab: {
 		type: String,
@@ -46,18 +60,24 @@ const tabBarList = ref([
 		url: '/pages/tabBar/index/index',
 		tabName: 'index',
 		className: 'shouye',
+		icon: home,
+		iconActive: homeActive,
 	},
 	{
 		text: '体检预约',
 		url: '/pages/tabBar/appointment/appointment',
 		tabName: 'appointment',
 		className: 'yuyuetijian',
+		icon: appointment,
+		iconActive: appointmentActive,
 	},
 	{
 		text: '我的',
 		url: '/pages/tabBar/user/user',
 		tabName: 'userTab',
 		className: 'gerenzhongxin',
+		icon: user,
+		iconActive: userActive,
 	},
 ]);
 

@@ -1,23 +1,7 @@
 <template>
 	<view class="appointment-content">
 		<NavBar title="体检预约" :opacity="1" />
-		<view
-			style="
-				height: 60rpx;
-				background: linear-gradient(
-					to right,
-					#e1f5e9,
-					#ebfae5 50%,
-					#e7fadf 100%
-				);
-				color: #58b384;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				text-align: center;
-				padding: 40rpx 0;
-			"
-		>
+		<view class="appointment-bg">
 			<text style="font-size: 28rpx"> 请选择您要预约的医院及时间 </text>
 		</view>
 		<view style="padding: 20rpx">
@@ -46,7 +30,10 @@
 					prop="date"
 					:borderBottom="false"
 				>
-					<view class="flex flex-wrap" style="flex-wrap: wrap">
+					<view
+						class="flex flex-wrap"
+						style="flex-wrap: wrap; width: 100%"
+					>
 						<view
 							class="item"
 							v-for="(item2, index2) in currentList"
@@ -215,6 +202,21 @@ const handleConfrim = () => {
 		padding: 30rpx;
 		font-size: 30rpx;
 		color: #333;
+	}
+	.appointment-bg {
+		height: 60rpx;
+		background: linear-gradient(
+			to right,
+			#e1f5e9,
+			#ebfae5 50%,
+			#e7fadf 100%
+		);
+		color: #58b384;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		padding: 40rpx 0;
 	}
 	.item {
 		width: 33.3%;

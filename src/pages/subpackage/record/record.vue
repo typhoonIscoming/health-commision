@@ -125,8 +125,10 @@
 				type="primary"
 				:plain="false"
 				hairline
+				color="#58B384"
+				shape="circle"
 				text="退出登录"
-				:custom-style="{ color: 'white', borderRadius: '6px' }"
+				:custom-style="{ color: 'white' }"
 				@click="handleUnbind"
 			></uv-button>
 		</view>

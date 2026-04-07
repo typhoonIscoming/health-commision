@@ -58,7 +58,7 @@
 				</uv-list>
 			</view>
 		</view>
-		<Tabbar current-tab="user" />
+		<Tabbar current-tab="userTab" />
 	</view>
 </template>
 <script setup>

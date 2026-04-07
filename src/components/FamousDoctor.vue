@@ -11,7 +11,8 @@
 				<view class="scroll-content">
 					<view
 						class="doctor-item flex flex-col flex-center"
-						v-for="(item, index) in doctor"
+						v-for="(item, index) in doctorList"
+						@click="handleDetail(item)"
 						:key="index"
 					>
 						<image
@@ -54,6 +55,9 @@
 import { ref } from 'vue';
 import Title from './Title.vue';
 import avatar from '@/static/card/doctor.png';
+import doctorHook from '@/hooks/doctorHook';
+
+const { doctorList } = doctorHook();
 
 const doctor = ref([
 	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
@@ -68,6 +72,12 @@ const handleMore = () => {
 	// uni.showToast({ icon: 'none', title: '敬请期待' });
 	uni.navigateTo({
 		url: '/pages/subpackage/famous/famous',
+	});
+};
+
+const handleDetail = (item) => {
+	uni.navigateTo({
+		url: `/pages/subpackage/doctorDetail/doctorDetail?name=${item.id}`,
 	});
 };
 </script>

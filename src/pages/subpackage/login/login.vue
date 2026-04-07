@@ -14,12 +14,12 @@
 			<image
 				src="@/static/home/login-logo.png"
 				mode="heightFix"
-				style="height: 60rpx"
+				style="height: 60rpx; width: 400rpx"
 			/>
 			<image
 				src="@/static/home/login-icon.png"
 				mode="heightFix"
-				style="height: 300rpx; width: 100%; margin-top: 20rpx"
+				style="height: 300rpx; width: 310rpx; margin-top: 20rpx"
 			/>
 		</view>
 		<view class="login-form">
@@ -214,20 +214,24 @@ const handlePreLogin = () => {
 		return;
 	}
 	// #ifdef MP-WEIXIN
-	wx.login({
-		success: (loginRes) => {
-			console.log('微信登录成功：', loginRes);
-			if (!isEmpty(loginRes.code)) {
-				handleLogin(loginRes.code);
-			} else {
-				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
-			}
-		},
-		fail: (err) => {
-			// eslint-disable-next-line no-console
-			console.log('获取登录code失败：', err);
-			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
-		},
+	// wx.login({
+	// 	success: (loginRes) => {
+	// 		console.log('微信登录成功：', loginRes);
+	// 		if (!isEmpty(loginRes.code)) {
+	// 			handleLogin(loginRes.code);
+	// 		} else {
+	// 			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+	// 		}
+	// 	},
+	// 	fail: (err) => {
+	// 		// eslint-disable-next-line no-console
+	// 		console.log('获取登录code失败：', err);
+	// 		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+	// 	},
+	// });
+	handleH5Login();
+	uni.navigateTo({
+		url: '/pages/subpackage/userAuth/userAuth',
 	});
 	// #endif
 	// #ifndef MP-WEIXIN
