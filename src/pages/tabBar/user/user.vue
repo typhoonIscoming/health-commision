@@ -15,7 +15,7 @@
 			</template>
 		</NavBar>
 		<view class="user-info-wrap">
-			<HomeCard />
+			<HomeCard theme="light" />
 		</view>
 		<view class="entry-wrapper">
 			<view class="menus-wrapper">

@@ -120,6 +120,12 @@
 					}
 				},
 				{
+					"path": "famous/famous",
+					"style": {
+						"navigationBarTitleText": "名医风采"
+					}
+				},
+				{
 					"path": "publicize/publicize",
 					"style": {
 						"navigationBarTitleText": "健康宣教详情"

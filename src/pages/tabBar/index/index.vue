@@ -32,7 +32,13 @@
 			v-if="noticeItem"
 			style="margin-bottom: 30rpx; position: relative"
 		>
-			<uv-notice-bar :text="noticeItem.biaoti" @click="handleNotice" />
+			<uv-notice-bar
+				:text="noticeItem.biaoti"
+				:icon="noticePng"
+				color="#999999"
+				bgColor="#ffffff"
+				@click="handleNotice"
+			/>
 		</view>
 		<!-- <HomeHealthRecord type="tj" /> -->
 		<HealthService />
@@ -76,6 +82,7 @@ import navBg from '@/static/home/home-bg.png';
 import PsychologicalCard from '@/components/PsychologicalCard.vue';
 import FamousDoctor from '@/components/FamousDoctor.vue';
 import safeInset from '@/hooks/safeInset';
+import noticePng from '@/static/card/notice.png';
 
 const { safeInsetBottom } = safeInset();
 

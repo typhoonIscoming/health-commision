@@ -1,6 +1,11 @@
 <template>
 	<view class="famous-doctor page-gap">
-		<Title title="名医风采" />
+		<Title title="名医风采">
+			<view style="display: flex; align-items: center">
+				<text style="color: #4a4a4a" @click="handleMore"> 更多 </text>
+				<uv-icon name="arrow-right" size="15"></uv-icon>
+			</view>
+		</Title>
 		<view class="card" style="padding-top: 30rpx">
 			<scroll-view scroll-x enable-flex :show-scrollbar="false">
 				<view class="scroll-content">
@@ -58,6 +63,13 @@ const doctor = ref([
 	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
 	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
 ]);
+
+const handleMore = () => {
+	// uni.showToast({ icon: 'none', title: '敬请期待' });
+	uni.navigateTo({
+		url: '/pages/subpackage/famous/famous',
+	});
+};
 </script>
 <style lang="scss" scoped>
 .famous-doctor {

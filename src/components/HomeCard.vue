@@ -1,10 +1,13 @@
 <template>
-	<view class="home-card">
+	<view
+		class="home-card"
+		:class="{ light: theme === 'light', dark: theme === 'dark' }"
+	>
 		<view
 			class="page-gap user-wrapper"
 			:class="[
 				userInfo
-					? 'has-user-info'
+					? 'has-user-info flex'
 					: 'no-user-info flex-col flex-between flex-center',
 			]"
 			@click="handleDetail"
@@ -18,7 +21,7 @@
 				bg-color="rgb(152, 209, 238)"
 				style="border: 1px solid transparent"
 			></uv-avatar>
-			<view class="person-detail">
+			<view class="person-detail" :class="{ 'has-login': userInfo }">
 				<view class="name-wrapper flex-center">
 					<text class="name">
 						{{ userInfo ? userInfo.name : '登录/注册' }}
@@ -40,6 +43,10 @@ const props = defineProps({
 	size: {
 		type: [Number, String],
 		default: 70,
+	},
+	theme: {
+		type: String,
+		default: 'light',
 	},
 });
 const emits = defineEmits(['onClick']);
@@ -81,7 +88,6 @@ onShow(() => {
 </script>
 <style lang="scss">
 .home-card {
-	// background: linear-gradient(to right, #e5f6f5, #c3ede7);
 	.user-wrapper {
 		gap: 12rpx;
 	}
@@ -98,21 +104,39 @@ onShow(() => {
 		}
 	}
 	.person-detail {
+		&.has-login {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
 		.name {
 			font-size: 16px;
 			font-weight: bold;
+			color: #ffffff;
 		}
 		.status {
-			background: #c2d9f5;
-			border: 1px solid #0f62fb;
-			border-radius: 3px;
-			color: #0f62fb;
+			background: #58b383;
+			border: 1px solid transparent;
+			border-radius: 20px;
+			color: #ffffff;
 			padding: 4rpx 10rpx;
 			margin-left: 16rpx;
+			font-size: 24rpx;
 		}
 		.phone {
-			color: #808080;
+			color: #eeeeee;
 			margin-top: 16rpx;
+		}
+	}
+
+	&.dark {
+		.person-detail {
+			.name,
+			.phone {
+				color: #3d3d3d;
+			}
+			.phone {
+			}
 		}
 	}
 }

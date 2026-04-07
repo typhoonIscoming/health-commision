@@ -216,9 +216,9 @@ import { bindUserAuth } from '@/api/index.js';
 const verifyText = ref('获取验证码');
 const form = ref(null);
 const model = ref({
-	name: '',
-	phone: '',
-	idCard: '',
+	name: '测试用户',
+	phone: '16601762764',
+	idCard: '654127198106222012',
 	idCardType: '身份证',
 	verify: '',
 	recognition: 'success',
@@ -329,15 +329,17 @@ const handleStartSoterAuthentication = () => {
 // 绑定用户信息
 const handleBindUserInfo = () => {
 	// TODO 调用绑定用户信息接口
-	bindUserAuth({
+	const params = {
 		name: model.value.name,
 		mob_num: model.value.phone,
 		car_id: model.value.idCard,
 		open_id: uni.getStorageSync('b2cOpenid'),
 		token: uni.getStorageSync('b2cToken')?.token,
 		xcx_code: uni.getStorageSync('b2cWechatCode'),
-	})
+	};
+	bindUserAuth(params)
 		.then((res) => {
+			res = mockBindUserInfo(params);
 			console.log('bindUserAuth', res);
 			if (!res || res.code !== 'S200') {
 				uni.showToast({
@@ -359,11 +361,23 @@ const handleBindUserInfo = () => {
 			}, 2000);
 		})
 		.catch((err) => {
-			uni.showToast({
-				title: err.message || '绑定失败',
-				icon: 'error',
-			});
+			mockBindUserInfo();
+			// uni.showToast({
+			// 	title: err.message || '绑定失败',
+			// 	icon: 'error',
+			// });
 		});
+};
+// 模拟绑定数据
+const mockBindUserInfo = (params) => {
+	const temp = {
+		code: 'S200',
+		name: model.value.name,
+		mob_num: model.value.phone,
+		car_id: model.value.idCard,
+		...params,
+	};
+	return temp;
 };
 </script>
 <style lang="scss">

@@ -238,6 +238,8 @@ onShow(() => {
 </script>
 <style lang="scss">
 .record {
+	padding: 20rpx;
+	box-sizing: border-box;
 	.uv-form-item {
 		background: white;
 		padding: 0 10px;

@@ -11,42 +11,8 @@
 				<text style="font-size: 30rpx">电子健康卡</text>
 			</view>
 		</view>
-		<view style="position: relative; height: 120px">
-			<HomeCard />
-			<!-- <view v-if="!userInfo" class="unlogin">
-				<view class="circle-icon" @click="handleLogin">
-					<uv-icon name="plus"></uv-icon>
-				</view>
-				<view style="margin-top: 10px; color: #0b0b0b">去登录</view>
-			</view>
-			<view v-else class="user-info">
-				<view
-					style="
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						height: 100%;
-					"
-				>
-					<view class="row">
-						<view class="label">姓名：</view>
-						<view class="value">{{ userInfo.name }}</view>
-					</view>
-					<view class="row">
-						<view class="label">身份证号：</view>
-						<view class="value">
-							{{ formatIdCard(userInfo.car_id) }}
-						</view>
-					</view>
-				</view>
-				<view style="height: 100%">
-					<image
-						:src="userInfo.tx"
-						mode="aspectFill"
-						style="width: 80px; height: 100%"
-					/>
-				</view>
-			</view> -->
+		<view class="user-info-wrap" :class="{ 'has-login': userInfo }">
+			<HomeCard theme="dark" />
 		</view>
 		<view class="card-bottom">中华人民共和国国家卫生委员会监制</view>
 	</view>
@@ -102,7 +68,14 @@ const handleDetail = () => {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-
+	.user-info-wrap {
+		position: relative;
+		height: 120px;
+		&.has-login {
+			display: flex;
+			align-items: center;
+		}
+	}
 	.title-wrap {
 		display: flex;
 		justify-content: space-between;
