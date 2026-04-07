@@ -126,6 +126,13 @@
 					}
 				},
 				{
+					"path": "doctorDetail/doctorDetail",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				},
+				{
 					"path": "publicize/publicize",
 					"style": {
 						"navigationBarTitleText": "健康宣教详情"

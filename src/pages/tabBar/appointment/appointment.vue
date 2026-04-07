@@ -85,6 +85,8 @@
 				<uv-button
 					type="primary"
 					text="确定"
+					color="#95C2AB"
+					shape="circle"
 					@click="handleConfrim"
 				></uv-button>
 			</view>

@@ -1,6 +1,11 @@
 <template>
 	<view class="famous-wrapper">
-		<view v-for="(item, i) in doctorList" :key="i" class="doctor-item flex">
+		<view
+			v-for="(item, i) in doctorList"
+			:key="i"
+			class="doctor-item flex"
+			@click="handleClick(item)"
+		>
 			<view class="avatar-wrap">
 				<image
 					:src="item.avatar || '@/static/home/doctor-avatar.png'"
@@ -50,35 +55,10 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import doctorAvatar from '@/static/card/doctor.png';
 
-const doctorList = ref([
-	{
-		name: '热合曼',
-		type: '主任医师',
-		avatar: doctorAvatar,
-		hospital: '乌鲁木齐市人民医院',
-		department: '皮肤科',
-		// 擅长
-		skill: '擅长：皮肤病的诊治，尤其是过敏性皮肤病、慢性湿疹、顽固性荨麻疹等疾病的诊治',
-	},
-	{
-		name: '热合曼.阿娜尔罕',
-		type: '心内科-主任医师',
-		avatar: doctorAvatar,
-		hospital: '乌鲁木齐市人民医院',
-		department: '心内科',
-		skill: '擅长：心血管疾病的诊治，尤其是高血压、冠心病、心律失常等疾病的诊治',
-	},
-	{
-		name: '热合曼',
-		type: '心内科-主任医师',
-		avatar: doctorAvatar,
-		hospital: '乌鲁木齐市人民医院',
-		department: '心内科',
-		skill: '擅长：心血管疾病的诊治，尤其是高血压、冠心病、心律失常等疾病的诊治',
-	},
-]);
+import doctorHook from '@/hooks/doctorHook';
+
+const { doctorList } = doctorHook();
 
 const loadStatus = ref('');
 
@@ -90,6 +70,12 @@ const getData = (fresh) => {
 	setTimeout(() => {
 		loadStatus.value = 'noMore';
 	}, 1000);
+};
+
+const handleClick = (item) => {
+	uni.navigateTo({
+		url: `/pages/subpackage/doctorDetail/doctorDetail?id=${item.id}`,
+	});
 };
 </script>
 <style lang="scss">
