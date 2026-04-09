@@ -1,20 +1,22 @@
 <template>
 	<view class="UserInfoCard" @click="handleDetail">
-		<view class="title-wrap">
+		<view v-if="userInfo" class="title-wrap">
 			<text style="color: #555643">新疆自治区卫生健康委员会</text>
 			<view style="display: flex; align-items: center">
 				<image
-					src="@/static/home/logo.png"
+					src="@/static/main/logo.png"
 					mode="heightFix"
-					style="width: 30px; height: 30px; margin-right: 10rpx"
+					style="width: 25px; height: 25px; margin-right: 10rpx"
 				/>
-				<text style="font-size: 30rpx">电子健康卡</text>
+				<text style="font-size: 30rpx">医疗就诊卡</text>
 			</view>
 		</view>
 		<view class="user-info-wrap" :class="{ 'has-login': userInfo }">
 			<HomeCard theme="dark" />
 		</view>
-		<view class="card-bottom">中华人民共和国国家卫生委员会监制</view>
+		<view v-if="userInfo" class="card-bottom">
+			新疆维吾尔自治区保健委员会办公室
+		</view>
 	</view>
 </template>
 <script setup>
@@ -84,6 +86,7 @@ const handleDetail = () => {
 
 	.card-bottom {
 		text-align: center;
+		color: #3d3d3d;
 	}
 
 	.unlogin {

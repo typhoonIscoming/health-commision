@@ -30,7 +30,14 @@
 		<UserInfoCard @onClick="handleDetail" />
 		<view
 			v-if="noticeItem"
-			style="margin-bottom: 30rpx; position: relative"
+			style="
+				margin: 0 16px 30rpx;
+				position: relative;
+				background-color: #ffffff;
+				border-radius: 20rpx;
+				overflow: hidden;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			"
 		>
 			<uv-notice-bar
 				:text="noticeItem.biaoti"
@@ -44,6 +51,7 @@
 		<HealthService />
 		<!-- <NoticeBar v-if="newsRestList.length" :list="newsRestList" /> -->
 		<view style="margin-top: 20px"></view>
+		<HealthScience />
 		<!-- <HealthEducation />
 		<view style="margin-top: 20px"></view> -->
 		<!-- <Psychological />
@@ -83,6 +91,7 @@ import PsychologicalCard from '@/components/PsychologicalCard.vue';
 import FamousDoctor from '@/components/FamousDoctor.vue';
 import safeInset from '@/hooks/safeInset';
 import noticePng from '@/static/card/notice.png';
+import HealthScience from '@/components/Health.vue';
 
 const { safeInsetBottom } = safeInset();
 

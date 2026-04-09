@@ -14,6 +14,17 @@
 				<text class="nav-title" style="color: #fff">新疆保健服务</text>
 			</template>
 		</NavBar>
+		<image
+			:src="navBg"
+			mode="widthFix"
+			class="page-bg__base"
+			:style="{
+				position: 'absolute',
+				top: `${0}px`,
+				left: 0,
+				width: '100%',
+			}"
+		/>
 		<view class="user-info-wrap">
 			<HomeCard theme="light" />
 		</view>
@@ -157,6 +168,8 @@ onShow(() => {
 	min-height: 100vh;
 	.user-info-wrap {
 		padding: 10rpx 16px;
+		position: relative;
+		z-index: 9999;
 	}
 	.entry-wrapper {
 		margin: 0 16px;

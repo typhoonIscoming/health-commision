@@ -33,33 +33,55 @@
 										</view>
 										<view class="row flex-center">
 											<view class="label">姓名：</view>
-											<view class="value">{{ userInfo?.name }}</view>
+											<view class="value">{{
+												userInfo?.name
+											}}</view>
 										</view>
 										<view class="row flex-center">
 											<view class="label">性别：</view>
-											<view class="value">{{ userInfo?.sex }}</view>
+											<view class="value">{{
+												userInfo?.sex
+											}}</view>
 										</view>
 										<view class="row flex">
 											<view class="label">单位：</view>
-											<view class="value">{{ userInfo?.yhdw }}</view>
-										</view>
-										<view class="row flex-center">
-											<view class="label">身份证号：</view>
-											<view class="value">{{ userInfo?.car_id }}</view>
+											<view class="value">{{
+												userInfo?.yhdw
+											}}</view>
 										</view>
 										<view class="row flex">
-											<view class="label">职级及年限：</view>
-											<view class="value">{{ userInfo?.zjnx }}</view>
+											<view class="label">
+												职级及年限：
+											</view>
+											<view class="value">
+												{{ userInfo?.zjnx }}
+											</view>
 										</view>
+										<view class="row flex-center">
+											<view
+												class="label"
+												style="font-weight: bold"
+											>
+												身份证号：
+											</view>
+											<view
+												class="value"
+												style="font-weight: bold"
+											>
+												{{ userInfo?.car_id }}
+											</view>
+										</view>
+
 										<!--姓名，性别，单位，身份证号，在职状态/退休状态-->
 									</view>
-									<view class="right-wrap flex-center">
+									<view
+										class="right-wrap flex-center"
+										style="padding-right: 20rpx"
+									>
 										<image
-											src="../static/home/card.png"
+											src="../static/main/people.png"
 											mode="widthFix"
-											style="
-												width: 100% !important;
-											"
+											style="width: 100% !important"
 										></image>
 									</view>
 								</view>
@@ -83,7 +105,11 @@
 											<text>电话</text>
 										</view>
 									</view>
-									<view class="table-row" v-for="row in hospital" :key="row">
+									<view
+										class="table-row"
+										v-for="row in hospital"
+										:key="row"
+									>
 										<view class="table-cell name-cell">
 											<text>{{ row.name }}</text>
 										</view>
@@ -190,18 +216,19 @@ defineOptions({
 				flex: 1;
 				height: 100%;
 				padding: 20rpx 0 20rpx 20rpx;
-				.row{
+				.row {
 					padding-top: 20rpx;
 				}
-				.label{
+				.label {
 					white-space: nowrap;
-					width: 160rpx;
+					// width: 160rpx;
 				}
-				.value{
+				.value {
 					word-break: break-all;
 					flex: 1;
 				}
-				.label, .value{
+				.label,
+				.value {
 					color: #080708;
 					font-size: 28rpx;
 				}
@@ -220,7 +247,7 @@ defineOptions({
 				color: white;
 			}
 		}
-		&.list{
+		&.list {
 			height: 100%;
 			padding: 20rpx;
 		}
@@ -237,7 +264,7 @@ defineOptions({
 	}
 
 	.swiper-item-content.list {
-		background: #D2E9D3;
+		background: #d2e9d3;
 		.table-wrap {
 			display: flex;
 			flex-direction: column;
@@ -268,7 +295,7 @@ defineOptions({
 			&.phone-cell {
 				flex: 0.8;
 			}
-			&.name-cell{
+			&.name-cell {
 				text-align: left;
 				padding-left: 10rpx;
 			}

@@ -1,29 +1,40 @@
 <template>
-	<view class="reservation-item flex">
+	<view class="reservation-item">
 		<view class="left">
 			<image
-				src="../static/home/tjjl.png"
+				src="../static/main/hospitalBuilding.png"
 				mode="aspectFill"
-				style="width: 60rpx; height: 60rpx"
+				style="width: 100%; height: 280rpx; border-radius: 8px"
 			/>
 		</view>
 		<view class="right">
-			<view class="row flex">
-				<view class="title">体检机构名称：</view>
-				<view class="value">{{ info.jgmc }}</view>
-			</view>
-			<view class="row flex">
-				<view class="title">机构地址：</view>
-				<view class="value">{{ info.jgdz }}</view>
-			</view>
+			<view
+				class="reservation-status"
+				style="
+					padding: 20rpx 0;
+					color: #58b384;
+					font-size: 28rpx;
+					font-weight: bold;
+				"
+				>{{ info.status }}</view
+			>
 
-			<view class="row flex">
-				<view class="title">预约日期：</view>
-				<view class="value" style="font-size: 32rpx; font-weight: bold">
+			<view class="row flex-col">
+				<view class="special-title" style="color: #999999">
+					预约日期
+				</view>
+				<view
+					class="value"
+					style="
+						font-size: 34rpx;
+						font-weight: bold;
+						margin-top: 10rpx;
+					"
+				>
 					{{ info.yyrq }}
 				</view>
 			</view>
-			<view class="row flex">
+			<!-- <view class="row flex">
 				<view class="title">预约状态：</view>
 				<view
 					class="value"
@@ -34,6 +45,18 @@
 					}"
 				>
 					{{ info.yyzt }}
+				</view>
+			</view> -->
+			<view class="row flex">
+				<view class="title">体检机构：</view>
+				<view class="value" style="color: #999999">
+					{{ info.jgmc }}
+				</view>
+			</view>
+			<view class="row flex">
+				<view class="title">机构地址：</view>
+				<view class="value" style="color: #999999">
+					{{ info.jgdz }}
 				</view>
 			</view>
 			<view v-if="info.yybz" class="row flex">
@@ -72,9 +95,10 @@ const info = computed(() => props.item);
 <style lang="scss">
 .reservation-item {
 	padding: 20rpx;
-	background: #f5faff;
+	background: #ffffff;
 	border-radius: 8px;
 	margin-bottom: 20rpx;
+	box-shadow: 0 0 5rpx rgba(0, 0, 0, 0.1);
 	.row {
 		margin-bottom: 20rpx;
 		&:last-child {
@@ -83,7 +107,6 @@ const info = computed(() => props.item);
 		.title {
 			color: #808080;
 			white-space: nowrap;
-			width: 200rpx;
 		}
 		.value {
 			word-break: break-all;
@@ -98,7 +121,6 @@ const info = computed(() => props.item);
 	}
 	.right {
 		flex: 1;
-		margin-left: 20rpx;
 	}
 }
 </style>

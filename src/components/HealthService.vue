@@ -1,10 +1,11 @@
 <template>
 	<view class="health-service page-gap">
-		<TitleRow title="健康服务记录" />
-
-		<view class="health-service-content">
+		<view style="padding: 0 13px">
+			<TitleRow title="健康服务记录" />
+		</view>
+		<view class="health-service-content" @click="handleRoute">
 			<view class="health-title">体检报告</view>
-			<view class="health-number">共有 0 份报告</view>
+			<view class="health-number">共有 {{ tjNumber }} 份报告</view>
 			<image
 				src="@/static/card/report1.png"
 				mode="aspectFit"
@@ -19,7 +20,38 @@
 	</view>
 </template>
 <script setup>
+import { ref, watch } from 'vue';
 import TitleRow from './Title.vue';
+import homeCardFee from '@/hooks/homeCardFee';
+import homeCardHook from '@/hooks/homeCard';
+
+const { list: resultList } = homeCardFee(true);
+const { tjbgNum } = homeCardHook(true);
+
+const tjNumber = ref(0);
+
+watch(
+	() => [tjbgNum.value, resultList.value],
+	(list) => {
+		tjNumber.value = list[0];
+		// service.value = service.value.map((item) => {
+		// 	if (item.name === 'tj') {
+		// 		return { ...item, count: list[0] };
+		// 	}
+		// 	const oItem = list[1].find((fItem) => fItem.name === item.name);
+		// 	return { ...item, count: oItem.count };
+		// });
+	},
+	{ deep: true, immediate: true },
+);
+
+const handleRoute = () => {
+	checkLogin.checkAuthInfo(() => {
+		uni.navigateTo({
+			url: `/pages/subpackage/physicalExamination/physicalExamination?type=tj`,
+		});
+	});
+};
 </script>
 <style lang="scss">
 .health-service {

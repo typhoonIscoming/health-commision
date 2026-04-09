@@ -171,10 +171,11 @@ onBeforeUnmount(() => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	display: flex;
+	/* display: flex; */
 	justify-content: center;
 	align-items: center;
 	transform: translateY(25px);
+	display: none;
 }
 .carousel-dot {
 	width: 8px;

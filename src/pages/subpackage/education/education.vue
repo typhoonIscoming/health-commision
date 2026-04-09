@@ -1,6 +1,6 @@
 <template>
 	<view class="education-page">
-		<view class="tab-wrap">
+		<view v-if="false" class="tab-wrap">
 			<view
 				v-for="(item, i) in typeList"
 				:key="i"
@@ -13,24 +13,26 @@
 		</view>
 		<view class="education-list">
 			<view
-				v-for="(item, i) in list"
+				v-for="(item, i) in mockList"
 				:key="i"
 				class="list-item"
 				@click="handleRoute(item)"
 			>
-				<image
-					v-if="currentType === 'image' && item.url"
-					:src="item.url"
-					mode="aspectFill"
-					style="width: 120rpx; height: 120rpx; margin-right: 20rpx"
-				/>
 				<view class="item-detail">
 					<view class="title">{{ item.name }}</view>
 					<view class="time">{{ item.updateTime }}</view>
 				</view>
+				<image
+					v-if="item.img"
+					:src="item.img"
+					mode="aspectFill"
+					style="width: 200rpx; height: 120rpx; margin-right: 20rpx"
+				/>
 			</view>
 		</view>
-		<uv-load-more :status="loadStatus" @loadmore="getPageData" />
+		<view style="margin-top: 40rpx">
+			<uv-load-more :status="loadStatus" @loadmore="getPageData" />
+		</view>
 	</view>
 </template>
 <script setup>
@@ -38,7 +40,7 @@ import { onMounted } from 'vue';
 import educationHook from '@/hooks/education';
 import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
 
-const { list, getMaterialData } = educationHook();
+const { list, mockList, getMaterialData } = educationHook();
 
 const pageIndex = ref(0);
 const pageSize = ref(10);
@@ -92,9 +94,9 @@ const getPageData = () => {
 };
 
 const handleRoute = (item) => {
-	uni.navigateTo({
-		url: `/pages/subpackage/thridParty/thridParty?url=${item.url}`,
-	});
+	// uni.navigateTo({
+	// 	url: `/pages/subpackage/thridParty/thridParty?url=${item.url}`,
+	// });
 };
 
 onMounted(() => {
@@ -115,6 +117,7 @@ onReachBottom(() => {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		margin-bottom: 40rpx;
 		.tab-item {
 			padding: 10rpx 40rpx;
 			background: #f4f4f5;
@@ -125,21 +128,32 @@ onReachBottom(() => {
 		}
 	}
 	.education-list {
-		margin-top: 40rpx;
+		box-shadow: 0 0 5rpx rgba(0, 0, 0, 0.1);
+		border-radius: 10px;
+		padding: 20rpx;
 		.list-item {
-			padding: 20rpx;
 			display: flex;
-			box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-			border-radius: 10px;
+			padding-bottom: 30rpx;
+			border-bottom: 1px solid #f0f0f0;
 			& ~ .list-item {
-				margin-top: 40rpx;
+				margin-top: 30rpx;
 			}
 			.item-detail {
 				flex: 1;
 				display: flex;
 				flex-direction: column;
-				justify-content: space-between;
+				justify-content: center;
 				align-items: flex-start;
+				.title {
+					font-weight: 700;
+					color: #3d3d3d;
+					font-size: 28rpx;
+				}
+				.time {
+					color: #999999;
+					font-size: 24rpx;
+					margin-top: 20rpx;
+				}
 			}
 		}
 	}

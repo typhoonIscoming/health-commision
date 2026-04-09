@@ -1,9 +1,20 @@
 <template>
 	<view class="reservation">
 		<view class="reservation-wrapper">
-			<ReservationItem v-for="(item, i) in reservationList" :key="i" :item="item" />
+			<ReservationItem
+				v-for="(item, i) in mockList"
+				:key="i"
+				:item="item"
+			/>
 		</view>
-		<uv-load-more :status="loadStatus" @loadmore="getData" />
+		<view style="margin-top: 40rpx">
+			<uv-load-more
+				:status="loadStatus"
+				color="#999999"
+				fontSize="12"
+				@loadmore="getData"
+			/>
+		</view>
 	</view>
 </template>
 <script setup>
@@ -13,7 +24,7 @@ import ReservationItem from '@/components/ReservationItem.vue';
 import { isEmpty } from '@/utils';
 import reservationHook from '@/hooks/reservationHook';
 
-const { reservationList, getList } = reservationHook();
+const { reservationList, mockList, getList } = reservationHook();
 
 const loadStatus = ref('');
 
@@ -28,27 +39,29 @@ const getData = (fresh) => {
 		return;
 	}
 	loading.value = true;
-	loadStatus.value = 'loading'
+	loadStatus.value = 'loading';
 	getList({
 		pageIndex: pageIndex.value,
 		pageSize: pageSize.value,
 		refresh: !!fresh,
-	}).then(res => {
-		if (!isEmpty(res)) {
-			const { total } = res;
-			if (pageIndex.value * pageSize.value >= total) {
-				loadStatus.value = 'noMore'
+	})
+		.then((res) => {
+			if (!isEmpty(res)) {
+				const { total } = res;
+				if (pageIndex.value * pageSize.value >= total) {
+					loadStatus.value = 'noMore';
+				} else {
+					loadStatus.value = 'loadmore';
+				}
+				pageIndex.value = pageIndex.value + 1;
 			} else {
-				loadStatus.value = 'loadmore'
+				loadStatus.value = 'noMore';
 			}
-			pageIndex.value = pageIndex.value + 1;
-		} else {
-			loadStatus.value = 'noMore'
-		}
-	}).finally(() => {
-		loading.value = false;
-		uni.stopPullDownRefresh();
-	});
+		})
+		.finally(() => {
+			loading.value = false;
+			uni.stopPullDownRefresh();
+		});
 };
 
 onMounted(() => {
@@ -60,11 +73,10 @@ onMounted(() => {
 	paddingBottom.value = paddingBottom.value + safeAreaInsets.bottom;
 });
 
-
 onPullDownRefresh(() => {
 	pageIndex.value = 1;
-	loadStatus.value = 'loadmore'
-	getData(true)
+	loadStatus.value = 'loadmore';
+	getData(true);
 });
 onReachBottom(() => {
 	getData();
@@ -74,7 +86,7 @@ onReachBottom(() => {
 .reservation {
 	padding: 13px;
 	position: relative;
-	background: white;
+	// background: white;
 	min-height: 100vh;
 	.footer {
 		position: fixed;

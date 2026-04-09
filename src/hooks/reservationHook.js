@@ -8,6 +8,17 @@ export default () => {
 	// 保存配置
 	const worksheetInfo = ref({});
 
+	const mockList = ref([
+		{
+			id: '1',
+			name: '预约单1',
+			status: '预约确认中',
+			yyrq: '2024-06-01',
+			jgmc: '新疆医科大学第二附属医院（新院址）',
+			jgdz: '乌鲁木齐市水磨沟区南湖东路北二巷38号',
+		},
+	]);
+
 	const getWorksheet = async () => {
 		const data = {
 			appKey: constants.appKey,
@@ -90,6 +101,7 @@ export default () => {
 	};
 	return {
 		reservationList,
+		mockList,
 		getList,
 	};
 };

@@ -58,10 +58,13 @@
 									<uv-count-to
 										:startVal="0"
 										:endVal="item2.num"
-										:fontSize="17"
+										:fontSize="15"
 										:duration="1000"
-										color="white"
+										color="#999999"
 									></uv-count-to>
+								</view>
+								<view class="selected-icon">
+									<uv-icon :name="selected" size="24" />
 								</view>
 							</view>
 						</view>
@@ -92,6 +95,7 @@ import appointmentHook from '@/hooks/appointment';
 import { makeAppointment } from '@/api';
 import Title from '@/components/Title.vue';
 import { onShow } from '@dcloudio/uni-app';
+import selected from '@/static/user/selected.png';
 
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } =
 	appointmentHook();
@@ -221,18 +225,21 @@ const handleConfrim = () => {
 	.item {
 		width: 33.3%;
 		padding: 6rpx;
-
+		position: relative;
 		&-wrap {
 			// background: #53c21d;
-			background: rgb(87, 190, 173);
-			border: 2rpx solid transparent;
+			// background: rgb(87, 190, 173);
+			background: #f5f5f5;
+			border: 2px solid transparent;
 			border-radius: 10rpx;
 			padding: 5px;
+			position: relative;
+			overflow: hidden;
 		}
 		&.disabled {
 			.item-wrap {
-				background: #c4c6c9;
-				border-color: #c4c6c9;
+				background: #f5f5f5;
+				border-color: transparent;
 				&-content,
 				&-num-content {
 					.item-date {
@@ -241,10 +248,20 @@ const handleConfrim = () => {
 				}
 			}
 		}
+		.selected-icon {
+			display: none;
+			width: fit-content;
+			height: fit-content;
+			position: absolute;
+			bottom: -2px;
+			right: 0;
+		}
 		&.active {
 			.item-wrap {
-				background: #2a82e4;
-				border-color: #2a82e4;
+				border-color: #58b384;
+			}
+			.selected-icon {
+				display: initial;
 			}
 		}
 		&-num-content {
@@ -252,14 +269,16 @@ const handleConfrim = () => {
 		}
 		&-content,
 		&-num-content {
+			text-align: center;
 			.item-date {
-				font-size: 28rpx;
-				color: white;
+				font-size: 34rpx;
+				color: black;
+				font-weight: bold;
 			}
 			.text {
 				line-height: 48rpx;
-				font-size: 24rpx;
-				color: white;
+				font-size: 28rpx;
+				color: #999999;
 				/* #ifndef APP-NVUE */
 				word-break: break-all;
 				/* #endif */

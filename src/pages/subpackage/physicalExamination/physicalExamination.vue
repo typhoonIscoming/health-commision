@@ -1,7 +1,10 @@
 <template>
 	<view class="physical">
 		<view class="physical-dropdown-wrapper">
-			<view class="physical-dropdown flex-center flex-between">
+			<view
+				v-if="false"
+				class="physical-dropdown flex-center flex-between"
+			>
 				<view
 					class="dropdown-item flex-center"
 					:style="{

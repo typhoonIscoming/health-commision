@@ -18,12 +18,6 @@
 			></uv-empty>
 		</view>
 		<uv-load-more :status="loadStatus" @loadmore="getList()" />
-		<!-- <uv-load-more
-			:status="status"
-			:loading-text="loadingText"
-			:loadmore-text="loadmoreText"
-			:nomore-text="nomoreText"
-		/> -->
 	</view>
 </template>
 <script setup>
@@ -42,43 +36,42 @@ const loading = ref(false);
 
 const getList = async (fresh) => {
 	if (loading.value || loadStatus.value === 'noMore') {
-		return
+		return;
 	}
 	const params = {
 		pageIndex: pageIndex.value,
 		pageSize: pageSize.value,
 		refresh: !!fresh,
-	}
+	};
 	loading.value = true;
 	loadStatus.value = 'loading';
 	const [_, res] = await to(getData(params));
 	loading.value = false;
 	// console.log('evalute res', res)
 	if (!isEmpty(_) || isEmpty(res)) {
-		return
+		return;
 	}
 	const { total } = res;
 	if (pageIndex.value * pageSize.value < total) {
-		loadStatus.value = 'loadmore'
+		loadStatus.value = 'loadmore';
 	} else {
 		loadStatus.value = 'noMore';
 	}
-}
+};
 
 onBeforeMount(() => {
-	getList()
-})
+	getList();
+});
 
 onReachBottom(() => {
-	getList()
-})
+	getList();
+});
 
-onPullDownRefresh(async() => {
+onPullDownRefresh(async () => {
 	// 模拟下拉刷新
 	getList(true).then(() => {
 		uni.stopPullDownRefresh();
 	});
-	
 });
 
 const handleRoute = (item) => {

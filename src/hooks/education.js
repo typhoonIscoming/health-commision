@@ -6,10 +6,25 @@ import {
 	getArtical,
 } from '@/api';
 import { to, isEmpty, parseTime } from '@/utils';
+import healthimg from '@/static/main/health1.png';
 
 export default () => {
 	const accessToken = ref();
 	const list = ref([]);
+	const mockList = ref([
+		{
+			name: '糖尿病骨质疏松导致的骨折',
+			updateTime: '2024-06-01',
+			type: '图文消息',
+			img: healthimg,
+		},
+		{
+			name: '乙肝疫苗接种的“时间”',
+			updateTime: '2024-06-02',
+			type: '图文消息',
+			img: healthimg,
+		},
+	]);
 	// 获取微信token
 	const getToken = async () => {
 		const [err, res] = await to(getWechatToken());
@@ -117,6 +132,7 @@ export default () => {
 	// });
 	return {
 		list,
+		mockList,
 		getWechatList,
 		getMaterialData,
 		getGroupArtical,

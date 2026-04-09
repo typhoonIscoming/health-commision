@@ -1,6 +1,6 @@
 <template>
 	<view class="questionnaire question">
-		<NavBar title="问卷调查" :opacity="opacity">
+		<NavBar title="问卷调查" :bgImage="pageBg" :opacity="opacity">
 			<template v-slot:left>
 				<uv-icon
 					name="arrow-left"
@@ -9,14 +9,32 @@
 				></uv-icon>
 			</template>
 		</NavBar>
-		<Background />
+		<image
+			:src="pageBg"
+			mode="widthFix"
+			class="page-bg__base"
+			:style="{
+				position: 'absolute',
+				top: `${0}px`,
+				left: 0,
+				width: '100%',
+			}"
+		/>
+		<!-- <Background /> -->
 		<view class="question-header">
 			<view class="header-content">
-				<view class="title">{{ title }}</view>
+				<view style="display: flex; align-items: center">
+					<uv-icon :name="evaluateIcon" size="20"></uv-icon>
+					<text class="title" style="margin-left: 10rpx">
+						{{ title }}
+					</text>
+				</view>
 				<view class="desc flex-center">
-					<text style="margin-right: 5px">北极星</text>
-					<uv-tags text="富有商服" size="mini"></uv-tags>
-					<text style="margin-left: 5px">提供服务</text>
+					<text style="margin-right: 5px">
+						感谢您的评价，我们会努力做到更好！
+					</text>
+					<!-- <uv-tags text="富有商服" size="mini"></uv-tags>
+					<text style="margin-left: 5px">提供服务</text> -->
 				</view>
 			</view>
 		</view>
@@ -98,23 +116,12 @@
 							</view>
 						</view>
 					</uv-form-item>
-					<!-- <uv-form-item
-						v-if="showInput(item.alias, model[item.alias])"
-						label="请输入原因"
-						:prop="`${item.alias}_other`"
-						:borderBottom="false"
-						labelWidth="auto"
-					>
-						<uv-textarea
-							v-model="model[`${item.alias}_other`]"
-							:disabled="disabled"
-							placeholder="请输入内容"
-						></uv-textarea>
-					</uv-form-item> -->
 				</view>
 				<uv-button
 					type="primary"
 					text="提交"
+					shape="circle"
+					:color="disabled ? '#95C2AB' : '#58B384'"
 					:disabled="disabled"
 					customStyle="margin-top: 10px"
 					@click="submit"
@@ -131,6 +138,9 @@ import Background from '@/components/Background.vue';
 import { uuid, isEmpty } from '@/utils';
 import satisfactionHook from '@/hooks/satisfactionHook';
 import parseHtml from '@/utils/html-paser.js';
+import questionBg from '@/static/main/evaluateBg.jpg';
+import pageBg from '@/static/main/evaluateBg.png';
+import evaluateIcon from '@/static/main/evaluateIcon.png';
 
 const { addData, getWorksheet, getRowDetail } = satisfactionHook();
 
@@ -376,9 +386,14 @@ onLoad((options) => {
 		.title {
 			font-size: 40rpx;
 			font-weight: bold;
-			color: #333333;
+			color: #4e8a6c;
 			margin-bottom: 10rpx;
 			width: 6em;
+			display: flex;
+			align-items: center;
+		}
+		.desc {
+			color: #7cb296;
 		}
 	}
 	.form-wrapper {
@@ -407,6 +422,31 @@ onLoad((options) => {
 		}
 		.uv-form-item__body__left__content {
 			padding-right: 0% !important;
+		}
+		/* 重写样式 */
+		.uv-radio-group {
+			.uv-radio__icon-wrap {
+				display: none;
+				&.uv-radio__icon-wrap--disabled--checked
+					+ .uv-radio__label-wrap {
+					background: #c2e7d6;
+				}
+			}
+			.uv-radio__label-wrap {
+				padding: 8px;
+				border-radius: 6px;
+				background: #f3f3f3;
+				text-align: center;
+				color: #5b5b5b;
+				border: 1px solid #e5e5e5;
+				text {
+					color: #5b5b5b !important;
+				}
+				&.uv-radio__label-wrap--active {
+					border-color: #58b384;
+					background: #e6f7f1;
+				}
+			}
 		}
 	}
 }
