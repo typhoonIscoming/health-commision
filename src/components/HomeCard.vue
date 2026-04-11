@@ -4,7 +4,7 @@
 		:class="{ light: theme === 'light', dark: theme === 'dark' }"
 	>
 		<view
-			class="page-gap user-wrapper"
+			class="user-wrapper"
 			:class="[
 				userInfo
 					? 'has-user-info flex'
@@ -90,6 +90,8 @@ onShow(() => {
 .home-card {
 	.user-wrapper {
 		gap: 12rpx;
+
+		border-radius: 8px;
 	}
 	.has-user-info {
 		.person-detail {

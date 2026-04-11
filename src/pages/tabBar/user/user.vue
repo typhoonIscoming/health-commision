@@ -170,6 +170,9 @@ onShow(() => {
 		padding: 10rpx 16px;
 		position: relative;
 		z-index: 9999;
+		.no-user-info {
+			background: rgba(255, 255, 255, 0.5);
+		}
 	}
 	.entry-wrapper {
 		margin: 0 16px;

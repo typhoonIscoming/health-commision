@@ -75,7 +75,7 @@
 				<uv-button
 					type="primary"
 					text="确定"
-					color="#95C2AB"
+					:color="submitColor"
 					shape="circle"
 					@click="handleConfrim"
 				></uv-button>
@@ -132,6 +132,13 @@ const height = computed(() => {
 const currentList = computed(() => {
 	if (isEmpty(currentIndex.value)) return [];
 	return list.value[currentIndex.value]?.children || [];
+});
+// 按钮颜色
+const submitColor = computed(() => {
+	if (isEmpty(model.value.name) || isEmpty(model.value.date)) {
+		return '#95C2AB';
+	}
+	return '#58b384';
 });
 
 const change = (id) => {

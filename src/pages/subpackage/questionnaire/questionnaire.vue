@@ -1,5 +1,14 @@
 <template>
-	<view class="questionnaire question">
+	<view
+		class="questionnaire question"
+		:style="{
+			background: `url(${pageBg})`,
+			backgroundSize: '100% auto',
+			backgroundRepeat: 'no-repeat',
+			backgroundPositionY: `${0}px`,
+			paddingBottom: `${safeInsetBottom + 20}px`,
+		}"
+	>
 		<NavBar title="问卷调查" :bgImage="pageBg" :opacity="opacity">
 			<template v-slot:left>
 				<uv-icon
@@ -9,7 +18,7 @@
 				></uv-icon>
 			</template>
 		</NavBar>
-		<image
+		<!-- <image
 			:src="pageBg"
 			mode="widthFix"
 			class="page-bg__base"
@@ -19,8 +28,7 @@
 				left: 0,
 				width: '100%',
 			}"
-		/>
-		<!-- <Background /> -->
+		/> -->
 		<view class="question-header">
 			<view class="header-content">
 				<view style="display: flex; align-items: center">
@@ -139,9 +147,11 @@ import { uuid, isEmpty } from '@/utils';
 import satisfactionHook from '@/hooks/satisfactionHook';
 import parseHtml from '@/utils/html-paser.js';
 import questionBg from '@/static/main/evaluateBg.jpg';
-import pageBg from '@/static/main/evaluateBg.png';
+import pageBg from '@/static/main/question.png';
 import evaluateIcon from '@/static/main/evaluateIcon.png';
+import safeInset from '@/hooks/safeInset';
 
+const { safeInsetBottom } = safeInset();
 const { addData, getWorksheet, getRowDetail } = satisfactionHook();
 
 const normal = {

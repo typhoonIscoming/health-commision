@@ -11,11 +11,7 @@
 			</view>
 		</view>
 		<view v-else style="padding-top: 60px">
-			<uv-empty
-				mode="data"
-				text="暂无评价内容"
-				textColor="#333333"
-			></uv-empty>
+			<uv-empty mode="data" text="" textColor="#333333"></uv-empty>
 		</view>
 		<uv-load-more :status="loadStatus" @loadmore="getList()" />
 	</view>
