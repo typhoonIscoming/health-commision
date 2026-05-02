@@ -46,6 +46,9 @@ import appointment from '@/static/tabbar/yuyue.png';
 import appointmentActive from '@/static/tabbar/yuyueActive.png';
 import user from '@/static/tabbar/user.png';
 import userActive from '@/static/tabbar/userActive.png';
+import hospital from '@/static/tabbar/hospital.png';
+import hospitalActive from '@/static/tabbar/hospitalActive.png';
+
 defineProps({
 	currentTab: {
 		type: String,
@@ -64,12 +67,12 @@ const tabBarList = ref([
 		iconActive: homeActive,
 	},
 	{
-		text: '体检预约',
-		url: '/pages/tabBar/appointment/appointment',
-		tabName: 'appointment',
-		className: 'yuyuetijian',
-		icon: appointment,
-		iconActive: appointmentActive,
+		text: '联系医院',
+		url: '/pages/tabBar/hospital/hospital',
+		tabName: 'hospital',
+		className: 'hospital',
+		icon: hospital,
+		iconActive: hospitalActive,
 	},
 	{
 		text: '我的',

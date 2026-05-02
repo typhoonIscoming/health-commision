@@ -11,9 +11,9 @@
 	>
 		<NavBar :bgImage="navBg">
 			<template #left>
-				<text class="nav-title" style="color: #fff"
-					>自治区二次补偿信息服务</text
-				>
+				<text class="nav-title" style="color: #fff">
+					新疆保健服务
+				</text>
 			</template>
 		</NavBar>
 		<image

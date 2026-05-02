@@ -15,11 +15,10 @@
 			}
 		},
 		{
-			"path": "pages/tabBar/appointment/appointment",
+			"path": "pages/tabBar/hospital/hospital",
 			"style": {
-				"navigationBarTitleText": "自治区二次补偿信息服务",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "联系医院",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -160,7 +159,7 @@
 				"text": ""
 			},
 			{
-				"pagePath": "pages/tabBar/appointment/appointment",
+				"pagePath": "pages/tabBar/hospital/hospital",
 				"text": ""
 			},
 			{
