@@ -1,6 +1,6 @@
 <template>
 	<view class="appointment-content">
-		<NavBar title="体检预约" :opacity="1" />
+		<!-- <NavBar title="体检预约" :opacity="1" /> -->
 		<view class="appointment-bg">
 			<text style="font-size: 28rpx"> 请选择您要预约的医院及时间 </text>
 		</view>
@@ -82,7 +82,7 @@
 			</view>
 		</view>
 
-		<Tabbar current-tab="appointment" />
+		<!-- <Tabbar current-tab="appointment" /> -->
 	</view>
 </template>
 

@@ -102,4 +102,10 @@ page {
 	border-radius: 5px;
 	overflow: hidden;
 }
+.align-center {
+	align-items: center;
+}
+.justify-between {
+	justify-content: space-between;
+}
 </style>

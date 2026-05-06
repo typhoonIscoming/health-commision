@@ -70,6 +70,7 @@
 									color: #3d3d3d;
 									font-weight: bold;
 									margin-left: 8px;
+									@click= 'handleCall(doctor.phone)';
 								"
 							>
 								{{ doctor.phone }}
@@ -85,8 +86,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Tabbar from '@/components/Tabbar.vue';
-import safeInset from '@/hooks/safeInset';
+import Tabbar from '../../../components/Tabbar.vue';
+import safeInset from '../../../hooks/safeInset';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import phoneIcon from '@/static/card/phone.png';
 import phoneIcon2 from '@/static/card/phone2.png';
@@ -124,6 +125,7 @@ const list = ref([
 				name: '李医生',
 				department: '外科',
 				title: '副主任医师',
+				phone: '0991-1234567',
 			},
 		],
 	},
@@ -137,10 +139,17 @@ const list = ref([
 				name: '王医生',
 				department: '儿科',
 				title: '主治医师',
+				phone: '0991-1234567',
 			},
 		],
 	},
 ]);
+
+const handleCall = (phone: string) => {
+	uni.makePhoneCall({
+		phoneNumber: phone,
+	});
+};
 </script>
 
 <style lang="scss" scoped>

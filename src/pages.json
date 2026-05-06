@@ -27,6 +27,12 @@
 				"navigationBarTitleText": "个人中心",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/tabBar/appointment/appointment",
+			"style": {
+				"navigationBarTitleText": "体检预约"
+			}
 		}
 	],
 	"subPackages": [
@@ -135,6 +141,12 @@
 					"path": "publicize/publicize",
 					"style": {
 						"navigationBarTitleText": "健康宣教详情"
+					}
+				},
+				{
+					"path": "tips/tips",
+					"style": {
+						"navigationBarTitleText": "就医温馨提示"
 					}
 				}
 			]
