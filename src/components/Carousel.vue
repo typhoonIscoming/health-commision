@@ -171,11 +171,11 @@ onBeforeUnmount(() => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	/* display: flex; */
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	transform: translateY(25px);
-	display: none;
+	/* display: none; */
 }
 .carousel-dot {
 	width: 8px;
@@ -186,6 +186,7 @@ onBeforeUnmount(() => {
 	transition: background 0.3s;
 }
 .carousel-dot.active {
-	background: #007aff;
+	/* background: #007aff; */
+	background: #ffffff;
 }
 </style>

@@ -1,5 +1,11 @@
 <template>
-	<view class="doctor-wrap">
+	<view
+		class="doctor-wrap"
+		:style="{
+			'background-image': `url(${doctorBg})`,
+			'background-size': 'contain',
+		}"
+	>
 		<NavBar title="专家介绍" :bgImage="doctorBg">
 			<template v-slot:left>
 				<view class="flex flex-center" @click="uni.navigateBack()">
@@ -7,7 +13,8 @@
 				</view>
 			</template>
 		</NavBar>
-		<image
+		<!-- <view></view> -->
+		<!-- <image
 			:src="doctorBg"
 			mode="widthFix"
 			class="page-bg__base"
@@ -16,18 +23,19 @@
 				top: `${0}px`,
 				left: 0,
 				width: '100%',
+				zIndex: -1,
 			}"
-		/>
+		/> -->
 		<view class="doctor-avatar flex">
 			<image
-				:src="doctorAvatar"
+				:src="doctorDetail.avatar || doctorDetail.fakeAvatar"
 				mode="aspectFit"
 				class="doctor-avatar__img"
 			/>
 			<view class="doctor-detail" style="flex: 1">
 				<view class="flex">
 					<uv-tags
-						text="主任医师"
+						:text="doctorDetail.type"
 						plain
 						shape="circle"
 						size="mini"
@@ -42,10 +50,10 @@
 						margin-top: 20rpx;
 					"
 				>
-					哈利娜.努尔买买提
+					{{ doctorDetail.name }}
 				</view>
 				<view style="margin-top: 20rpx; font-size: #222">
-					皮肤门诊科
+					{{ doctorDetail.department }}
 				</view>
 				<view class="hospital-address">
 					<uv-icon
@@ -53,7 +61,7 @@
 						size="20"
 						color="#999999"
 					></uv-icon>
-					<text>新疆维吾尔自治区人民医院</text>
+					<text>{{ doctorDetail.hospital }}</text>
 				</view>
 			</view>
 		</view>
@@ -63,11 +71,7 @@
 				<text style="font-size: 32rpx; color: #58b384">擅长</text>
 			</view>
 			<view class="skill-content">
-				<view> 疑难皮肤病:白癜风、红斑狼疮、天疱疮、银屑病 </view>
-				<view>
-					常见皮肤病:湿疹、荨麻疹、过敏性皮肤病、色素性皮肤病
-				</view>
-				<view> 性病:各类性传播疾病的规范化诊断与治疗 </view>
+				<view> {{ doctorDetail.skill }} </view>
 			</view>
 		</view>
 		<view class="doctor-skill-at doctor-info">
@@ -81,16 +85,8 @@
 			</view>
 			<view class="skill-content">
 				<view>
-					承担石河子大学医学院、新疆医科大学本科生、 专科生授课任务
-					每周带教2学时，专科带教35-60人次
-					坚持三级查房，每周3次专家门诊
-					每年参与三级医院间疑难病例会诊10余次、远程会诊20余次
-					多次参加国内皮肤性病学术会议与学习班
+					{{ doctorDetail.introduction }}
 				</view>
-				<view>
-					常见皮肤病:湿疹、荨麻疹、过敏性皮肤病、色素性皮肤病
-				</view>
-				<view> 性病:各类性传播疾病的规范化诊断与治疗 </view>
 			</view>
 		</view>
 	</view>
@@ -107,10 +103,10 @@ import doctorSkill from '@/static/card/doctor-skill.png';
 
 const { doctorList } = doctorHook();
 
-const doctorDetail = ref();
+const doctorDetail = ref({});
 
 const getData = (id) => {
-	doctorDetail.value = doctorList.value.find((item) => item.id === id);
+	doctorDetail.value = doctorList.value.find((item) => item.id == id);
 };
 
 onLoad((options) => {
@@ -121,8 +117,10 @@ onLoad((options) => {
 </script>
 <style lang="scss">
 .doctor-wrap {
+	padding-bottom: 20rpx;
 	.doctor-avatar {
 		padding: 40rpx 60rpx 0;
+		gap: 10px;
 		.doctor-detail {
 			display: flex;
 			flex-direction: column;
@@ -145,7 +143,7 @@ onLoad((options) => {
 		margin-top: 20rpx;
 	}
 	.doctor-info {
-		margin: 0 20rpx 20rpx;
+		margin: 20rpx 20rpx;
 		padding: 20rpx;
 		border-radius: 20rpx;
 		background: url('@/static/card/goodAtBg.png') no-repeat center;

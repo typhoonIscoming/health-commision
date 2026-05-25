@@ -43,7 +43,7 @@
 							身份证号：
 						</view>
 						<view class="value" style="font-weight: bold">
-							{{ userInfo?.car_id }}
+							{{ handleIdCard(userInfo?.car_id) }}
 						</view>
 					</view>
 
@@ -103,6 +103,14 @@ const handleDetail = () => {
 		return;
 	}
 	emits('onClick');
+};
+const handleIdCard = (idCard) => {
+	if (!idCard) return '';
+	if (idCard.length < 10) return idCard;
+	// 显示前6位和后4位，中间6位用*替代
+	const start = idCard.substring(0, 4);
+	const end = idCard.substring(idCard.length - 4);
+	return `${start}******${end}`;
 };
 </script>
 <style lang="scss">

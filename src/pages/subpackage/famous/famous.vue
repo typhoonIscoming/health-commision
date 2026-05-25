@@ -9,9 +9,9 @@
 			<view class="avatar-wrap">
 				<image
 					:src="item.avatar || '@/static/home/doctor-avatar.png'"
-					mode="aspectFit"
+					mode="heightFix"
 					class="doctor-avatar"
-					style="width: 150rpx; height: 150rpx"
+					style="height: 150rpx; border-radius: 20rpx"
 				/>
 			</view>
 			<view class="doctor-detail">
@@ -94,8 +94,9 @@ const handleClick = (item) => {
 		border-radius: 20rpx;
 		overflow: hidden;
 		margin-right: 30rpx;
-		background: #bce1ce;
-		padding: 10rpx 0 5rpx;
+		// background: #bce1ce;
+		padding: 0;
+		height: fit-content;
 	}
 	.doctor-detail {
 		display: flex;

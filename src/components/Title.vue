@@ -24,6 +24,7 @@ const props = defineProps({
 	position: relative;
 	// padding-left: 20rpx;
 	// padding-right: 20rpx;
+	padding-bottom: 20rpx;
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
@@ -33,9 +34,9 @@ const props = defineProps({
 			content: '';
 			position: absolute;
 			left: 2px;
-			bottom: 0;
-			width: 60rpx;
-			height: 4px;
+			bottom: -10rpx;
+			width: 100%;
+			height: 2px;
 			background: #58b384;
 			border-radius: 5px;
 			overflow: hidden;

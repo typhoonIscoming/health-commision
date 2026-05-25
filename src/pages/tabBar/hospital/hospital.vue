@@ -8,7 +8,11 @@
 			paddingBottom: `${safeInsetBottom + 20}px`,
 		}"
 	>
-		<view class="page-gap hospital-item" v-for="(item, i) in list" :key="i">
+		<view
+			class="page-gap hospital-item"
+			v-for="(item, i) in hospitalList"
+			:key="i"
+		>
 			<view class="hospital-name flex align-center">
 				<uv-icon
 					:name="hospitalIcon"
@@ -18,7 +22,7 @@
 				<text
 					style="font-weight: bold; color: #3d3d3d; font-size: 30rpx"
 				>
-					{{ item.title }}
+					{{ item.name }}
 				</text>
 			</view>
 			<view class="hospital-address">
@@ -37,6 +41,7 @@
 				</text>
 				<text
 					style="color: #58b384; font-weight: bold; font-size: 28rpx"
+					@click="handleCall(item.phone)"
 				>
 					{{ item.phone }}
 				</text>
@@ -59,6 +64,7 @@
 						<view
 							v-if="doctor.phone"
 							class="doctor-contact flex align-center"
+							@click="handleCall(doctor.phone)"
 						>
 							<uv-icon
 								:name="phoneIcon2"
@@ -70,7 +76,6 @@
 									color: #3d3d3d;
 									font-weight: bold;
 									margin-left: 8px;
-									@click= 'handleCall(doctor.phone)';
 								"
 							>
 								{{ doctor.phone }}
@@ -91,61 +96,14 @@ import safeInset from '../../../hooks/safeInset';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import phoneIcon from '@/static/card/phone.png';
 import phoneIcon2 from '@/static/card/phone2.png';
+import useHospital from '@/hooks/hospitalHook';
 
 const { safeInsetBottom } = safeInset();
 
-const list = ref([
-	{
-		title: '医院名称',
-		desc: '新疆维吾尔自治区人民医院',
-		address: '新疆维吾尔自治区人民医院地址',
-		phone: '0991-1234567',
-		doctors: [
-			{
-				name: '张医生',
-				department: '内科',
-				title: '主任医师',
-				phone: '0991-1234567',
-			},
-			{
-				name: '王医生',
-				department: '外科',
-				title: '副主任医师',
-				phone: '0991-1234567',
-			},
-		],
-	},
-	{
-		title: '联系电话',
-		desc: '0991-1234567',
-		address: '新疆维吾尔自治区人民医院地址',
-		phone: '0991-1234567',
-		doctors: [
-			{
-				name: '李医生',
-				department: '外科',
-				title: '副主任医师',
-				phone: '0991-1234567',
-			},
-		],
-	},
-	{
-		title: '联系地址',
-		desc: '新疆维吾尔自治区人民医院地址',
-		address: '新疆维吾尔自治区人民医院地址',
-		phone: '0991-1234567',
-		doctors: [
-			{
-				name: '王医生',
-				department: '儿科',
-				title: '主治医师',
-				phone: '0991-1234567',
-			},
-		],
-	},
-]);
+const { hospitalList } = useHospital();
 
 const handleCall = (phone: string) => {
+	if (!phone) return;
 	uni.makePhoneCall({
 		phoneNumber: phone,
 	});

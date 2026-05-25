@@ -113,7 +113,10 @@
 										<view class="table-cell name-cell">
 											<text>{{ row.name }}</text>
 										</view>
-										<view class="table-cell phone-cell">
+										<view
+											class="table-cell phone-cell"
+											@click="handleCall(row.phone)"
+										>
 											<text>{{ row.phone }}</text>
 										</view>
 									</view>
@@ -137,7 +140,10 @@
 <script setup>
 import { ref } from 'vue';
 import Carousel from './Carousel.vue';
-import { hospitalList } from '@/utils/hospital.js';
+import useHospital from '@/hooks/hospitalHook';
+
+const { hospitalList } = useHospital();
+
 const modal = ref();
 const list = [
 	{
@@ -154,6 +160,13 @@ const userInfo = ref(null);
 
 const handleOpen = () => {
 	modal.value?.open();
+};
+
+const handleCall = (phone) => {
+	if (!phone) return;
+	uni.makePhoneCall({
+		phoneNumber: phone,
+	});
 };
 
 defineExpose({

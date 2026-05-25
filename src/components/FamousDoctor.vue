@@ -7,46 +7,44 @@
 			</view>
 		</Title>
 		<view class="card" style="padding-top: 30rpx">
-			<scroll-view scroll-x enable-flex :show-scrollbar="false">
-				<view class="scroll-content">
+			<!-- <scroll-view scroll-x enable-flex :show-scrollbar="false"> -->
+			<view class="scroll-content">
+				<view
+					class="doctor-item flex flex-col flex-center"
+					v-for="(item, index) in doctorList"
+					@click="handleDetail(item)"
+					:key="index"
+				>
+					<image
+						:src="item.avatar || '@/static/home/doctor-avatar.png'"
+						mode="aspectFit"
+						class="doctor-avatar"
+						style="width: 180rpx; height: 200rpx"
+					/>
+					<view class="avatar-bg"></view>
 					<view
-						class="doctor-item flex flex-col flex-center"
-						v-for="(item, index) in doctorList"
-						@click="handleDetail(item)"
-						:key="index"
+						style="
+							margin-top: 10rpx;
+							font-size: 28rpx;
+							color: #4d9c73;
+							max-width: 240rpx;
+							white-space: nowrap;
+						"
 					>
-						<image
-							:src="
-								item.avatar || '@/static/home/doctor-avatar.png'
-							"
-							mode="aspectFit"
-							class="doctor-avatar"
-							style="width: 180rpx; height: 200rpx"
-						/>
-						<view class="avatar-bg"></view>
-						<view
-							style="
-								margin-top: 10rpx;
-								font-size: 28rpx;
-								color: #4d9c73;
-								max-width: 240rpx;
-								white-space: nowrap;
-							"
-						>
-							{{ item.name }}
-						</view>
-						<view
-							style="
-								margin-top: 10rpx;
-								font-size: 24rpx;
-								color: #898989;
-							"
-						>
-							{{ item.type }}
-						</view>
+						{{ item.name }}
+					</view>
+					<view
+						style="
+							margin-top: 10rpx;
+							font-size: 24rpx;
+							color: #898989;
+						"
+					>
+						{{ item.type }}
 					</view>
 				</view>
-			</scroll-view>
+			</view>
+			<!-- </scroll-view> -->
 		</view>
 	</view>
 </template>
@@ -59,15 +57,6 @@ import doctorHook from '@/hooks/doctorHook';
 
 const { doctorList } = doctorHook();
 
-const doctor = ref([
-	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
-	{ name: '热合曼.阿娜尔罕', type: '心内科-主任医师', avatar: avatar },
-	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
-	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
-	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
-	{ name: '热合曼', type: '心内科-主任医师', avatar: avatar },
-]);
-
 const handleMore = () => {
 	// uni.showToast({ icon: 'none', title: '敬请期待' });
 	uni.navigateTo({
@@ -77,7 +66,7 @@ const handleMore = () => {
 
 const handleDetail = (item) => {
 	uni.navigateTo({
-		url: `/pages/subpackage/doctorDetail/doctorDetail?name=${item.id}`,
+		url: `/pages/subpackage/doctorDetail/doctorDetail?id=${item.id}`,
 	});
 };
 </script>
@@ -88,10 +77,11 @@ const handleDetail = (item) => {
 	border-radius: 20rpx;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	.scroll-content {
+		width: 100%;
 		display: flex;
-		gap: 30rpx;
-		width: fit-content;
-		overflow-x: auto;
+		gap: 10rpx;
+		justify-content: space-between;
+		// overflow-x: auto;
 		.doctor-item {
 			min-width: 200rpx;
 			padding-top: 40rpx;
