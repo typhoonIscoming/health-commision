@@ -86,12 +86,23 @@ const loadStatus = ref('nomore');
 const list = ref([]);
 
 watch(
-	() => [tjbgList.value, resultList.value],
+	() => [tjbgList.value, resultList.value, serviceType.value],
 	(result) => {
 		const tjList = result[0];
+		console.log('====', serviceType.value);
 		if (serviceType.value === 'tj') {
 			if (!isEmpty(tjList)) {
 				list.value = tjList;
+			} else {
+				list.value = [
+					{
+						tjyy: '第一人民医院',
+						bgrq: '2024-01-04',
+						bgjgms: '体检正常',
+						bgmc: '测试人员的体验报告',
+						rowid: '3947325b-0220-49e2-82a4-88b3f408f056',
+					},
+				];
 			}
 		} else {
 			const val = result[1];
@@ -101,7 +112,7 @@ watch(
 			}
 		}
 	},
-	{ deep: true, immediate: true },
+	{ deep: true },
 );
 
 const handleClick = (sortType) => {
@@ -200,6 +211,7 @@ const service = ref([
 ]);
 
 onLoad((options) => {
+	console.log('oooo', options);
 	serviceType.value = options.type;
 	getPageData();
 	const option = service.value.find((item) => item.name === options.type);

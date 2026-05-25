@@ -25,23 +25,26 @@
 			/>
 			<view class="list-wrapper flex-col flex-between">
 				<view class="label">问卷调查</view>
-				<view class="desc">健康状态调研问卷</view>
+				<view class="desc">满意度调研问卷</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script lang="ts" setup>
-import psychoLogicalHook from '@/hooks/psychoLogicalHook';
+import { onMounted } from 'vue';
+import psychoLogicalHook from '@/hooks/psychoLogicalHook.js';
+import { checkLogin } from '@/utils';
+
 const { list, getData } = psychoLogicalHook();
 
-const handleClick = (type) => {
+const handleClick = (type: string) => {
 	let url = '';
 	if (type === 'xinli') {
-		const item = list.value.find((i) => i.ymdz);
+		const item = list.value.find((i: any) => i.ymdz);
 		url = item ? item.ymdz : '';
 	} else if (type === 'wenjuan') {
-		const item = list.value.find((i) => i.ymdz);
+		const item = list.value.find((i: any) => i.ymdz);
 		url = item ? item.ymdz : '';
 	}
 	if (url) {

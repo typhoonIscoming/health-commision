@@ -28,7 +28,7 @@
 													margin-left: 20rpx;
 												"
 											>
-												医疗优诊卡
+												医疗就诊卡
 											</text>
 										</view>
 										<view class="row flex-center">

@@ -18,8 +18,7 @@
 						@click="handleRoute"
 					></uv-tags>
 				</view>
-				<view class="physical-item-address"
-				>
+				<view class="physical-item-address">
 					体检机构：{{ info.tjyy }}
 				</view>
 				<view class="physical-item-address flex-between">
@@ -54,14 +53,18 @@ const handleRoute = async () => {
 	const path = decodeURIComponent(res.url);
 	const match = path.match(/\.([a-zA-Z0-9]+)(?=[\?&]|$)/);
 	const fileType = match ? match[1] : 'pdf';
-
+	wx.showLoading({
+		title: '正在获取体检报告',
+	});
 	uni.downloadFile({
 		url: path,
 		fail: function (result) {
 			console.log('下载文档异常', result);
+			wx.hideLoading();
 		},
 		success: function (result) {
 			var filePath = result.tempFilePath;
+			wx.hideLoading();
 			uni.openDocument({
 				filePath: filePath,
 				showMenu: true,
@@ -85,7 +88,7 @@ const handleRoute = async () => {
 		flex: 1;
 	}
 	&-title {
-		.title{
+		.title {
 			font-size: 38rpx;
 			font-weight: bold;
 			flex: 1;
