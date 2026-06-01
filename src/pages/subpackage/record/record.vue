@@ -180,8 +180,8 @@ const handleUnbind = () => {
 const fetchUserInfo = () => {
 	const auth = uni.getStorageSync('b2cAuth') || {};
 	model.value.name = auth.name || '';
-	model.value.age = auth.age || '';
-	model.value.gender = auth.sex || '';
+	model.value.age = auth.age || '65';
+	model.value.gender = auth.sex || '女';
 	let phone = auth.mob_num || '';
 	if (phone.startsWith('+86')) {
 		phone = phone.slice(3);
@@ -217,11 +217,11 @@ const fetchUserInfo = () => {
 		}
 	}
 	model.value.birthday = birthday || '';
-	model.value.rankYears = auth.zjnx || '';
-	model.value.recordStatus = auth.jlzt || '';
-	model.value.personStatus = auth.ryzt || '';
-	model.value.civilServantLevel = auth.gwyjb || '';
-	model.value.treatmentLevel = auth.dyjb || '';
+	model.value.rankYears = auth.zjnx || '30';
+	model.value.recordStatus = auth.jlzt || '正常';
+	model.value.personStatus = auth.ryzt || '退休';
+	model.value.civilServantLevel = auth.gwyjb || '厅级';
+	model.value.treatmentLevel = auth.dyjb || '处级正职';
 	const id = auth.car_id || '';
 	if (id.length < 8) {
 		model.value.idCard = id || '';

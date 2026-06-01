@@ -36,7 +36,7 @@
 					</view>
 					<view class="row flex-center">
 						<view class="label">性别：</view>
-						<view class="value">{{ userInfo?.sex }}</view>
+						<view class="value">{{ userInfo?.sex || '女' }}</view>
 					</view>
 					<view class="row flex-center">
 						<view class="label" style="font-weight: bold">

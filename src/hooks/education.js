@@ -14,7 +14,7 @@ export default () => {
 	const mockList = ref([
 		{
 			name: '糖尿病骨质疏松导致的骨折',
-			updateTime: '2024-06-01',
+			updateTime: '2024-06-03',
 			type: '图文消息',
 			img: healthimg,
 		},
