@@ -220,7 +220,7 @@ const fetchUserInfo = () => {
 	model.value.rankYears = auth.zjnx || '30';
 	model.value.recordStatus = auth.jlzt || '正常';
 	model.value.personStatus = auth.ryzt || '退休';
-	model.value.civilServantLevel = auth.gwyjb || '厅级';
+	model.value.civilServantLevel = auth.civilServantLevel || '厅级';
 	model.value.treatmentLevel = auth.dyjb || '处级正职';
 	const id = auth.car_id || '';
 	if (id.length < 8) {

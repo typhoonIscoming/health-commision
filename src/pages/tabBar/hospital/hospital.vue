@@ -13,7 +13,7 @@
 			v-for="(item, i) in hospitalList"
 			:key="i"
 		>
-			<view class="hospital-name flex align-center">
+			<view class="hospital-name flex">
 				<uv-icon
 					:name="hospitalIcon"
 					size="20"
@@ -125,6 +125,7 @@ const handleCall = (phone: string) => {
 	.hospital-name {
 		gap: 10rpx;
 		padding-left: 10px;
+		align-items: flex-start;
 	}
 	.hospital-address {
 		margin: 10rpx 0;

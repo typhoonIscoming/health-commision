@@ -58,6 +58,11 @@
 											</view>
 											<view class="value">
 												{{
+													userInfo?.civilServantLevel ||
+													'厅级'
+												}}
+
+												{{
 													userInfo?.zjnx || '10年以上'
 												}}
 											</view>
