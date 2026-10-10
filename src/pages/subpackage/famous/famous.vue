@@ -1,7 +1,7 @@
 <template>
 	<view class="famous-wrapper">
 		<view
-			v-for="(item, i) in doctorList"
+			v-for="(item, i) in list"
 			:key="i"
 			class="doctor-item flex"
 			@click="handleClick(item)"
@@ -23,10 +23,10 @@
 							font-weight: bold;
 						"
 					>
-						{{ item.name }}
+						{{ item.ysxm }}
 					</text>
 					<text style="margin-left: 10rpx; font-size: 26rpx">
-						{{ item.type }}
+						{{ item.zhicheng }}
 					</text>
 				</view>
 				<view
@@ -38,38 +38,38 @@
 					"
 				>
 					<text>
-						{{ item.hospital }}
+						{{ item.ssyyjg }}
 					</text>
 					|
 					<text>
-						{{ item.department }}
+						{{ item.szks }}
 					</text>
 				</view>
 				<view style="margin-top: 10rpx; color: #999999">
-					{{ item.skill }}
+					{{ parseText(item.desc) }}
 				</view>
 			</view>
 		</view>
-		<uv-load-more :status="loadStatus" @loadmore="getData" />
+		<uv-load-more :status="loadStatus" @loadmore="getDoctorData" />
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import doctorHook from '@/hooks/doctorHook';
 
-const { doctorList } = doctorHook();
+const { doctorList, list, getData } = doctorHook();
 
 const loadStatus = ref('');
 
-const getData = (fresh) => {
+const getDoctorData = (fresh) => {
 	if (loadStatus.value === 'noMore') {
 		return;
 	}
 	loadStatus.value = 'loading';
-	setTimeout(() => {
+	getData().then(() => {
 		loadStatus.value = 'noMore';
-	}, 1000);
+	});
 };
 
 const handleClick = (item) => {
@@ -77,6 +77,23 @@ const handleClick = (item) => {
 		url: `/pages/subpackage/doctorDetail/doctorDetail?id=${item.id}`,
 	});
 };
+
+const parseText = (nodes) => {
+	let result = '';
+	nodes.forEach((node) => {
+		if (node.text) {
+			result += node.text;
+		}
+		if (node.children && node.children.length) {
+			result += parseText(node.children);
+		}
+	});
+	return result;
+};
+
+onMounted(() => {
+	getDoctorData();
+});
 </script>
 <style lang="scss">
 .famous-wrapper {

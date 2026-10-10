@@ -1,4 +1,9 @@
 import { ref } from 'vue';
+import { getWorksheetInfo, getWorksheetDetail } from '@/api';
+import { to, isEmpty, isJSON } from '@/utils';
+import constants from '@/utils/constants';
+import parseHtml from '@/utils/html-paser';
+
 import doctorAvatar from '@/static/card/doctor.png';
 
 import lvsq from '@/static/doctor/lqs.png';
@@ -6,6 +11,7 @@ import whm from '@/static/doctor/whm.png';
 import zl from '@/static/doctor/zl.png';
 
 export default () => {
+	const list = ref([]);
 	const doctorList = ref([
 		{
 			id: 2,
@@ -37,7 +43,7 @@ export default () => {
 		{
 			id: 3,
 			name: '吕全胜',
-			type: '副主任',
+			type: '主任医师',
 			avatar: lvsq,
 			fakeAvatar: doctorAvatar,
 			hospital: '自治区中医医院',
@@ -47,7 +53,77 @@ export default () => {
 				'对于老年心脑血管疾病有着丰富的临床治疗经验；目前为《火树华心悸临证经验集》主编、《现代中医临证指南》副主编，获得自治区自然科学基金项目等，国家《中医药骨伤特色救治能力建设项目》主办人，国家“十四五”全国高等院校行业规划教材《中西医结合急救医学》、《中医急诊学》编委。',
 		},
 	]);
+	// 保存配置
+	const worksheetInfo = ref({});
+
+	const getWorksheet = async () => {
+		const data = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'myfc',
+		};
+		const [err, res] = await to(getWorksheetInfo(data));
+		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
+			return;
+		}
+		worksheetInfo.value = res.data;
+		return res.data;
+	};
+
+	const getData = async () => {
+		let config = {};
+		if (isEmpty(worksheetInfo.value)) {
+			const result = await getWorksheet();
+			if (isEmpty(result)) {
+				return;
+			}
+			config = result;
+		} else {
+			config = worksheetInfo.value;
+		}
+		const { views, controls } = config;
+		const view = views.find((item) => item.name === '全部');
+		const params = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'myfc',
+			viewId: view.viewId,
+			listType: 1,
+			isAsc: false,
+		};
+		const [e, response] = await to(getWorksheetDetail(params));
+		if (!isEmpty(e) || isEmpty(response.data.rows)) {
+			return;
+		}
+		list.value = response.data.rows
+			.sort((a, b) => {
+				// 判断a/b是否有设置排序数字，没有的话就向后排
+				const aIndex = Number(a.pxzd) || Number.MAX_SAFE_INTEGER;
+				const bIndex = Number(b.pxzd) || Number.MAX_SAFE_INTEGER;
+				return aIndex - bIndex;
+			})
+			.map((item) => {
+				const desc = parseHtml(item.zyzl);
+				const hasImg =
+					item.yszp &&
+					isJSON(item.yszp) &&
+					JSON.parse(item.yszp).length > 0;
+				const img = hasImg
+					? JSON.parse(item.yszp)[0]?.large_thumbnail_full_path
+					: '';
+				return {
+					desc: desc,
+					avatar: img,
+					...item,
+					id: item.rowid,
+				};
+			});
+		console.log('名医风采排序后:', list.value);
+	};
+
 	return {
 		doctorList,
+		list,
+		getData,
 	};
-};
+};;

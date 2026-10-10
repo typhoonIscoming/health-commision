@@ -84,6 +84,19 @@ export const parseTime = (v, format = 'yyyy-MM-dd HH:mm:ss') => {
 	return result;
 };
 
+export const isJSON = (str) => {
+	if (typeof str !== 'string') return false;
+	try {
+		const obj = JSON.parse(str);
+		const isObj =
+			Object.prototype.toString.call(obj) === '[object Object]' ||
+			Array.isArray(obj);
+		return isObj ? obj : false;
+	} catch (e) {
+		return false;
+	}
+};
+
 export const checkLogin = {
 	checkAuthInfo: (fn = noop) => {
 		const tokenInfo = uni.getStorageSync('b2cToken');

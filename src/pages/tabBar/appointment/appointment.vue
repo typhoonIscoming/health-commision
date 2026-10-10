@@ -40,9 +40,7 @@
 							:key="index2"
 							style="white-space: nowrap"
 							:class="{
-								active:
-									hospitalIndex === currentIndex &&
-									timeIndex === index2,
+								active: timeIndex === index2,
 								disabled: !item2.num,
 							}"
 							@click="handleSelected(index2)"
@@ -112,6 +110,7 @@ const form = ref();
 
 onMounted(() => {
 	const userInfo = uni.getStorageSync('b2cAuth');
+	console.log('userInfo', userInfo);
 	if (isEmpty(userInfo)) {
 		return;
 	}
@@ -146,6 +145,7 @@ const change = (id) => {
 	currentIndex.value = index;
 	timeIndex.value = null;
 	const item = list.value[index];
+	console.log('change', id, index, item);
 	getHospitialDateList(item);
 };
 // 选择的医院
@@ -169,7 +169,7 @@ const handleSelected = (index) => {
 };
 
 const onSubmit = async (userInfo) => {
-	const selectedHospital = list.value[hospitalIndex.value];
+	const selectedHospital = list.value[currentIndex.value];
 	const selectedTime = selectedHospital.children[timeIndex.value];
 	if (isEmpty(selectedTime)) {
 		uni.showToast({ icon: 'none', title: '请选择预约时间' });

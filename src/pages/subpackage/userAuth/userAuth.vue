@@ -339,7 +339,7 @@ const handleBindUserInfo = () => {
 	};
 	bindUserAuth(params)
 		.then((res) => {
-			res = mockBindUserInfo(params);
+			res = res ? res : mockBindUserInfo(params);
 			console.log('bindUserAuth', res);
 			if (!res || res.code !== 'S200') {
 				uni.showToast({

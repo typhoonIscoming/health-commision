@@ -35,7 +35,7 @@
 			<view class="doctor-detail" style="flex: 1">
 				<view class="flex">
 					<uv-tags
-						:text="doctorDetail.type"
+						:text="doctorDetail.zhicheng"
 						plain
 						shape="circle"
 						size="mini"
@@ -50,10 +50,10 @@
 						margin-top: 20rpx;
 					"
 				>
-					{{ doctorDetail.name }}
+					{{ doctorDetail.ysxm }}
 				</view>
 				<view style="margin-top: 20rpx; font-size: #222">
-					{{ doctorDetail.department }}
+					{{ doctorDetail.szks }}
 				</view>
 				<view class="hospital-address">
 					<uv-icon
@@ -61,7 +61,7 @@
 						size="20"
 						color="#999999"
 					></uv-icon>
-					<text>{{ doctorDetail.hospital }}</text>
+					<text>{{ doctorDetail.ssyyjg }}</text>
 				</view>
 			</view>
 		</view>
@@ -71,10 +71,13 @@
 				<text style="font-size: 32rpx; color: #58b384">擅长</text>
 			</view>
 			<view class="skill-content">
-				<view> {{ doctorDetail.skill }} </view>
+				<view> {{ doctorDetail.scly }} </view>
 			</view>
 		</view>
-		<view class="doctor-skill-at doctor-info">
+		<view
+			v-if="doctorDetail.desc && doctorDetail.desc.length > 0"
+			class="doctor-skill-at doctor-info"
+		>
 			<view class="flex flex-center">
 				<uv-icon
 					:name="doctorSkill"
@@ -85,7 +88,9 @@
 			</view>
 			<view class="skill-content">
 				<view>
-					{{ doctorDetail.introduction }}
+					{{ descriptions }}
+					<!-- {{ doctorDetail.introduction }} -->
+					<!-- <RichTextNode :nodes="doctorDetail.desc" /> -->
 				</view>
 			</view>
 		</view>
@@ -95,24 +100,47 @@
 import doctorHook from '@/hooks/doctorHook';
 import { onLoad } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
+import RichTextNode from '@/components/RichTextNode.vue';
 import doctorBg from '@/static/card/doctor-detail.png';
 import doctorAvatar from '@/static/card/doctor.png';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import goodAt from '@/static/card/skill.png';
 import doctorSkill from '@/static/card/doctor-skill.png';
+import { computed } from 'vue';
 
-const { doctorList } = doctorHook();
+const { doctorList, list, getData } = doctorHook();
 
 const doctorDetail = ref({});
+const descriptions = ref('');
 
-const getData = (id) => {
-	doctorDetail.value = doctorList.value.find((item) => item.id == id);
+const getDoctorDetail = (id) => {
+	doctorDetail.value = list.value.find((item) => item.id == id);
+	if (doctorDetail.value.desc.length) {
+		// 递归将数组中的文字提取出来
+		const extractText = (nodes) => {
+			let result = '';
+			nodes.forEach((node) => {
+				if (node.text) {
+					result += node.text;
+				}
+				if (node.children && node.children.length) {
+					result += extractText(node.children);
+				}
+			});
+			return result;
+		};
+		descriptions.value = extractText(doctorDetail.value.desc);
+	}
+
+	console.log('doctorDetail', doctorDetail.value, descriptions.value);
 };
 
 onLoad((options) => {
 	const { id } = options;
 	console.log('id', id);
-	getData(Number(id));
+	getData().then(() => {
+		getDoctorDetail(id);
+	});
 });
 </script>
 <style lang="scss">

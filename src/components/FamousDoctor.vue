@@ -7,55 +7,61 @@
 			</view>
 		</Title>
 		<view class="card" style="padding-top: 30rpx">
-			<!-- <scroll-view scroll-x enable-flex :show-scrollbar="false"> -->
-			<view class="scroll-content">
-				<view
-					class="doctor-item flex flex-col flex-center"
-					v-for="(item, index) in doctorList"
-					@click="handleDetail(item)"
-					:key="index"
-				>
-					<image
-						:src="item.avatar || '@/static/home/doctor-avatar.png'"
-						mode="aspectFit"
-						class="doctor-avatar"
-						style="width: 180rpx; height: 200rpx"
-					/>
-					<view class="avatar-bg"></view>
+			<scroll-view scroll-x enable-flex :show-scrollbar="false">
+				<view class="scroll-content">
 					<view
-						style="
-							margin-top: 10rpx;
-							font-size: 28rpx;
-							color: #4d9c73;
-							max-width: 240rpx;
-							white-space: nowrap;
-						"
+						class="doctor-item flex flex-col flex-center"
+						v-for="(item, index) in list"
+						@click="handleDetail(item)"
+						:key="index"
 					>
-						{{ item.name }}
-					</view>
-					<view
-						style="
-							margin-top: 10rpx;
-							font-size: 24rpx;
-							color: #898989;
-						"
-					>
-						{{ item.type }}
+						<image
+							:src="
+								item.avatar || '@/static/home/doctor-avatar.png'
+							"
+							mode="aspectFit"
+							class="doctor-avatar"
+							style="width: 180rpx; height: 200rpx"
+						/>
+						<view class="avatar-bg"></view>
+						<view
+							style="
+								margin-top: 10rpx;
+								font-size: 28rpx;
+								color: #4d9c73;
+								max-width: 240rpx;
+								white-space: nowrap;
+							"
+						>
+							{{ item.ysxm }}
+						</view>
+						<view
+							style="
+								margin-top: 10rpx;
+								font-size: 24rpx;
+								color: #898989;
+							"
+						>
+							{{ item.zhicheng }}
+						</view>
 					</view>
 				</view>
-			</view>
-			<!-- </scroll-view> -->
+			</scroll-view>
 		</view>
 	</view>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted } from 'vue';
 import Title from './Title.vue';
 import avatar from '@/static/card/doctor.png';
 import doctorHook from '@/hooks/doctorHook';
 
-const { doctorList } = doctorHook();
+const { list, getData } = doctorHook();
+
+onMounted(() => {
+	getData();
+});
 
 const handleMore = () => {
 	// uni.showToast({ icon: 'none', title: '敬请期待' });

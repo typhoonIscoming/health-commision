@@ -38,6 +38,7 @@ export default () => {
 		const view = views.find((item) => item.name === '全部');
 		const control = controls.find((item) => item.alias === 'leixing');
 		const option = control.options.find((item) => item.value === filter);
+		// console.log('viewview:', worksheetInfo.value, views, view);
 		const params = {
 			appKey: constants.appKey,
 			sign: constants.sign,
@@ -45,18 +46,19 @@ export default () => {
 			viewId: view.viewId,
 			listType: 1,
 			isAsc: false,
-			filters: [
-				{
-					controlId: control.controlId,
-					// values: ['62224596'],
-					values: [option.key],
-					filterType: 2,
-					dataType: 2,
-					spliceType: 1,
-				},
-			],
+			// filters: [
+			// 	{
+			// 		controlId: control.controlId,
+			// 		// values: ['62224596'],
+			// 		values: [option.key],
+			// 		filterType: 2,
+			// 		dataType: 2,
+			// 		spliceType: 1,
+			// 	},
+			// ],
 		};
 		const [e, response] = await to(getWorksheetDetail(params));
+		console.log('responseresponse:', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}
