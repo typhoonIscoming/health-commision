@@ -214,31 +214,27 @@ const handlePreLogin = () => {
 		return;
 	}
 	// #ifdef MP-WEIXIN
-	// wx.login({
-	// 	success: (loginRes) => {
-	// 		console.log('微信登录成功：', loginRes);
-	// 		if (!isEmpty(loginRes.code)) {
-	// 			handleLogin(loginRes.code);
-	// 		} else {
-	// 			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
-	// 		}
-	// 	},
-	// 	fail: (err) => {
-	// 		// eslint-disable-next-line no-console
-	// 		console.log('获取登录code失败：', err);
-	// 		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
-	// 	},
-	// });
-	handleH5Login();
-	uni.navigateTo({
-		url: '/pages/subpackage/userAuth/userAuth',
+	wx.login({
+		success: (loginRes) => {
+			console.log('微信登录成功：', loginRes);
+			if (!isEmpty(loginRes.code)) {
+				handleLogin(loginRes.code);
+			} else {
+				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+			}
+		},
+		fail: (err) => {
+			// eslint-disable-next-line no-console
+			console.log('获取登录code失败：', err);
+			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+		},
 	});
 	// #endif
 	// #ifndef MP-WEIXIN
-	handleH5Login();
-	uni.navigateTo({
-		url: '/pages/subpackage/userAuth/userAuth',
-	});
+	// handleH5Login();
+	// uni.navigateTo({
+	// 	url: '/pages/subpackage/userAuth/userAuth',
+	// });
 	// #endif
 };
 // H5模拟登录

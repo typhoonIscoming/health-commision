@@ -60,18 +60,23 @@
 							placeholderStyle="color: #7C7C7C"
 						>
 							<template v-slot:suffix>
-								<uv-code
-									ref="uCode"
-									@change="codeChange"
-									seconds="20"
-									changeText="X秒重新获取"
-								></uv-code>
 								<uv-button
+									v-if="showCountDown"
+									type="primary"
+									size="mini"
+									shape="circle"
+									color="#58B384"
+								>
+									{{ count }} s
+								</uv-button>
+								<uv-button
+									v-else
 									:text="verifyText"
 									type="primary"
 									size="mini"
 									shape="circle"
 									color="#58B384"
+									@click="handleGetVerifyCode"
 								>
 									发送验证码
 								</uv-button>
@@ -209,9 +214,10 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import faceVerify from '@/utils/faceVerify';
-import { bindUserAuth } from '@/api/index.js';
+import { bindUserAuth, getMobileVerifyCode } from '@/api/index.js';
+import { isEmpty, to } from '@/utils';
 
 const verifyText = ref('获取验证码');
 const form = ref(null);
@@ -274,10 +280,9 @@ const rules = ref({
 	// 	},
 	// ],
 });
-
-const codeChange = (text) => {
-	verifyText.value = text;
-};
+const showCountDown = ref(false);
+const count = ref(60);
+let timer = null;
 
 const handleSubmit = () => {
 	form.value
@@ -379,6 +384,60 @@ const mockBindUserInfo = (params) => {
 	};
 	return temp;
 };
+// 获取短信验证码
+const handleGetVerifyCode = async () => {
+	if (isEmpty(model.value.phone)) {
+		uni.showToast({ icon: 'none', title: '请输入手机号' });
+		return;
+	}
+	const [err, res] = await to(
+		getMobileVerifyCode({
+			// mob: model.value.phone,
+			mob: '18227337736',
+			// time: new Date().getTime(),
+		}),
+	);
+	if (err) {
+		uni.showToast({ icon: 'none', title: err.message || '获取验证码失败' });
+		return;
+	}
+	startInterval();
+	uni.showToast({ icon: 'none', title: '验证码已发送' });
+};
+
+const startInterval = (initTime) => {
+	const entryTime = parseInt(new Date().getTime() / 1000); // 进入页面得当前时间
+	let currentTime = 0; // 当前时间
+	const maxtime = initTime || 60; // 传入秒钟 = 最多走几秒
+	count.value = maxtime;
+	showCountDown.value = true;
+	timer = setInterval(() => {
+		currentTime = parseInt(new Date().getTime() / 1000); // 在定时器里面每隔一秒记录当前时间；
+		const TimeDifference = currentTime - entryTime; // 时间差
+		const mytime = maxtime - TimeDifference; // 传入的秒数 - 已经走掉的秒数  = 当前还剩多少秒数
+
+		if (TimeDifference <= maxtime) {
+			// 如果已经走掉的秒数 小于等于  传入的秒数
+			count.value = Math.floor(mytime % 60);
+		} else {
+			clearInterval(timer);
+			timer = null;
+			showCountDown.value = false;
+			uni.removeStorageSync('b2cVerifyCodeEntryTime');
+		}
+		uni.setStorageSync('b2cVerifyCodeEntryTime', count.value);
+	}, 1000);
+};
+
+onMounted(() => {
+	// 进入页面查看是否之前的倒计时还没有完成
+	const remainingTime = uni.getStorageSync('b2cVerifyCodeEntryTime');
+	if (remainingTime > 0) {
+		count.value = remainingTime;
+		showCountDown.value = true;
+		startInterval(remainingTime);
+	}
+});
 </script>
 <style lang="scss">
 .userAuth {

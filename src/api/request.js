@@ -3,8 +3,8 @@ import { isEmpty } from '@/utils';
 
 const http = /^(http[s]?)/;
 
-// const BASE_URL = 'http://192.168.3.182:9080';
-const BASE_URL = 'https://www.2g2b.cn';
+const BASE_URL = 'https://bjbecbc.xjqmjk.com';
+// const BASE_URL = 'https://www.2g2b.cn';
 
 export default function request(options) {
 	const {

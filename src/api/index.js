@@ -3,7 +3,7 @@ import constants from '../utils/constants';
 
 export const fastLogin = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookLogin}`,
+		url: `/api/workflow/hooks2/${constants.hookLogin}`,
 		method: 'POST',
 		data,
 	});
@@ -12,7 +12,7 @@ export const fastLogin = (data) => {
 // 判断当前用户是否已经认证
 export const checkUserAuth = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookNewAuthCheck}`,
+		url: `/api/workflow/hooks2/${constants.hookNewAuthCheck}`,
 		method: 'GET',
 		data,
 	});
@@ -21,7 +21,7 @@ export const checkUserAuth = (data) => {
 // 绑定用户信息
 export const bindUserAuth = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookNewAuthBind}`,
+		url: `/api/workflow/hooks2/${constants.hookNewAuthBind}`,
 		method: 'post',
 		data,
 	});
@@ -30,7 +30,7 @@ export const bindUserAuth = (data) => {
 // 获取验证码
 export const getMobileVerifyCode = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.mobileVerifyCodeKey}`,
+		url: `/api/workflow/hooks2/${constants.mobileVerifyCodeKey}`,
 		method: 'POST',
 		data,
 	});
@@ -66,7 +66,7 @@ export const getRowDetail = (data) => {
 // 获取体检报告的下载地址
 export const getReportUrl = (data) => {
 	return request({
-		url: `/api/workflow/hooks/${constants.hookDownloadReport}`,
+		url: `/api/workflow/hooks2/${constants.hookDownloadReport}`,
 		method: 'POST',
 		data,
 	});
