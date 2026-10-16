@@ -218,6 +218,7 @@ import { ref, onMounted } from 'vue';
 import faceVerify from '@/utils/faceVerify';
 import { bindUserAuth, getMobileVerifyCode } from '@/api/index.js';
 import { isEmpty, to } from '@/utils';
+import constants from '@/utils/constants';
 
 const verifyText = ref('获取验证码');
 const form = ref(null);
@@ -394,7 +395,8 @@ const handleGetVerifyCode = async () => {
 		getMobileVerifyCode({
 			// mob: model.value.phone,
 			mob: '18227337736',
-			// time: new Date().getTime(),
+			appkey: constants.appKey,
+			sign: constants.sign,
 		}),
 	);
 	if (err) {

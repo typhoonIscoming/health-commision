@@ -6,7 +6,7 @@ export default {
 	hookLogin: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM1', // 'Njk1M2Q2MWM5YmI4MzcxMjBhOTFiNTBj', // 快速登录hook值
 	hookAuthCheck: 'Njk1ZDI1MTI5YmI4MzcxMjBhYTY0OGZk', // 用户认证hook值
 	hookAuthBind: 'Njk2MGE5NTlmMWQyYjk1ZWE2OTljNDVi', // 绑定用户信息hook值
-	hookNewAuthCheck: 'Njk3MjM1ZmExMmZhNjYzYTcxMzlmZTAz',
+	hookNewAuthCheck: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM4', // 'Njk3MjM1ZmExMmZhNjYzYTcxMzlmZTAz',
 	hookNewAuthBind: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM3', // 'Njk3MjJkMWMxMmZhNjYzYTcxMzljOTQy', // 最新的hook
 	hookDownloadReport: 'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
 	hookMakeAppointment: 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
