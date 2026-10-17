@@ -102,7 +102,7 @@ onMounted(() => {
 	// 获取体检报告数量
 	checkLogin.checkAuthInfo(() => {
 		showContent.value = true;
-	});
+	}, false);
 });
 </script>
 <style lang="scss">

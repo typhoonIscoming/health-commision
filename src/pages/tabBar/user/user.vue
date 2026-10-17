@@ -94,7 +94,7 @@ const userInfo = ref(null);
 
 const menus = ref([
 	{
-		name: '备案信息',
+		name: '个人信息',
 		desc: '完善个人信息',
 		label: 'record',
 		icon: 'beianxinxi',

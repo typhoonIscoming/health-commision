@@ -98,9 +98,10 @@ export const isJSON = (str) => {
 };
 
 export const checkLogin = {
-	checkAuthInfo: (fn = noop) => {
+	checkAuthInfo: (fn = noop, autoRoute = true) => {
 		const tokenInfo = uni.getStorageSync('b2cToken');
 		const auth = uni.getStorageSync('b2cAuth');
+		const openid = uni.getStorageSync('b2cOpenid');
 		if (tokenInfo && auth) {
 			fn(auth, tokenInfo);
 			return true;
@@ -109,20 +110,25 @@ export const checkLogin = {
 		checkLogin.setRouteUrlAfterLogin();
 		// 如果未登录或登录过期，跳转登录页
 		if (
+			!openid ||
 			!tokenInfo ||
 			!tokenInfo.token ||
 			(tokenInfo.expires &&
 				+new Date() - tokenInfo.expires > 7 * 24 * 3600 * 1000)
 		) {
-			uni.navigateTo({
-				url: '/pages/subpackage/login/login',
-			});
+			if (autoRoute) {
+				uni.navigateTo({
+					url: '/pages/subpackage/login/login',
+				});
+			}
 			return false;
 		}
 		if (!auth) {
-			uni.navigateTo({
-				url: '/pages/subpackage/userAuth/userAuth',
-			});
+			if (autoRoute) {
+				uni.navigateTo({
+					url: '/pages/subpackage/userAuth/userAuth',
+				});
+			}
 		}
 
 		return false;

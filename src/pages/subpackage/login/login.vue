@@ -26,6 +26,8 @@
 			<view v-if="loginStatus === 'fastLogin'" class="fast-login">
 				<uv-button
 					@click="handlePreLogin"
+					:disabled="isLoggingIn"
+					:loading="isLoggingIn"
 					shape="circle"
 					color="#58B384"
 				>
@@ -80,6 +82,8 @@
 						color="var(--uni-primary-text-color)"
 						shape="circle"
 						@click="onLogin"
+						:disabled="isLoggingIn"
+						:loading="isLoggingIn"
 					>
 						登录
 					</uv-button>
@@ -177,53 +181,65 @@ const rules = ref({
 			trigger: 'blur',
 		},
 	],
-	// verify: [
-	// 	{
-	// 		required: true,
-	// 		message: '请输入验证码',
-	// 		trigger: 'blur',
-	// 	},
-	// ],
+	verify: [
+		{
+			required: true,
+			message: '请输入验证码',
+			trigger: 'blur',
+		},
+	],
 });
 const count = ref();
 // 显示倒计时
 const showCountDown = ref(false);
 const showAgreementPop = ref(false);
 const isPrivacy = ref(0); // 是否同意隐私协议，1已同意，0未同意
+const isLoggingIn = ref(false);
 const form = ref();
 
 let timer = null;
 
 const otherLogin = () => {
+	if (isLoggingIn.value) {
+		return;
+	}
 	loginStatus.value =
 		loginStatus.value === 'fastLogin' ? 'phoneLogin' : 'fastLogin';
 };
 
-const onGetPhoneNumberLogin = (e) => {
-	if (!e.detail.code) {
-		// eslint-disable-next-line no-console
-		console.log('手机授权获取code失败：', e.detail);
-		uni.showToast({ icon: 'none', title: '手机授权获取失败' });
+const handlePreLogin = () => {
+	if (isLoggingIn.value) {
 		return;
 	}
-	handleLogin(e.detail.code);
-};
-const handlePreLogin = () => {
 	if (isPrivacy.value !== 1) {
 		showAgreementPop.value = true;
 		return;
 	}
+	isLoggingIn.value = true;
+	requestWechatLogin();
+};
+
+const requestWechatLogin = () => {
+	const isPhoneLogin = loginStatus.value === 'phoneLogin';
 	// #ifdef MP-WEIXIN
 	wx.login({
 		success: (loginRes) => {
 			console.log('微信登录成功：', loginRes);
 			if (!isEmpty(loginRes.code)) {
-				handleLogin(loginRes.code);
+				// 不管是微信登录还是短信登录，都需要使用登录code去换取openid
+				if (!isPhoneLogin) {
+					handleLogin(loginRes.code);
+				} else {
+					loginByPhone(loginRes.code);
+				}
+				uni.setStorageSync('b2cWechatCode', loginRes.code);
 			} else {
+				isLoggingIn.value = false;
 				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 			}
 		},
 		fail: (err) => {
+			isLoggingIn.value = false;
 			// eslint-disable-next-line no-console
 			console.log('获取登录code失败：', err);
 			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
@@ -231,21 +247,10 @@ const handlePreLogin = () => {
 	});
 	// #endif
 	// #ifndef MP-WEIXIN
-	// handleH5Login();
-	// uni.navigateTo({
-	// 	url: '/pages/subpackage/userAuth/userAuth',
-	// });
+	isLoggingIn.value = false;
 	// #endif
 };
-// H5模拟登录
-const handleH5Login = () => {
-	uni.setStorageSync('b2cWechatCode', '0f360Sll2Mxl6h4gOfol2czfS5060Slm');
-	uni.setStorageSync('b2cOpenid', 'oAHxr7e4Accb6y1zO4ot2Co7JAVg');
-	uni.setStorageSync('b2cToken', {
-		expires: +new Date(),
-		token: 'b49a39b1-581c-4bbe-8c12-3505ef7d14a7',
-	});
-};
+// 微信快速登录
 const handleLogin = (code) => {
 	fastLogin({
 		js_code: code,
@@ -254,26 +259,53 @@ const handleLogin = (code) => {
 		login_type: 'weixin',
 	})
 		.then((res) => {
-			uni.setStorageSync('b2cWechatCode', code);
-			console.log('快速登录成功：', res);
 			// eslint-disable-next-line no-console
 			if (!isEmpty(res.token)) {
 				handleFastLoginCheck(res);
 			} else {
+				isLoggingIn.value = false;
 				uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 			}
 		})
 		.catch((err) => {
+			isLoggingIn.value = false;
 			// eslint-disable-next-line no-console
 			console.log('快速登录失败：', err);
+			uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 		});
 };
+// 通过手机号登录
+const loginByPhone = async (code) => {
+	const params = {
+		js_code: code,
+		appKey: constants.appKey,
+		sign: constants.sign,
+		login_type: 'tel',
+		tel_no: model.value.phone,
+		auth_code: model.value.verify,
+	};
+	const [err, res] = await to(fastLogin(params));
+	if (!isEmpty(err) || isEmpty(res)) {
+		isLoggingIn.value = false;
+		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+		return;
+	}
+	if (!isEmpty(res.token)) {
+		handleFastLoginCheck(res);
+	} else {
+		isLoggingIn.value = false;
+		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
+	}
+};
+
 const handleFastLoginCheck = async (data) => {
 	// 检查用户是否已经授权，如果没有授权，就跳转授权页
 	const [err, res] = await to(
 		checkUserAuth({ open_id: data.openid, token: data.token }),
 	);
 	if (!isEmpty(err)) {
+		isLoggingIn.value = false;
+		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 		return;
 	}
 	let { user_id } = res;
@@ -331,8 +363,7 @@ const getVerify = () => {
 		return;
 	}
 	getMobileVerifyCode({
-		手机号: model.value.phone,
-		time: new Date().getTime(),
+		mob: model.value.phone,
 	})
 		.then(() => {
 			uni.showToast({ icon: 'none', title: '验证码已发送' });
@@ -350,81 +381,28 @@ const getVerify = () => {
 };
 
 const onLogin = () => {
-	console.log('---', form.value.validate);
+	if (isLoggingIn.value) {
+		return;
+	}
+	isLoggingIn.value = true;
 	form.value
 		.validate()
 		.then((valid) => {
-			console.log('validate---', valid);
-			if (valid) {
-				if (isPrivacy.value !== 1) {
-					showAgreementPop.value = true;
-					return;
-				}
-				loginByPhone();
-			} else {
-				uni.showToast({ icon: 'none', title: '请填写完整信息' });
-				return false;
+			if (!valid) {
+				isLoggingIn.value = false;
+				return;
 			}
+			if (isPrivacy.value !== 1) {
+				isLoggingIn.value = false;
+				showAgreementPop.value = true;
+				return;
+			}
+			requestWechatLogin();
 		})
 		.catch(() => {
+			isLoggingIn.value = false;
 			uni.showToast({ icon: 'none', title: '请填写完整信息' });
-			return false;
 		});
-};
-// 通过手机号登录
-const loginByPhone = async () => {
-	// #ifdef H5
-	const token = {
-		expires: 1769102486226,
-		token: '9af286c4-3177-4099-9d3f-c2d7a49ba20e',
-	};
-	const info = {
-		msg: '绑定成功',
-		birthday: '1985-01-01',
-		dyjb: '处级正职',
-		gwyjb: '六级公务员',
-		code: 'S200',
-		zjnx: '退休厅级10年以上',
-		mob_num: '+8616601762764',
-		tx: 'https://www.2g2b.cn/file/mdpic/aa59881e-0936-4e06-a0b9-aa627b124541/cabace3c-e25e-4020-add2-14bae997e3ee/695fbdff1544a42694699177/20260123/dG0m5xfI06dg1S1V8x366Gc116b1e75a07aF5Nftfl7u657Z5he1eX2La9c8fr3E.jpeg?attname=fb1036faa4a0d0ed6496fcab03aa659b.jpeg&e=1769530858&token=mdstorage:0krx-13-v25KOIs4-9xiFv7s_HY=',
-		sex: '男',
-		jlzt: '正常',
-		ryzt: '退休',
-		user_id: 'U20248736652',
-		ybbh: '62196250',
-		name: '测试2',
-		yhdw: '新疆维吾尔自治区商务厅',
-		car_id: '65232219850101101X',
-		age: '41',
-	};
-	uni.setStorageSync('b2cAuth', info);
-	uni.setStorageSync('b2cToken', token);
-	// #endif
-	const [err, res] = await to(
-		checkUserAuth({
-			mob_num: model.value.phone,
-		}),
-	);
-	if (!isEmpty(err) || isEmpty(res.user_id)) {
-		return;
-	}
-	const { ybbh } = res;
-	if (!ybbh) {
-		// 未认证，跳转认证页
-		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
-		setTimeout(() => {
-			uni.reLaunch({
-				url: '/pages/subpackage/userAuth/userAuth',
-			});
-		}, 1000);
-		return;
-	}
-	uni.showToast({ icon: 'none', title: '登录成功' });
-	setTimeout(() => {
-		uni.reLaunch({
-			url: '/pages/tabBar/index/index',
-		});
-	}, 1000);
 };
 
 const onHandlePrivacyClick = () => {

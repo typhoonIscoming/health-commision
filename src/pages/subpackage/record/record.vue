@@ -16,7 +16,7 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="电话" prop="phone" borderBottom>
+			<uv-form-item v-if="false" label="电话" prop="phone" borderBottom>
 				<uv-input
 					v-model="model.phone"
 					readonly
@@ -34,7 +34,7 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="年龄" prop="age" borderBottom>
+			<uv-form-item v-if="false" label="年龄" prop="age" borderBottom>
 				<uv-input
 					v-model="model.age"
 					readonly
@@ -52,7 +52,12 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="生日" prop="birthday" borderBottom>
+			<uv-form-item
+				v-if="false"
+				label="生日"
+				prop="birthday"
+				borderBottom
+			>
 				<uv-input
 					v-model="model.birthday"
 					readonly
@@ -70,7 +75,12 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="记录状态" prop="recordStatus" borderBottom>
+			<uv-form-item
+				v-if="false"
+				label="记录状态"
+				prop="recordStatus"
+				borderBottom
+			>
 				<uv-input
 					v-model="model.recordStatus"
 					readonly
@@ -79,7 +89,12 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="人员状态" prop="personStatus" borderBottom>
+			<uv-form-item
+				v-if="false"
+				label="人员状态"
+				prop="personStatus"
+				borderBottom
+			>
 				<uv-input
 					v-model="model.personStatus"
 					readonly
@@ -101,7 +116,12 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="待遇级别" prop="treatmentLevel" borderBottom>
+			<uv-form-item
+				v-if="false"
+				label="待遇级别"
+				prop="treatmentLevel"
+				borderBottom
+			>
 				<uv-input
 					v-model="model.treatmentLevel"
 					readonly
@@ -110,7 +130,12 @@
 					color="#808080"
 				></uv-input>
 			</uv-form-item>
-			<uv-form-item label="卡类型" prop="cardType" borderBottom>
+			<uv-form-item
+				v-if="false"
+				label="卡类型"
+				prop="cardType"
+				borderBottom
+			>
 				<uv-input
 					v-model="model.cardType"
 					readonly
@@ -242,6 +267,8 @@ onShow(() => {
 .record {
 	padding: 20rpx;
 	box-sizing: border-box;
+	height: 100vh;
+	position: relative;
 	.uv-form-item {
 		background: white;
 		padding: 0 10px;
@@ -252,6 +279,13 @@ onShow(() => {
 	}
 	.uv-form-item__body__left__content__label {
 		color: #000000;
+	}
+	.button-wrapper {
+		position: absolute;
+		bottom: 20rpx;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
 	}
 }
 </style>
