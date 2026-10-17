@@ -1,5 +1,17 @@
 <template>
 	<view class="userAuth">
+		<NavBar title="用户认证">
+			<template v-slot:left>
+				<view
+					class="flex flex-center"
+					@click="
+						uni.navigateTo({ url: '/pages/subpackage/login/login' })
+					"
+				>
+					<uv-icon name="arrow-left"></uv-icon>
+				</view>
+			</template>
+		</NavBar>
 		<view class="user-auth-tip flex flex-center" style="padding: 0 10rpx">
 			<image
 				src="@/static/home/verify.png"
@@ -29,17 +41,20 @@
 					<uv-form-item prop="name" label="姓名" borderBottom>
 						<uv-input
 							v-model="model.name"
+							clearable
 							placeholderClass="place-holder"
 							inputAlign="right"
 							border="none"
 							placeholder="请输入姓名"
 							placeholderStyle="color: #7C7C7C"
+							@change="model.recognition = ''"
 						>
 						</uv-input>
 					</uv-form-item>
 					<uv-form-item prop="phone" label="手机号码" borderBottom>
 						<uv-input
 							v-model="model.phone"
+							clearable
 							placeholderClass="place-holder"
 							inputAlign="right"
 							type="number"
@@ -52,6 +67,7 @@
 					<uv-form-item prop="verify" label="手机验证码" borderBottom>
 						<uv-input
 							v-model="model.verify"
+							clearable
 							placeholderClass="place-holder"
 							inputAlign="right"
 							type="number"
@@ -102,12 +118,14 @@
 					<uv-form-item prop="idCard" label="证件号码">
 						<uv-input
 							v-model="model.idCard"
+							clearable
 							placeholderClass="place-holder"
 							inputAlign="right"
 							type="idcard"
 							border="none"
 							placeholder="请输入身份证号"
 							placeholderStyle="color: #7C7C7C"
+							@change="model.recognition = ''"
 						>
 						</uv-input>
 					</uv-form-item>
@@ -118,15 +136,6 @@
 							class="flex-col flex-between flex-center"
 							style="width: 100%"
 						>
-							<!-- <view
-								style="
-									font-weight: bold;
-									font-size: 32rpx;
-									margin: 40rpx 0;
-								"
-							>
-								为确保信息安全，需由本人进行验证
-							</view> -->
 							<image
 								src="@/static/home/verify-icon.png"
 								mode="aspectFit"
@@ -135,6 +144,8 @@
 							<view>
 								<uv-button
 									type="primary"
+									:loading="faceVerifyLoading"
+									loadingText="识别中..."
 									color="#68D7AA"
 									shape="circle"
 									style="margin-top: 30rpx"
@@ -146,55 +157,13 @@
 									}"
 									@click="handleStartSoterAuthentication"
 								>
-									人脸识别
+									{{
+										model.recognition === 'success'
+											? '识别成功'
+											: '人脸识别'
+									}}
 								</uv-button>
 							</view>
-							<!-- <view
-								class="flex recognition-box"
-								@click="handleStartSoterAuthentication"
-							>
-								<uni-icons
-									custom-prefix="iconfont"
-									type="icon-Gc_101_line-FaceRecognition"
-									size="42rpx"
-									color="#2D8AF8"
-								/>
-								<text
-									style="margin-left: 10rpx; font-size: 28rpx"
-								>
-									请进行人脸识别
-								</text>
-								<view
-									v-if="model.recognition"
-									style="margin-left: 40rpx"
-								>
-									<text
-										v-if="model.recognition === 'success'"
-									>
-										<uni-icons
-											type="checkmarkempty"
-											size="30rpx"
-											color="#2D8AF8"
-										/>
-									</text>
-									<text
-										v-else-if="model.recognition === 'fail'"
-									>
-										<uni-icons
-											type="closeempty"
-											size="30rpx"
-											color="#2D8AF8"
-										/>
-									</text>
-								</view>
-								<view class="arrow-wrap">
-									<uni-icons
-										type="right"
-										size="20"
-										color="#7c7c7c"
-									></uni-icons>
-								</view>
-							</view> -->
 						</view>
 					</uv-form-item>
 				</view>
@@ -215,11 +184,17 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import faceVerify from '@/utils/faceVerify';
-import { bindUserAuth, getMobileVerifyCode } from '@/api/index.js';
+import NavBar from '@/components/NavBar.vue';
+import {
+	bindUserAuth,
+	getMobileVerifyCode,
+	faceRecognition,
+} from '@/api/index.js';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
 
+const success = 'success';
+const fail = 'fail';
 const verifyText = ref('获取验证码');
 const form = ref(null);
 const model = ref({
@@ -228,7 +203,7 @@ const model = ref({
 	idCard: '654127198106222012',
 	idCardType: '身份证',
 	verify: '',
-	recognition: 'success',
+	recognition: success, // success | fail
 });
 const rules = ref({
 	name: [
@@ -263,27 +238,29 @@ const rules = ref({
 			trigger: 'blur',
 		},
 	],
-	// recognition: [
-	// 	{
-	// 		validator: (_, v, c) => {
-	// 			console.log('人脸识别结果', v);
-	// 			if (!v) {
-	// 				c(new Error('请进行人脸识别'));
-	// 				return;
-	// 			}
-	// 			if (v && v === 'success') {
-	// 				c();
-	// 			} else {
-	// 				c(new Error('人脸识别未通过，请重新识别'));
-	// 			}
-	// 		},
-	// 		trigger: 'blur',
-	// 	},
-	// ],
+	recognition: [
+		{
+			validator: (_, v, c) => {
+				console.log('人脸识别结果', v);
+				if (!v) {
+					c(new Error('请进行人脸识别'));
+					return;
+				}
+				if (v && v === 'success') {
+					c();
+				} else {
+					c(new Error('人脸识别未通过，请重新识别'));
+				}
+			},
+			trigger: 'blur',
+		},
+	],
 });
 const showCountDown = ref(false);
 const count = ref(60);
 let timer = null;
+
+const faceVerifyLoading = ref(false);
 
 const handleSubmit = () => {
 	form.value
@@ -302,29 +279,57 @@ const handleSubmit = () => {
 		});
 };
 // 人脸识别
-const handleStartSoterAuthentication = () => {
-	// faceVerify({ name: model.value.name, idCard: model.value.idCard }).then((res) => {
-	// 	model.value.recognition = 'success';
-	// 	console.log('人脸识别成功', res);
-	// }).catch((err) => {
-	// 	console.log('人脸识别失败', err);
-	// 	uni.showToast({
-	// 		title: err.message || '人脸识别失败',
-	// 		icon: 'error',
-	// 	});
-	// });
+const handleStartSoterAuthentication = async () => {
+	if (model.value.recognition === success) {
+		return;
+	}
 	model.value.recognition = '';
-	uni.startSoterAuthentication({
-		requestAuthModes: ['facial'],
-		challenge: '123456',
-		authContent: '请进行人脸识别',
+	// 人脸识别之前先校验用户信息
+	form.value.validateField(['name', 'idCard'], (result) => {
+		console.log('校验用户信息结果', result);
+		if (isEmpty(result)) {
+			handleFaceRecognition();
+		}
+	});
+};
+// 获取人脸识别方法必须得verifyId
+const getVerifyId = async () => {
+	if (faceVerifyLoading.value) {
+		return;
+	}
+	const params = {
+		real_name: model.value.name,
+		id_card: model.value.idCard,
+		openid: uni.getStorageSync('b2cOpenid'),
+	};
+	faceVerifyLoading.value = true;
+	const [err, res] = await to(faceRecognition(params));
+	faceVerifyLoading.value = false;
+	if (err) {
+		uni.showToast({
+			icon: 'none',
+			title: err.message || '获取verifyId失败',
+		});
+		return;
+	}
+	return res?.verify_id;
+};
+// 获取到verifyId后才能进行人脸识别
+const handleFaceRecognition = async () => {
+	const verifyId = await getVerifyId();
+	if (!verifyId) {
+		return;
+	}
+	// 这里可以调用实际的人脸识别逻辑，例如 uni.startSoterAuthentication
+	wx.requestFacialVerify({
+		verifyId,
 		success: (res) => {
 			console.log('人脸识别成功', res);
-			model.value.recognition = 'success';
+			model.value.recognition = success;
 		},
 		fail: (err) => {
 			console.log('人脸识别失败', err);
-			model.value.recognition = 'fail';
+			model.value.recognition = fail;
 			uni.showToast({
 				title: '人脸识别失败',
 				icon: 'error',
@@ -332,6 +337,7 @@ const handleStartSoterAuthentication = () => {
 		},
 	});
 };
+
 // 绑定用户信息
 const handleBindUserInfo = () => {
 	// TODO 调用绑定用户信息接口
@@ -349,7 +355,7 @@ const handleBindUserInfo = () => {
 			console.log('bindUserAuth', res);
 			if (!res || res.code !== 'S200') {
 				uni.showToast({
-					title: '绑定失败',
+					title: res?.msg || '绑定失败',
 					icon: 'error',
 				});
 				return;
@@ -474,6 +480,12 @@ onMounted(() => {
 			border-radius: 16rpx;
 			padding: 0 20rpx 20rpx;
 			margin-top: 30rpx;
+			.uv-form-item__body__right__message {
+				display: inline-block;
+				margin-left: 0 !important;
+				text-align: center;
+				width: 100%;
+			}
 		}
 		.recognition-box {
 			padding: 20rpx;

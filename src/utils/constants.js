@@ -13,6 +13,8 @@ export default {
 	mobileVerifyCodeKey: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNh', // 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi', // 短信验证码
 	hookGetAccessToken: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNi', // 'Njk4NWExOGZmOThkZGFkZjdjYWRmMjc1', // 获取公众号token
 	hookMeterialList: 'Njk5ZTY1NThiNzdmYTU2MDliNWQwM2M5', // 获取物料列表
+	// 人脸识别的hook
+	hookFaceRecognition: 'NmFkMjM0NTk3MzAxNTkzYTU2MGQ4M2U1', // 人脸识别hook值
 
 	// 表名
 	rylb: '人员列表', // 人员列表视图名称

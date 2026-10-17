@@ -18,6 +18,15 @@ export const checkUserAuth = (data) => {
 	});
 };
 
+// 人脸识别
+export const faceRecognition = (data) => {
+	return request({
+		url: `/api/workflow/hooks2/${constants.hookFaceRecognition}`,
+		method: 'POST',
+		data,
+	});
+};
+
 // 绑定用户信息
 export const bindUserAuth = (data) => {
 	return request({
