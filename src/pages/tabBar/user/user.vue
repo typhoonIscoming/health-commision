@@ -95,7 +95,7 @@ const userInfo = ref(null);
 const menus = ref([
 	{
 		name: '个人信息',
-		desc: '完善个人信息',
+		desc: '个人信息查看',
 		label: 'record',
 		icon: 'beianxinxi',
 		color: '#FDA062',

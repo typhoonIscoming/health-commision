@@ -48,10 +48,10 @@
 			/>
 		</view>
 		<!-- <HomeHealthRecord type="tj" /> -->
-		<HealthService />
+		<HealthScience />
 		<!-- <NoticeBar v-if="newsRestList.length" :list="newsRestList" /> -->
 		<view style="margin-top: 20px"></view>
-		<HealthScience />
+		<HealthService />
 		<!-- <HealthEducation />
 		<view style="margin-top: 20px"></view> -->
 		<!-- <Psychological />

@@ -23,6 +23,12 @@
 			mode="widthFix"
 			class="card-bg2"
 		/>
+		<image
+			v-if="userInfo"
+			src="@/static/main/card-bg2.png"
+			mode="widthFix"
+			class="card-bg3"
+		/>
 		<view
 			class="user-info-wrap card-padding"
 			:class="{ 'has-login': userInfo }"
@@ -54,7 +60,7 @@
 					style="padding-right: 20rpx"
 				>
 					<image
-						src="../static/main/people.png"
+						src="../static/main/avatar.jpg"
 						mode="widthFix"
 						style="width: 100% !important"
 					></image>
@@ -62,18 +68,36 @@
 			</view>
 		</view>
 		<view v-if="userInfo" class="card-bottom">
-			<view>新疆维吾尔自治区卫生健康委员会</view>
-			<view>新疆维吾尔自治区保健委员会办公室</view>
+			<view class="card-info">
+				<view>新疆维吾尔自治区卫生健康委员会</view>
+				<view>新疆维吾尔自治区保健委员会办公室</view>
+			</view>
+			<view class="hospital-list">
+				<view v-for="(hospital, i) in hospitalListComputed" :key="i">
+					{{ hospital.name }} &nbsp; {{ hospital.phone }}
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import HomeCard from '@/components/HomeCard.vue';
+import useHospital from '@/hooks/hospitalHook';
+
+const { hospitalList } = useHospital();
 
 const emits = defineEmits(['onClick']);
 
 const userInfo = ref();
+
+const hospitalListComputed = computed(() => {
+	const list = hospitalList.value;
+	if (list.length >= 2) {
+		return list.slice(0, 2);
+	}
+	return list;
+});
 
 onShow(() => {
 	const auth = uni.getStorageSync('b2cAuth');
@@ -130,7 +154,8 @@ const handleIdCard = (idCard) => {
 		padding: 0 10px;
 	}
 	.card-bg1,
-	.card-bg2 {
+	.card-bg2,
+	.card-bg3 {
 		width: 200rpx;
 		height: 200rpx;
 		position: absolute;
@@ -140,12 +165,16 @@ const handleIdCard = (idCard) => {
 		left: 40%;
 	}
 	.card-bg2 {
-		bottom: 0;
-		left: 20%;
+		bottom: 15%;
+		left: 12%;
+	}
+	.card-bg3 {
+		bottom: 0%;
+		right: 10%;
 	}
 	.user-info-wrap {
 		position: relative;
-		height: 120px;
+		min-height: 120px;
 		padding: 0 10px;
 		background: linear-gradient(to bottom, #b5dfcd, #eaf4f0);
 		&.has-login {
@@ -163,10 +192,16 @@ const handleIdCard = (idCard) => {
 
 	.card-bottom {
 		text-align: center;
-		// color: #3d3d3d;
 		color: #ffffff;
 		background: #72a24a;
-		padding: 5px 0;
+		padding: 0 5px;
+		.card-info {
+			padding: 5px 0;
+		}
+		.hospital-list {
+			border-top: 1px solid #ffffff;
+			padding: 5px 0;
+		}
 	}
 
 	.unlogin {

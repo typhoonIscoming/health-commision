@@ -2,138 +2,144 @@
 	<view class="user-card">
 		<uv-modal ref="modal" :asyncClose="true" :showConfirmButton="false">
 			<view class="card-content">
-				<view class="user-info">
-					<Carousel :list="list">
-						<template #default="{ item }">
-							<view
-								v-if="item.name === 'detail'"
-								class="swiper-item-content details"
-							>
-								<view class="top-wrap flex">
-									<view class="left-wrap">
-										<view class="title-wrap flex-center">
-											<image
-												src="../static/home/card.png"
-												mode="aspectFill"
-												style="
-													width: 80rpx;
-													height: 80rpx;
-													border-radius: 50%;
-												"
-											></image>
-											<text
-												style="
-													font-size: 32rpx;
-													font-weight: bold;
-													margin-left: 20rpx;
-												"
-											>
-												医疗就诊卡
-											</text>
-										</view>
-										<view class="row flex-center">
-											<view class="label">姓名：</view>
-											<view class="value">
-												{{ userInfo?.name }}
-											</view>
-										</view>
-										<view class="row flex-center">
-											<view class="label">性别：</view>
-											<view class="value">
-												{{ userInfo?.sex || '女' }}
-											</view>
-										</view>
-										<view class="row flex">
-											<view class="label">单位：</view>
-											<view class="value">
-												{{
-													userInfo?.yhdw ||
-													'新疆维吾尔自治区商务厅'
-												}}
-											</view>
-										</view>
-										<view class="row flex">
-											<view class="label">
-												职级及年限：
-											</view>
-											<view class="value">
-												{{
-													userInfo?.civilServantLevel ||
-													'厅级'
-												}}
-
-												{{
-													userInfo?.zjnx || '10年以上'
-												}}
-											</view>
-										</view>
-										<view class="row flex-center">
-											<view
-												class="label"
-												style="font-weight: bold"
-											>
-												身份证号：
-											</view>
-											<view
-												class="value"
-												style="font-weight: bold"
-											>
-												{{ userInfo?.car_id }}
-											</view>
-										</view>
-
-										<!--姓名，性别，单位，身份证号，在职状态/退休状态-->
-									</view>
-									<view
-										class="right-wrap flex-center"
-										style="padding-right: 20rpx"
+				<view v-if="true" class="user-info">
+					<!-- <Carousel :list="list">
+						<template #default="{ item }"> -->
+					<view class="swiper-item-content details">
+						<view class="top-wrap flex">
+							<view class="left-wrap">
+								<view class="title-wrap flex-center">
+									<image
+										src="../static/home/card.png"
+										mode="aspectFill"
+										style="
+											width: 80rpx;
+											height: 80rpx;
+											border-radius: 50%;
+										"
+									></image>
+									<text
+										style="
+											font-size: 32rpx;
+											font-weight: bold;
+											margin-left: 20rpx;
+										"
 									>
-										<image
-											src="../static/main/people.png"
-											mode="widthFix"
-											style="width: 100% !important"
-										></image>
+										医疗就诊卡
+									</text>
+								</view>
+								<view class="row flex-center">
+									<view class="label">姓名：</view>
+									<view class="value">
+										{{ userInfo?.name }}
 									</view>
 								</view>
-								<view class="bottom-wrap flex-column">
-									<view>新疆维吾尔自治区卫生健康委员会</view>
-									<view>
-										新疆维吾尔自治区保健委员会办公室
+								<view class="row flex-center">
+									<view class="label">性别：</view>
+									<view class="value">
+										{{ userInfo?.sex || '女' }}
 									</view>
+								</view>
+								<view class="row flex">
+									<view class="label">单位：</view>
+									<view class="value">
+										{{
+											userInfo?.yhdw ||
+											'新疆维吾尔自治区商务厅'
+										}}
+									</view>
+								</view>
+								<view class="row flex">
+									<view class="label"> 职级及年限： </view>
+									<view class="value">
+										{{
+											userInfo?.civilServantLevel ||
+											'厅级'
+										}}
+
+										{{ userInfo?.zjnx || '10年以上' }}
+									</view>
+								</view>
+								<view class="row flex-center">
+									<view
+										class="label"
+										style="font-weight: bold"
+									>
+										身份证号：
+									</view>
+									<view
+										class="value"
+										style="font-weight: bold"
+									>
+										{{ userInfo?.car_id }}
+									</view>
+								</view>
+
+								<!--姓名，性别，单位，身份证号，在职状态/退休状态-->
+							</view>
+							<view
+								class="right-wrap flex-center"
+								style="padding-right: 20rpx"
+							>
+								<image
+									src="../static/main/avatar.jpg"
+									mode="widthFix"
+									style="width: 100% !important"
+								></image>
+							</view>
+						</view>
+						<view class="bottom-wrap flex-column">
+							<view>新疆维吾尔自治区卫生健康委员会</view>
+							<view> 新疆维吾尔自治区保健委员会办公室 </view>
+						</view>
+					</view>
+					<view v-show="!collapsed" class="swiper-item-content list">
+						<view class="table-wrap">
+							<view class="table-row">
+								<view class="table-cell name-cell">
+									<text>医院名称</text>
+								</view>
+								<view class="table-cell phone-cell">
+									<text>电话</text>
 								</view>
 							</view>
 							<view
-								v-else-if="item.name === 'list'"
-								class="swiper-item-content list"
+								class="table-row"
+								v-for="row in hospital"
+								:key="row"
 							>
-								<view class="table-wrap">
-									<view class="table-row">
-										<view class="table-cell name-cell">
-											<text>医院名称</text>
-										</view>
-										<view class="table-cell phone-cell">
-											<text>电话</text>
-										</view>
-									</view>
-									<view
-										class="table-row"
-										v-for="row in hospital"
-										:key="row"
-									>
-										<view class="table-cell name-cell">
-											<text>{{ row.name }}</text>
-										</view>
-										<view
-											class="table-cell phone-cell"
-											@click="handleCall(row.phone)"
-										>
-											<text>{{ row.phone }}</text>
-										</view>
-									</view>
+								<view class="table-cell name-cell">
+									<text>{{ row.name }}</text>
+								</view>
+								<view
+									class="table-cell phone-cell"
+									@click="handleCall(row.phone)"
+								>
+									<text>{{ row.phone }}</text>
 								</view>
 							</view>
-						</template>
-					</Carousel>
+						</view>
+					</view>
+					<view
+						class="collapse-wrapper"
+						@click="collapsed = !collapsed"
+					>
+						<image
+							src="../static/main/downIcon.png"
+							mode="aspectFill"
+							:class="[
+								collapsed ? 'down' : 'up',
+								'collapse-icon',
+							]"
+							style="
+								width: 40rpx;
+								height: 50rpx;
+								border-radius: 50%;
+							"
+						></image>
+					</view>
+					<!-- </template>
+					</Carousel> -->
 				</view>
 				<view class="close-wrap">
 					<uv-icon
@@ -159,14 +165,15 @@ const list = [
 	{
 		name: 'detail',
 	},
-	{
-		name: 'list',
-	},
+	// {
+	// 	name: 'list',
+	// },
 ];
 
 const hospital = ref(hospitalList);
 
 const userInfo = ref(null);
+const collapsed = ref(true);
 
 const handleOpen = () => {
 	modal.value?.open();
@@ -197,6 +204,20 @@ defineOptions({
 });
 </script>
 <style lang="scss">
+@mixin collapse-icon-animation($animation-name, $direction-transform) {
+	animation: #{$animation-name} 1.5s ease-in-out infinite;
+
+	@keyframes #{$animation-name} {
+		0%,
+		100% {
+			transform: translateY(0) $direction-transform;
+		}
+		50% {
+			transform: translateY(8px) $direction-transform;
+		}
+	}
+}
+
 .user-card {
 	.uv-popup {
 		.uv-modal__content {
@@ -221,17 +242,19 @@ defineOptions({
 	}
 	.card-content {
 		width: 100%;
-		transform: translateY(-30%);
+		// transform: translateY(-30%);
+		// background: red;
 	}
 	.swiper-item-content {
-		border-radius: 30rpx;
-		border: 1px solid #525252;
+		// border-radius: 30rpx;
+		// border: 1px solid #525252;
 		background: white;
 		overflow: hidden;
 		&.details {
 			height: 100%;
 			display: flex;
 			flex-direction: column;
+			border-radius: 30rpx 30rpx 0 0;
 			.top-wrap {
 				flex: 1;
 			}
@@ -273,6 +296,27 @@ defineOptions({
 		&.list {
 			height: 100%;
 			padding: 20rpx;
+			border-radius: 0 0 30rpx 30rpx;
+		}
+	}
+	.collapse-wrapper {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-top: 5px;
+		.collapse-icon {
+			&.down {
+				@include collapse-icon-animation(
+					collapse-icon-down,
+					rotateX(0deg)
+				);
+			}
+			&.up {
+				@include collapse-icon-animation(
+					collapse-icon-up,
+					rotateX(180deg)
+				);
+			}
 		}
 	}
 
@@ -282,7 +326,7 @@ defineOptions({
 		left: 0;
 		bottom: 0;
 		margin: auto;
-		transform: translateY(200%);
+		transform: translateY(120%);
 		width: fit-content;
 	}
 
@@ -292,7 +336,7 @@ defineOptions({
 			display: flex;
 			flex-direction: column;
 			gap: 0;
-			border: 1px solid #525252;
+			// border: 1px solid #999999;
 			border-radius: 8rpx;
 			overflow: hidden;
 		}
@@ -300,7 +344,8 @@ defineOptions({
 			display: flex;
 			flex-direction: row;
 			gap: 0;
-			border-bottom: 1px solid #525252;
+			border-bottom: 1px solid #999999;
+			padding: 5rpx 0;
 			&:last-child {
 				border-bottom: none;
 			}
@@ -311,7 +356,7 @@ defineOptions({
 			text-align: center;
 			font-size: 26rpx;
 			color: #333;
-			border-right: 1px solid #525252;
+			// border-right: 1px solid #999999;
 			&:last-child {
 				border-right: none;
 			}
