@@ -145,6 +145,12 @@
 					}
 				},
 				{
+					"path": "healthEvaluation/healthEvaluation",
+					"style": {
+						"navigationBarTitleText": "健康测评"
+					}
+				},
+				{
 					"path": "tips/tips",
 					"style": {
 						"navigationBarTitleText": "就医温馨提示"

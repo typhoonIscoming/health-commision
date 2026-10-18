@@ -41,10 +41,10 @@ const { list, getData } = psychoLogicalHook();
 const handleClick = (type: string) => {
 	let url = '';
 	if (type === 'xinli') {
-		const item = list.value.find(
-			(i: any) => i.leixing.indexOf('心理') !== -1,
-		);
-		url = item ? item.ymdz : '';
+		uni.navigateTo({
+			url: '/pages/subpackage/healthEvaluation/healthEvaluation',
+		});
+		return;
 	} else if (type === 'wenjuan') {
 		const item = list.value.find(
 			(i: any) => i.leixing.indexOf('问卷') !== -1,

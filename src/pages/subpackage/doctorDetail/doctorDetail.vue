@@ -13,23 +13,10 @@
 				</view>
 			</template>
 		</NavBar>
-		<!-- <view></view> -->
-		<!-- <image
-			:src="doctorBg"
-			mode="widthFix"
-			class="page-bg__base"
-			:style="{
-				position: 'absolute',
-				top: `${0}px`,
-				left: 0,
-				width: '100%',
-				zIndex: -1,
-			}"
-		/> -->
 		<view class="doctor-avatar flex">
 			<image
 				:src="doctorDetail.avatar || doctorDetail.fakeAvatar"
-				mode="aspectFit"
+				mode="heightFix"
 				class="doctor-avatar__img"
 			/>
 			<view class="doctor-detail" style="flex: 1">
@@ -152,7 +139,7 @@ onLoad((options) => {
 		.doctor-detail {
 			display: flex;
 			flex-direction: column;
-			justify-content: center;
+			justify-content: space-around;
 		}
 		.doctor-avatar__img {
 			width: 240rpx;

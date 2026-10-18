@@ -5,6 +5,7 @@ import constants from '@/utils/constants';
 
 export default () => {
 	const list = ref([]);
+	const loading = ref(false);
 
 	// 保存配置
 	const worksheetInfo = ref({});
@@ -25,9 +26,11 @@ export default () => {
 
 	const getData = async (filter = '心理测评') => {
 		let config = {};
+		loading.value = true;
 		if (isEmpty(worksheetInfo.value)) {
 			const result = await getWorksheet();
 			if (isEmpty(result)) {
+				loading.value = false;
 				return;
 			}
 			config = result;
@@ -58,6 +61,7 @@ export default () => {
 			// ],
 		};
 		const [e, response] = await to(getWorksheetDetail(params));
+		loading.value = false;
 		console.log('responseresponse:', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
@@ -68,5 +72,6 @@ export default () => {
 	return {
 		list,
 		getData,
+		loading,
 	};
 };

@@ -10,6 +10,12 @@ onLoad((options) => {
 	if (options.url) {
 		pageUrl.value = options.url;
 	}
+	if (options.title) {
+		// uniapp设置页面tital
+		uni.setNavigationBarTitle({
+			title: options.title,
+		});
+	}
 });
 </script>
 <style lang="scss"></style>

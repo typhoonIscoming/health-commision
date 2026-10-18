@@ -147,3 +147,64 @@ export const checkLogin = {
 		}
 	},
 };
+
+// 带 cancel / flush
+export const debounce = (fn, delay = 300) => {
+	let timer = null;
+	let lastArgs = null;
+	let lastThis = null;
+
+	function debounced(...args) {
+		lastArgs = args;
+		lastThis = this;
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			timer = null;
+			fn.apply(lastThis, lastArgs);
+		}, delay);
+	}
+
+	debounced.cancel = () => {
+		clearTimeout(timer);
+		timer = null;
+	};
+
+	debounced.flush = () => {
+		if (timer) {
+			clearTimeout(timer);
+			timer = null;
+			fn.apply(lastThis, lastArgs);
+		}
+	};
+
+	return debounced;
+};
+
+// 首次立即执行 + 最后一次也执行
+export const throttle = (fn, interval = 300, options = {}) => {
+	let timer = null;
+	let lastTime = 0;
+	const { leading = true, trailing = true } = options;
+
+	return function (...args) {
+		const now = Date.now();
+		if (!lastTime && !leading) lastTime = now;
+
+		const remaining = interval - (now - lastTime);
+
+		if (remaining <= 0 || remaining > interval) {
+			if (timer) {
+				clearTimeout(timer);
+				timer = null;
+			}
+			lastTime = now;
+			fn.apply(this, args);
+		} else if (!timer && trailing) {
+			timer = setTimeout(() => {
+				lastTime = leading ? Date.now() : 0;
+				timer = null;
+				fn.apply(this, args);
+			}, remaining);
+		}
+	};
+};
