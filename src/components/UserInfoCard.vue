@@ -60,7 +60,7 @@
 					style="padding-right: 20rpx"
 				>
 					<image
-						src="../static/main/avatar.jpg"
+						:src="constants.userAvatar"
 						mode="widthFix"
 						style="width: 100% !important"
 					></image>
@@ -84,6 +84,7 @@
 import { ref, computed } from 'vue';
 import HomeCard from '@/components/HomeCard.vue';
 import useHospital from '@/hooks/hospitalHook';
+import constants from '@/utils/constants';
 
 const { hospitalList } = useHospital();
 

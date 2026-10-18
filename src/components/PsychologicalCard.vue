@@ -10,8 +10,8 @@
 				style="width: 100rpx; height: 100rpx"
 			/>
 			<view class="list-wrapper">
-				<view class="label">心理测评</view>
-				<view class="desc">心理健康状况测评</view>
+				<view class="label">健康测评</view>
+				<view class="desc">身心健康状况测评</view>
 			</view>
 		</view>
 		<view
@@ -25,7 +25,7 @@
 			/>
 			<view class="list-wrapper flex-col flex-between">
 				<view class="label">问卷调查</view>
-				<view class="desc">满意度调研问卷</view>
+				<view class="desc">健康状态调研问卷</view>
 			</view>
 		</view>
 	</view>
