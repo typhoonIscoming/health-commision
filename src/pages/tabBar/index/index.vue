@@ -47,20 +47,9 @@
 				@click="handleNotice"
 			/>
 		</view>
-		<!-- <HomeHealthRecord type="tj" /> -->
 		<HealthScience />
-		<!-- <NoticeBar v-if="newsRestList.length" :list="newsRestList" /> -->
 		<view style="margin-top: 20px"></view>
 		<HealthService />
-		<!-- <HealthEducation />
-		<view style="margin-top: 20px"></view> -->
-		<!-- <Psychological />
-		<view style="margin-top: 20px"></view>
-		<Satisfaction />
-		<view style="margin-top: 20px"></view>
-		<Questionnaire />
-		<view style="margin-top: 20px" />
-		<HomeHealthRecord title="其他服务记录" type="other" /> -->
 		<view style="margin-top: 20px" />
 		<FamousDoctor />
 		<view style="margin-top: 20px" />
@@ -74,17 +63,11 @@
 import { ref, onMounted } from 'vue';
 import { onPageScroll } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
-import HomeHealthRecord from '@/components/HomeHealthRecord';
-import Satisfaction from '@/components/Satisfaction';
-import Questionnaire from '@/components/Questionnaire.vue';
 import Tabbar from '@/components/Tabbar.vue';
 import UserCard from '@/components/UserCard.vue';
-import NoticeBar from '@/components/NoticeBar.vue';
-import Psychological from '@/components/Psychological.vue';
 import UserInfoCard from '@/components/UserInfoCard.vue';
 import { isEmpty } from '@/utils';
 import homeNoticebar from '@/hooks/home-noticebar';
-import HealthEducation from '@/components/HealthEducation.vue';
 import HealthService from '@/components/HealthService.vue';
 import navBg from '@/static/home/home-bg.png';
 import PsychologicalCard from '@/components/PsychologicalCard.vue';
