@@ -138,14 +138,19 @@ onMounted(() => {
 		flex-direction: column;
 		gap: 15rpx;
 		border-radius: 20rpx;
+		background-size: cover;
 		&.psychological {
-			background: #c2f7ce;
+			// background: #c2f7ce;
+			background: url('/static/user/psychological.png') no-repeat center
+				center;
 		}
 		&.physical {
-			background: #bbf3f1;
+			// background: #bbf3f1;
+			background: url('/static/user/physical.png') no-repeat center center;
 		}
 		&.weight {
-			background: #d0e3f9;
+			// background: #d0e3f9;
+			background: url('/static/user/weight.png') no-repeat center center;
 		}
 		& + .evaluation-item {
 			margin-top: 15px;
