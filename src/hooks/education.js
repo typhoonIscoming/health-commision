@@ -27,7 +27,9 @@ export default () => {
 	]);
 	// 获取微信token
 	const getToken = async () => {
-		const [err, res] = await to(getWechatToken());
+		const [err, res] = await to(
+			getWechatToken({ appid: 'wx9fb4cd705642b13d' }),
+		);
 		if (isEmpty(res) || !res.access_token) {
 			return;
 		}
@@ -45,6 +47,7 @@ export default () => {
 			accessToken.value = result;
 		}
 		const [err, res] = await to(getWechatArticle(accessToken.value, data));
+		console.log('getWechatList', res);
 		if (!isEmpty(err)) {
 			return;
 		}

@@ -126,11 +126,12 @@ export const editRow = (data) => {
 };
 
 // 获取微信token
-export const getWechatToken = () => {
+export const getWechatToken = (data) => {
 	return request({
 		url: `/api/workflow/hooks2/${constants.hookGetAccessToken}`,
 		method: 'post',
 		data: {
+			...data,
 			appKey: constants.appKey,
 			sign: constants.sign,
 		},

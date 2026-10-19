@@ -226,6 +226,10 @@ export const getUserInfo = () => {
 		if (!avatar && !isEmpty(item)) {
 			avatar = item.large_thumbnail_full_path || item.thumbnail_full_path;
 		}
+		if (isEmpty(avatar)) {
+			avatar = auth.sex === '男' ? male : female;
+		}
+		console.log('avatar', avatar, 'auth', auth);
 		return { ...auth, avatar: avatar };
 	}
 	return null;

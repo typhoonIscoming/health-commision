@@ -40,7 +40,7 @@ import { ref } from 'vue';
 import Title from './Title.vue';
 import educationHook from '@/hooks/education';
 
-const { list, mockList, getMaterialData } = educationHook();
+const { list, mockList, getMaterialData, getWechatList } = educationHook();
 
 const pageIndex = ref(0);
 const pageSize = ref(3);
@@ -50,6 +50,11 @@ onMounted(() => {
 		offset: pageIndex.value,
 		count: pageSize.value,
 		type: 'image', // image | news | voice | video
+	});
+	getWechatList({
+		offset: pageIndex.value,
+		count: pageSize.value,
+		type: 'image',
 	});
 });
 

@@ -84,7 +84,9 @@ const noticeItem = computed(() => {
 	if (isEmpty(noticeList.value)) {
 		return null;
 	}
-	return noticeList.value[0];
+	// 根据列表数据中ctime字段，获取最新的一条数据
+	const sortedList = noticeList.value.sort((a, b) => b.ctime - a.ctime);
+	return sortedList[0];
 });
 // 获取剩余的新闻列表
 const newsRestList = computed(() => {
