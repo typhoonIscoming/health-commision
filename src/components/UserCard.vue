@@ -37,27 +37,23 @@
 								<view class="row flex-center">
 									<view class="label">性别：</view>
 									<view class="value">
-										{{ userInfo?.sex || '女' }}
+										{{ userInfo?.sex || '--' }}
 									</view>
 								</view>
 								<view class="row flex">
 									<view class="label">单位：</view>
 									<view class="value">
-										{{
-											userInfo?.yhdw ||
-											'新疆维吾尔自治区商务厅'
-										}}
+										{{ userInfo?.yhdw || '--' }}
 									</view>
 								</view>
 								<view class="row flex">
 									<view class="label"> 职级及年限： </view>
 									<view class="value">
 										{{
-											userInfo?.civilServantLevel ||
-											'厅级'
+											userInfo?.civilServantLevel || '--'
 										}}
 
-										{{ userInfo?.zjnx || '10年以上' }}
+										{{ userInfo?.zjnx || '--' }}
 									</view>
 								</view>
 								<view class="row flex-center">

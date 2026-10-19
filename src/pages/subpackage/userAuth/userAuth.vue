@@ -41,7 +41,7 @@
 					<uv-form-item prop="name" label="姓名" borderBottom>
 						<uv-input
 							v-model="model.name"
-							clearable
+							:clearable="false"
 							placeholderClass="place-holder"
 							inputAlign="right"
 							border="none"
@@ -54,7 +54,7 @@
 					<uv-form-item prop="phone" label="手机号码" borderBottom>
 						<uv-input
 							v-model="model.phone"
-							clearable
+							:clearable="false"
 							placeholderClass="place-holder"
 							inputAlign="right"
 							type="number"
@@ -67,7 +67,7 @@
 					<uv-form-item prop="verify" label="手机验证码" borderBottom>
 						<uv-input
 							v-model="model.verify"
-							clearable
+							:clearable="false"
 							placeholderClass="place-holder"
 							inputAlign="right"
 							type="number"
@@ -171,6 +171,7 @@
 
 			<view style="margin-top: 60rpx">
 				<uv-button
+					:loading="bindLoading"
 					type="primary"
 					color="#58B384"
 					shape="circle"
@@ -198,9 +199,9 @@ const fail = 'fail';
 const verifyText = ref('获取验证码');
 const form = ref(null);
 const model = ref({
-	name: '美工测试',
-	phone: '16601762764',
-	idCard: '654123198108123012',
+	name: '',
+	phone: '',
+	idCard: '',
 	idCardType: '身份证',
 	verify: '',
 	recognition: success, // success | fail
@@ -261,6 +262,7 @@ const count = ref(60);
 let timer = null;
 
 const faceVerifyLoading = ref(false);
+const bindLoading = ref(false);
 
 const handleSubmit = () => {
 	form.value
@@ -340,7 +342,11 @@ const handleFaceRecognition = async () => {
 
 // 绑定用户信息
 const handleBindUserInfo = () => {
+	if (bindLoading.value) {
+		return;
+	}
 	// TODO 调用绑定用户信息接口
+	bindLoading.value = true;
 	const params = {
 		name: model.value.name,
 		mob_num: model.value.phone,
@@ -351,7 +357,7 @@ const handleBindUserInfo = () => {
 	};
 	bindUserAuth(params)
 		.then((res) => {
-			res = res ? res : mockBindUserInfo(params);
+			// res = res ? res : mockBindUserInfo(params);
 			console.log('bindUserAuth', res);
 			if (!res || res.code !== 'S200') {
 				uni.showToast({
@@ -373,11 +379,14 @@ const handleBindUserInfo = () => {
 			}, 2000);
 		})
 		.catch((err) => {
-			mockBindUserInfo();
-			// uni.showToast({
-			// 	title: err.message || '绑定失败',
-			// 	icon: 'error',
-			// });
+			// mockBindUserInfo();
+			uni.showToast({
+				title: err.message || '绑定失败',
+				icon: 'error',
+			});
+		})
+		.finally(() => {
+			bindLoading.value = false;
 		});
 };
 // 模拟绑定数据

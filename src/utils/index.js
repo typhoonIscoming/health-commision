@@ -218,6 +218,12 @@ export const getUserInfo = () => {
 
 	if (!isEmpty(auth)) {
 		let avatar = auth.base64 || auth.tx;
+		if (auth.base64) {
+			// 判断字符串是否是data:image/png;base64开头
+			if (!auth.base64.startsWith('data:image')) {
+				avatar = `data:image/png;base64,${auth.base64}`;
+			}
+		}
 		const photoInfo =
 			!isEmpty(userInfoStorage) && isJSON(userInfoStorage.ryzp)
 				? JSON.parse(userInfoStorage.ryzp)
@@ -229,7 +235,7 @@ export const getUserInfo = () => {
 		if (isEmpty(avatar)) {
 			avatar = auth.sex === '男' ? male : female;
 		}
-		console.log('avatar', avatar, 'auth', auth);
+		// console.log('avatar', avatar, 'auth', auth);
 		return { ...auth, avatar: avatar };
 	}
 	return null;
