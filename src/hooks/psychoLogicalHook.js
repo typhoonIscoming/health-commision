@@ -62,7 +62,7 @@ export default () => {
 		};
 		const [e, response] = await to(getWorksheetDetail(params));
 		loading.value = false;
-		console.log('responseresponse:', response);
+		// console.log('responseresponse:', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}

@@ -27,20 +27,6 @@
 					{{ info.wjmbmc || '服务满意度调查' }}
 				</view>
 			</view>
-			<!-- <view style="padding: 20rpx 0">
-				<uv-line></uv-line>
-			</view>
-			<view class="evaluateItem-footer flex-center flex-between">
-				<text>{{ info.mbrq }}</text>
-				<view class="flex-center cell-right">
-					<text style="font-size: 24rpx">查看详情</text>
-					<uv-icon
-						name="arrow-right"
-						color="#A6A6A6"
-						size="15"
-					></uv-icon>
-				</view>
-			</view> -->
 		</view>
 	</view>
 </template>

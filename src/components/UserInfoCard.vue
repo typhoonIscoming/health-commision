@@ -60,9 +60,9 @@
 					style="padding-right: 20rpx"
 				>
 					<image
-						:src="constants.userAvatar"
+						:src="userInfo.avatar"
 						mode="widthFix"
-						style="width: 100% !important"
+						style="width: 100% !important; max-height: 240rpx"
 					></image>
 				</view>
 			</view>
@@ -84,7 +84,7 @@
 import { ref, computed } from 'vue';
 import HomeCard from '@/components/HomeCard.vue';
 import useHospital from '@/hooks/hospitalHook';
-import constants from '@/utils/constants';
+import { isEmpty, getUserInfo } from '@/utils/index';
 
 const { hospitalList } = useHospital();
 
@@ -101,11 +101,9 @@ const hospitalListComputed = computed(() => {
 });
 
 onShow(() => {
-	const auth = uni.getStorageSync('b2cAuth');
-	// console.log('user-info-card onshow', auth);
+	const auth = getUserInfo();
 	if (!isEmpty(auth)) {
 		userInfo.value = auth;
-		return;
 	}
 });
 

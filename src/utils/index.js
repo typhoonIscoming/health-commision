@@ -1,4 +1,6 @@
 import constants from './constants.js';
+import male from '../static/user/avatar-male.png';
+import female from '../static/user/avatar-female.png';
 // 手机号
 export const mobileReg = /^1[3456789]\d{9}$/;
 
@@ -207,4 +209,24 @@ export const throttle = (fn, interval = 300, options = {}) => {
 			}, remaining);
 		}
 	};
+};
+
+// 获取用户信息
+export const getUserInfo = () => {
+	const auth = uni.getStorageSync('b2cAuth');
+	const userInfoStorage = uni.getStorageSync('b2cUserInfo');
+
+	if (!isEmpty(auth)) {
+		let avatar = auth.base64 || auth.tx;
+		const photoInfo =
+			!isEmpty(userInfoStorage) && isJSON(userInfoStorage.ryzp)
+				? JSON.parse(userInfoStorage.ryzp)
+				: '';
+		const item = Array.isArray(photoInfo) ? photoInfo[0] : {};
+		if (!avatar && !isEmpty(item)) {
+			avatar = item.large_thumbnail_full_path || item.thumbnail_full_path;
+		}
+		return { ...auth, avatar: avatar };
+	}
+	return null;
 };

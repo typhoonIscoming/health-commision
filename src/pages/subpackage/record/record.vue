@@ -190,6 +190,9 @@ const rules = ref({});
 const handleUnbind = () => {
 	uni.setStorageSync('b2cAuth', null);
 	uni.setStorageSync('b2cToken', null);
+	uni.setStorageSync('b2cUserInfo', null);
+	uni.setStorageSync('b2cOpenid', null);
+	uni.setStorageSync('b2cWechatCode', null);
 	uni.showToast({
 		title: '绑定已解除',
 		icon: 'none',

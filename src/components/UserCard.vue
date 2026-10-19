@@ -82,7 +82,7 @@
 								style="padding-right: 20rpx"
 							>
 								<image
-									:src="constants.userAvatar"
+									:src="userInfo?.avatar"
 									mode="widthFix"
 									style="width: 100% !important"
 								></image>
@@ -157,7 +157,7 @@
 import { ref } from 'vue';
 import Carousel from './Carousel.vue';
 import useHospital from '@/hooks/hospitalHook';
-import constants from '@/utils/constants';
+import { isEmpty, getUserInfo } from '@/utils/index';
 
 const { hospitalList } = useHospital();
 
@@ -190,12 +190,11 @@ const handleCall = (phone) => {
 defineExpose({
 	open() {
 		handleOpen();
-		const auth = uni.getStorageSync('b2cAuth');
-		if (!auth) {
-			userInfo.value = null;
+		const auth = getUserInfo();
+		if (!isEmpty(auth)) {
+			userInfo.value = auth;
 			return;
 		}
-		userInfo.value = auth;
 	},
 });
 defineOptions({

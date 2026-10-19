@@ -75,7 +75,7 @@ export default () => {
 					id: item.rowid,
 				};
 			});
-		console.log('名医风采排序后:', list.value);
+		// console.log('名医风采排序后:', list.value);
 	};
 
 	return {

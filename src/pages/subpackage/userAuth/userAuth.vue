@@ -198,9 +198,9 @@ const fail = 'fail';
 const verifyText = ref('获取验证码');
 const form = ref(null);
 const model = ref({
-	name: '测试用户',
+	name: '美工测试',
 	phone: '16601762764',
-	idCard: '654127198106222012',
+	idCard: '654123198108123012',
 	idCardType: '身份证',
 	verify: '',
 	recognition: success, // success | fail

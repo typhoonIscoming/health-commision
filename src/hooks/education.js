@@ -61,8 +61,10 @@ export default () => {
 	};
 	// 获取微信公众号文章列表
 	const getMaterialData = async (data, isfresh) => {
+		console.log('=====getMaterialData start=====', data);
 		if (isEmpty(accessToken.value)) {
 			const [err, result] = await to(getToken());
+			console.log('getMaterialData1', err, result);
 			if (isEmpty(result)) {
 				return;
 			}
