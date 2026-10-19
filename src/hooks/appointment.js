@@ -109,6 +109,18 @@ export default () => {
 			return;
 		}
 		let list = res.data.rows || [];
+		if (isEmpty(list)) {
+			// 无数据时模拟从今天起未来 9 天、数量为 0 的日期
+			const pad = (n) => String(n).padStart(2, '0');
+			list = Array.from({ length: 9 }, (_, i) => {
+				const d = new Date();
+				d.setDate(d.getDate() + i);
+				return {
+					yyrq: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+					dqhsyyys: 0,
+				};
+			});
+		}
 		// 先按日期合并（相同日期合并剩余预约数），再排序并取前 9 条
 		const mergedMap = {};
 		list.forEach((row) => {

@@ -45,7 +45,10 @@
 						{{ item.szks }}
 					</text>
 				</view>
-				<view style="margin-top: 10rpx; color: #999999">
+				<view
+					class="doctor-desc"
+					style="margin-top: 10rpx; color: #999999"
+				>
 					{{ parseText(item.desc) }}
 				</view>
 			</view>
@@ -120,6 +123,13 @@ onMounted(() => {
 		flex: 1;
 		flex-direction: column;
 		justify-content: center;
+	}
+	.doctor-desc {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 5;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 }
 </style>

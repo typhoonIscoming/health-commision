@@ -9,16 +9,6 @@
 				@click="onSwitchTab(item)"
 			>
 				<view class="tab-icon">
-					<!-- <uni-icons
-						custom-prefix="iconfont"
-						:type="`icon-${item.className}`"
-						size="36rpx"
-						:color="
-							currentTab === item.tabName
-								? 'rgb(87, 190, 173)'
-								: '#999'
-						"
-					/> -->
 					<uv-icon
 						:name="
 							currentTab === item.tabName

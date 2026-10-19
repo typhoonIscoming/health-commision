@@ -11,7 +11,7 @@
 				<view class="scroll-content">
 					<view
 						class="doctor-item flex flex-col flex-center"
-						v-for="(item, index) in list"
+						v-for="(item, index) in doctorList"
 						@click="handleDetail(item)"
 						:key="index"
 					>
@@ -52,12 +52,13 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import Title from './Title.vue';
-import avatar from '@/static/card/doctor.png';
 import doctorHook from '@/hooks/doctorHook';
 
 const { list, getData } = doctorHook();
+
+const doctorList = computed(() => list.value.slice(0, 5));
 
 onMounted(() => {
 	getData();

@@ -82,7 +82,7 @@
 								style="padding-right: 20rpx"
 							>
 								<image
-									src="../static/main/avatar.jpg"
+									:src="constants.userAvatar"
 									mode="widthFix"
 									style="width: 100% !important"
 								></image>
@@ -157,6 +157,7 @@
 import { ref } from 'vue';
 import Carousel from './Carousel.vue';
 import useHospital from '@/hooks/hospitalHook';
+import constants from '@/utils/constants';
 
 const { hospitalList } = useHospital();
 

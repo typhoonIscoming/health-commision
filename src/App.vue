@@ -41,8 +41,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './static/iconfont/iconfont.css';
-
 /*每个页面公共css */
 view,
 text {

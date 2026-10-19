@@ -89,7 +89,6 @@ import { onLoad } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import RichTextNode from '@/components/RichTextNode.vue';
 import doctorBg from '@/static/card/doctor-detail.png';
-import doctorAvatar from '@/static/card/doctor.png';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import goodAt from '@/static/card/skill.png';
 import doctorSkill from '@/static/card/doctor-skill.png';
