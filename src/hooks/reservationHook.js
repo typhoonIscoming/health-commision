@@ -83,6 +83,7 @@ export default () => {
 			],
 		};
 		const [e, response] = await to(getWorksheetDetail(params));
+		console.log('reservation response', response);
 		if (!isEmpty(e) || isEmpty(response.data.rows)) {
 			return;
 		}

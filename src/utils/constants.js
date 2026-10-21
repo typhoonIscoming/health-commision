@@ -8,7 +8,7 @@ export default {
 	hookAuthBind: 'Njk2MGE5NTlmMWQyYjk1ZWE2OTljNDVi', // 绑定用户信息hook值
 	hookNewAuthCheck: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM4', // 'Njk3MjM1ZmExMmZhNjYzYTcxMzlmZTAz',
 	hookNewAuthBind: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM3', // 'Njk3MjJkMWMxMmZhNjYzYTcxMzljOTQy', // 最新的hook
-	hookDownloadReport: 'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
+	hookDownloadReport: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OTlh', //'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
 	hookMakeAppointment: 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
 	mobileVerifyCodeKey: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNh', // 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi', // 短信验证码
 	hookGetAccessToken: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNi', // 'Njk4NWExOGZmOThkZGFkZjdjYWRmMjc1', // 获取公众号token

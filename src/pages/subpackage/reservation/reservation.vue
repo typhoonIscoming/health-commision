@@ -2,7 +2,7 @@
 	<view class="reservation">
 		<view class="reservation-wrapper">
 			<ReservationItem
-				v-for="(item, i) in mockList"
+				v-for="(item, i) in reservationList"
 				:key="i"
 				:item="item"
 			/>
