@@ -47,7 +47,7 @@ export default () => {
 			phone: '0991-5813577',
 			doctors: [
 				{
-					name: '吕书勤',
+					name: '吕全胜',
 					title: '保健科主任',
 					phone: '0991-5813577',
 				},
@@ -91,7 +91,7 @@ export default () => {
 		{
 			name: '新疆维吾尔自治区维吾尔医医院(自治区第二人医院)',
 			// address: '新疆乌鲁木齐市新市区苏州东街789号',
-			phone: '0991-6296628',
+			phone: '0991-2554429',
 			doctors: [
 				{
 					name: '木巴热克.麦麦提',
