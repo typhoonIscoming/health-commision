@@ -26,7 +26,7 @@ import PhysicalItemRecord from '@/components/PhysicalItemRecord.vue';
 import { onPullDownRefresh, onReachBottom, onLoad } from '@dcloudio/uni-app';
 import homeCardHook from '@/hooks/homeCard';
 import homeCardFee from '@/hooks/homeCardFee';
-import { isEmpty } from '@/utils';
+import { isEmpty, to } from '@/utils';
 
 const { tjbgList, getList } = homeCardHook();
 const { list: resultList, getData } = homeCardFee(false);
@@ -38,9 +38,9 @@ const loadStatus = ref('nomore');
 const list = ref([]);
 
 const pageIndex = ref(1);
-const pageSize = ref(20);
+const pageSize = ref(10);
 // 获取数据
-const getPageData = (isfresh) => {
+const getPageData = async (isfresh) => {
 	const [currentType, currentOrder] = type.value.split('_');
 	let sorts = {};
 	if (currentType) {
@@ -56,24 +56,32 @@ const getPageData = (isfresh) => {
 		}
 	}
 	loadStatus.value = 'loading';
-	getList({
-		isfresh,
-		pageIndex: pageIndex.value,
-		pageSize: pageSize.value,
-		sorts,
-	}).then((res) => {
-		if (!isEmpty(res)) {
-			const { total } = res;
-			if (pageIndex.value * pageSize.value < Number(total)) {
-				loadStatus.value = 'loadmore';
-			} else {
-				loadStatus.value = 'nomore';
-			}
-			pageIndex.value = pageIndex.value + 1;
-			return;
-		}
+	if (isfresh) {
+		pageIndex.value = 1;
+	}
+	const [err, res] = await to(
+		getList({
+			isfresh,
+			pageIndex: pageIndex.value,
+			pageSize: pageSize.value,
+			sorts,
+		}),
+	);
+	if (err) {
 		loadStatus.value = 'nomore';
-	});
+		return;
+	}
+	if (!isEmpty(res)) {
+		const { total } = res;
+		if (pageIndex.value * pageSize.value < Number(total)) {
+			loadStatus.value = 'loadmore';
+		} else {
+			loadStatus.value = 'nomore';
+		}
+		pageIndex.value = pageIndex.value + 1;
+		return;
+	}
+	loadStatus.value = 'nomore';
 };
 
 const service = ref([

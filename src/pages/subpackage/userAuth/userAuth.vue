@@ -408,8 +408,8 @@ const handleGetVerifyCode = async () => {
 	}
 	const [err, res] = await to(
 		getMobileVerifyCode({
-			// mob: model.value.phone,
-			mob: '18227337736',
+			mob: model.value.phone,
+			// mob: '18227337736',
 			appkey: constants.appKey,
 			sign: constants.sign,
 		}),

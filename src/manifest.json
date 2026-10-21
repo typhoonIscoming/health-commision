@@ -58,6 +58,9 @@
         "lazyCodeLoading" : "requiredComponents",
         "statusbar" : {
             "immersed" : false
+        },
+        "optimization" : {
+            "subPackages" : true
         }
     },
     "mp-alipay" : {

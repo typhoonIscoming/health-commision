@@ -50,17 +50,24 @@ const handleRoute = async () => {
 		uni.showToast({ icon: 'none', title: '获取体检报告失败' });
 		return;
 	}
+	// if (isEmpty(props.item.fjxzdz)) {
+	// 	uni.showToast({ icon: 'none', title: '暂未上传体检报告' });
+	// 	return;
+	// }
+	// const path = decodeURIComponent(props.item.fjxzdz);
 	const path = decodeURIComponent(res.url);
 	const match = path.match(/\.([a-zA-Z0-9]+)(?=[\?&]|$)/);
 	const fileType = match ? match[1] : 'pdf';
+	console.log('fileType', fileType);
 	wx.showLoading({
 		title: '正在获取体检报告',
 	});
 	uni.downloadFile({
-		url: path,
+		url: res.url,
 		fail: function (result) {
 			console.log('下载文档异常', result);
 			wx.hideLoading();
+			uni.showToast({ icon: 'none', title: '下载文档异常' });
 		},
 		success: function (result) {
 			var filePath = result.tempFilePath;
