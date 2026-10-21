@@ -40,16 +40,14 @@
 					<text>
 						{{ item.ssyyjg }}
 					</text>
-					|
-					<text>
-						{{ item.szks }}
-					</text>
+
+					<text v-if="item.szks"> | {{ item.szks }} </text>
 				</view>
 				<view
 					class="doctor-desc"
 					style="margin-top: 10rpx; color: #999999"
+					v-html="parseText(item.desc)"
 				>
-					{{ parseText(item.desc) }}
 				</view>
 			</view>
 		</view>

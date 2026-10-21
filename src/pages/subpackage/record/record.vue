@@ -248,7 +248,7 @@ const fetchUserInfo = () => {
 	model.value.rankYears = auth.zjnx || '';
 	model.value.recordStatus = auth.jlzt || '';
 	model.value.personStatus = auth.ryzt || '';
-	model.value.civilServantLevel = auth.civilServantLevel || '';
+	model.value.civilServantLevel = auth.gwyjb || '';
 	model.value.treatmentLevel = auth.dyjb || '';
 	const id = auth.car_id || '';
 	if (id.length < 8) {

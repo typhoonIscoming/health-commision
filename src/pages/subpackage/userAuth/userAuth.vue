@@ -204,7 +204,7 @@ const model = ref({
 	idCard: '',
 	idCardType: '身份证',
 	verify: '',
-	recognition: success, // success | fail
+	recognition: '', // success | fail
 });
 const rules = ref({
 	name: [
@@ -366,7 +366,18 @@ const handleBindUserInfo = () => {
 				});
 				return;
 			}
-			uni.setStorageSync('b2cAuth', res);
+			// 通过身份证号推算性别
+			const result = {
+				...res,
+				sex:
+					res.sex ||
+					(res.car_id
+						? parseInt(res.car_id.slice(16, 17)) % 2 === 1
+							? '男'
+							: '女'
+						: ''),
+			};
+			uni.setStorageSync('b2cAuth', result);
 			uni.showToast({
 				title: '绑定成功',
 				icon: 'success',

@@ -324,7 +324,16 @@ const handleFastLoginCheck = async (data) => {
 	uni.showToast({ icon: 'none', title: '登录成功' });
 	// 这里默认填入数据以防本地认证状态丢失（userAuth.vue--204行）
 	// 如果已经绑定，这里的res就是返回的身份信息
-	uni.setStorageSync('b2cAuth', res);
+	uni.setStorageSync('b2cAuth', {
+		...res,
+		sex:
+			res.sex ||
+			(res.car_id
+				? parseInt(res.car_id.slice(16, 17)) % 2 === 1
+					? '男'
+					: '女'
+				: ''),
+	});
 	setTimeout(() => {
 		uni.reLaunch({
 			url: '/pages/tabBar/index/index',
