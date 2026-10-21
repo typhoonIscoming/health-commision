@@ -11,7 +11,7 @@
 			/>
 			<view class="list-wrapper">
 				<view class="label">健康测评</view>
-				<view class="desc">身心健康状况测评</view>
+				<view class="desc">健康状况测评</view>
 			</view>
 		</view>
 		<view

@@ -37,23 +37,21 @@
 								<view class="row flex-center">
 									<view class="label">性别：</view>
 									<view class="value">
-										{{ userInfo?.sex || '--' }}
+										{{ userInfo?.sex || '' }}
 									</view>
 								</view>
 								<view class="row flex">
 									<view class="label">单位：</view>
 									<view class="value">
-										{{ userInfo?.yhdw || '--' }}
+										{{ userInfo?.yhdw || '' }}
 									</view>
 								</view>
 								<view class="row flex">
 									<view class="label"> 职级及年限： </view>
 									<view class="value">
-										{{
-											userInfo?.civilServantLevel || '--'
-										}}
+										{{ userInfo?.civilServantLevel || '' }}
 
-										{{ userInfo?.zjnx || '--' }}
+										{{ userInfo?.zjnx || '' }}
 									</view>
 								</view>
 								<view class="row flex-center">

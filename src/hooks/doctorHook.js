@@ -57,7 +57,7 @@ export default () => {
 				// 判断a/b是否有设置排序数字，没有的话就向后排
 				const aIndex = Number(a.pxzd) || Number.MAX_SAFE_INTEGER;
 				const bIndex = Number(b.pxzd) || Number.MAX_SAFE_INTEGER;
-				return aIndex - bIndex;
+				return aIndex - bIndex > 0 ? 1 : -1;
 			})
 			.map((item) => {
 				const desc = parseHtml(item.zyzl);
@@ -75,7 +75,7 @@ export default () => {
 					id: item.rowid,
 				};
 			});
-		// console.log('名医风采排序后:', list.value);
+		console.log('名医风采排序后:', response.data.rows, list.value);
 	};
 
 	return {
