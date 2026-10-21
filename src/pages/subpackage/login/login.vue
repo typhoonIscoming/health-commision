@@ -308,13 +308,10 @@ const handleFastLoginCheck = async (data) => {
 		uni.showToast({ icon: 'none', title: '登录失败，请稍后重试' });
 		return;
 	}
-	let { user_id } = res;
-	// #ifdef H5
-	user_id = 'oAHxr7e4Accb6y1zO4ot2Co7JAVg';
-	// #endif
+	let { msg } = res;
 	uni.setStorageSync('b2cOpenid', data.openid);
 	uni.setStorageSync('b2cToken', { expires: +new Date(), token: data.token });
-	if (!user_id) {
+	if (msg !== '已绑定') {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
 		setTimeout(() => {

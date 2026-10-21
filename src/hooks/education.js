@@ -4,13 +4,19 @@ import {
 	getWechatArticle,
 	getMaterialList,
 	getArtical,
+	getWorksheetInfo,
+	getWorksheetDetail,
+	getRowById,
 } from '@/api';
 import { to, isEmpty, parseTime } from '@/utils';
+import constants from '@/utils/constants';
 import healthimg from '@/static/main/health1.png';
 
 export default () => {
+	const worksheetInfo = ref(null);
 	const accessToken = ref();
 	const list = ref([]);
+	const loading = ref(false);
 	const mockList = ref([
 		{
 			name: '糖尿病骨质疏松导致的骨折',
@@ -132,14 +138,79 @@ export default () => {
 			total: total_count,
 		};
 	};
-	// onMounted(() => {
-	// 	getToken();
-	// });
+	// 获取公众宣教表中的数据
+	const getWorksheet = async () => {
+		const data = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'gzxjxx',
+		};
+		const [err, res] = await to(getWorksheetInfo(data));
+		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
+			return;
+		}
+		worksheetInfo.value = res.data;
+		return res.data;
+	};
+	const getData = async (args) => {
+		const { pageIndex = 1, pageSize = 10 } = args || {};
+		loading.value = true;
+		let config = {};
+		if (isEmpty(worksheetInfo.value)) {
+			const result = await getWorksheet();
+			if (isEmpty(result)) {
+				loading.value = false;
+				return;
+			}
+			config = result;
+		} else {
+			config = worksheetInfo.value;
+		}
+		const { views, controls } = config;
+		const view = views.find((item) => item.name === '全部');
+		const params = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'gzxjxx',
+			viewId: view.viewId,
+			listType: 1,
+			isAsc: false,
+			pageSize: pageSize,
+			pageIndex: pageIndex,
+		};
+		const [e, response] = await to(getWorksheetDetail(params));
+		loading.value = false;
+		if (!isEmpty(e) || isEmpty(response.data.rows)) {
+			return;
+		}
+		list.value = response.data.rows;
+		console.log('获取到的公众宣教表数据', list.value);
+		return list.value;
+	};
+
+	// 获取详细信息
+	const getDetail = async (rowId) => {
+		const params = {
+			appKey: constants.appKey,
+			sign: constants.sign,
+			worksheetId: 'gzxjxx',
+			rowId: rowId,
+		};
+		const [err, res] = await to(getRowById(params));
+		if (!isEmpty(err) || !res.success || isEmpty(res.data)) {
+			return;
+		}
+		return res.data;
+	};
+
 	return {
+		loading,
 		list,
 		mockList,
 		getWechatList,
 		getMaterialData,
 		getGroupArtical,
+		getData,
+		getDetail,
 	};
-};
+};;
