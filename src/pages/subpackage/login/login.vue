@@ -310,7 +310,9 @@ const handleFastLoginCheck = async (data) => {
 	}
 	let { msg } = res;
 	uni.setStorageSync('b2cOpenid', data.openid);
-	uni.setStorageSync('b2cToken', { expires: +new Date(), token: data.token });
+	// 设置token的过期时间
+	const expires = +new Date() + 2 * 60 * 60 * 1000; // 设置2小时过期
+	uni.setStorageSync('b2cToken', { expires, token: data.token });
 	if (msg !== '已绑定') {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });

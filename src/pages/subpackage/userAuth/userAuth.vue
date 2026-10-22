@@ -190,6 +190,8 @@ import {
 	bindUserAuth,
 	getMobileVerifyCode,
 	faceRecognition,
+	getWorksheetInfo,
+	getWorksheetDetail,
 } from '@/api/index.js';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
@@ -206,6 +208,7 @@ const model = ref({
 	verify: '',
 	recognition: '', // success | fail
 });
+const verifyCode = ref('');
 const rules = ref({
 	name: [
 		{
@@ -226,6 +229,23 @@ const rules = ref({
 			trigger: 'blur',
 		},
 	],
+	verify: [
+		{
+			required: true,
+			message: '请输入验证码',
+			trigger: 'blur',
+		},
+		{
+			validator: (_, v, c) => {
+				if (v !== verifyCode.value) {
+					c(new Error('验证码不正确'));
+				} else {
+					c();
+				}
+			},
+			trigger: 'blur',
+		},
+	],
 	idCard: [
 		{
 			required: true,
@@ -242,7 +262,6 @@ const rules = ref({
 	recognition: [
 		{
 			validator: (_, v, c) => {
-				console.log('人脸识别结果', v);
 				if (!v) {
 					c(new Error('请进行人脸识别'));
 					return;
@@ -274,10 +293,10 @@ const handleSubmit = () => {
 			}
 		})
 		.catch(() => {
-			uni.showToast({
-				title: '表单填写有误',
-				icon: 'error',
-			});
+			// uni.showToast({
+			// 	title: '表单填写有误',
+			// 	icon: 'error',
+			// });
 		});
 };
 // 人脸识别
@@ -296,17 +315,12 @@ const handleStartSoterAuthentication = async () => {
 };
 // 获取人脸识别方法必须得verifyId
 const getVerifyId = async () => {
-	if (faceVerifyLoading.value) {
-		return;
-	}
 	const params = {
 		real_name: model.value.name,
 		id_card: model.value.idCard,
 		openid: uni.getStorageSync('b2cOpenid'),
 	};
-	faceVerifyLoading.value = true;
 	const [err, res] = await to(faceRecognition(params));
-	faceVerifyLoading.value = false;
 	if (err) {
 		uni.showToast({
 			icon: 'none',
@@ -316,10 +330,89 @@ const getVerifyId = async () => {
 	}
 	return res?.verify_id;
 };
+
+const checkUserRegistered = async () => {
+	const data = {
+		appKey: constants.appKey,
+		sign: constants.sign,
+		worksheetId: 'rywh',
+	};
+	const [err, res] = await to(getWorksheetInfo(data));
+	console.log('checkUserRegistered', err, res);
+	if (!isEmpty(err)) {
+		uni.showToast({
+			icon: 'none',
+			title: err.message || '获取人员信息失败，请重新获取',
+		});
+		return false;
+	}
+	// 比对姓名和身份证号
+	const view = res.data.views.find((item) => item.name === '人员列表');
+	const idCardControl = res.data.controls.find(
+		(item) => item.alias === 'sfzh',
+	);
+	const nameControl = res.data.controls.find((item) => item.alias === 'ryxm');
+	const params = {
+		appKey: constants.appKey,
+		sign: constants.sign,
+		worksheetId: 'rywh',
+		viewId: view.viewId,
+		pageSize: 20,
+		pageIndex: 1,
+		listType: 1,
+		filters: [
+			{
+				controlId: idCardControl.controlId,
+				values: [model.value.idCard],
+				filterType: 2,
+				dataType: 2,
+				spliceType: 1,
+			},
+			{
+				controlId: nameControl.controlId,
+				values: [model.value.name],
+				filterType: 2,
+				dataType: 2,
+				spliceType: 1,
+			},
+		],
+	};
+	// 获取人员详细信息
+	const [e, response] = await to(getWorksheetDetail(params));
+	console.log('是否查询到人员信息', e, response);
+	if (!isEmpty(e)) {
+		uni.showToast({
+			icon: 'none',
+			title: e.message || '获取人员信息失败，请重新获取',
+		});
+		return false;
+	}
+	if (isEmpty(response?.data?.rows)) {
+		uni.showToast({
+			icon: 'none',
+			title: '未查到身份信息，无法注册',
+		});
+		return false;
+	}
+	return true;
+};
+// 在先校验人脸识别之前，先去表中获取人员信息，看是否注册
 // 获取到verifyId后才能进行人脸识别
 const handleFaceRecognition = async () => {
-	const verifyId = await getVerifyId();
-	if (!verifyId) {
+	if (faceVerifyLoading.value) return;
+	faceVerifyLoading.value = true;
+	const [e, res] = await to(checkUserRegistered());
+	if (e || !res) {
+		faceVerifyLoading.value = false;
+		return;
+	}
+	const [ve, verifyId] = await to(getVerifyId());
+	faceVerifyLoading.value = false;
+	if (ve || !verifyId) {
+		uni.showToast({
+			icon: 'none',
+			title: ve?.message || '获取验证失败',
+		});
 		return;
 	}
 	// 这里可以调用实际的人脸识别逻辑，例如 uni.startSoterAuthentication
@@ -417,10 +510,10 @@ const handleGetVerifyCode = async () => {
 		uni.showToast({ icon: 'none', title: '请输入手机号' });
 		return;
 	}
+	verifyCode.value = '';
 	const [err, res] = await to(
 		getMobileVerifyCode({
 			mob: model.value.phone,
-			// mob: '18227337736',
 			appkey: constants.appKey,
 			sign: constants.sign,
 		}),
@@ -429,6 +522,7 @@ const handleGetVerifyCode = async () => {
 		uni.showToast({ icon: 'none', title: err.message || '获取验证码失败' });
 		return;
 	}
+	verifyCode.value = res.code;
 	startInterval();
 	uni.showToast({ icon: 'none', title: '验证码已发送' });
 };
