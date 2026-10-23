@@ -1,12 +1,15 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import useLoginStore from './store/login';
+import { startTokenGuard, stopTokenGuard } from './hooks/tokenGuard';
 export default {
 	computed: {
 		...mapState(useLoginStore, ['getLoginState']),
 	},
 	onLaunch: function () {
-		// console.log('App Launch');
+		console.log('App Launch');
+		// 存在登录态时，启动定时器周期性校验人员的token是否失效
+		startTokenGuard();
 	},
 	onShow: function () {
 		// #ifdef MP-WEIXIN
@@ -16,9 +19,11 @@ export default {
 		if (!this.getLoginState) {
 			// this.login();
 		}
+		startTokenGuard();
 	},
 	onHide: function () {
 		// console.log('App Hide');
+		stopTokenGuard();
 	},
 	methods: {
 		...mapActions(useLoginStore, ['setLogin']),

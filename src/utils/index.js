@@ -99,10 +99,29 @@ export const isJSON = (str) => {
 	}
 };
 
+export const getAuth = () => {
+	const auth = uni.getStorageSync('b2cAuth');
+	// 返回本地存储的用户认证信息
+	if (isEmpty(auth)) {
+		// 同时清楚其他相关的本地存储
+		uni.removeStorageSync('b2cOpenid');
+		return null;
+	}
+	// 获取有效期
+	const { expires } = auth;
+	if (expires < +new Date()) {
+		// 如果过期，清除相关存储
+		uni.removeStorageSync('b2cAuth');
+		uni.removeStorageSync('b2cOpenid');
+		return null;
+	}
+	return auth;
+};
+
 export const checkLogin = {
 	checkAuthInfo: (fn = noop, autoRoute = true) => {
 		const tokenInfo = uni.getStorageSync('b2cToken');
-		const auth = uni.getStorageSync('b2cAuth');
+		const auth = getAuth();
 		const openid = uni.getStorageSync('b2cOpenid');
 		if (tokenInfo && auth) {
 			fn(auth, tokenInfo);

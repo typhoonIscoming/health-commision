@@ -460,8 +460,10 @@ const handleBindUserInfo = () => {
 				return;
 			}
 			// 通过身份证号推算性别
+			const expires = +new Date() + 2 * 60 * 60 * 1000; // 设置2小时过期
 			const result = {
 				...res,
+				expires,
 				sex:
 					res.sex ||
 					(res.car_id

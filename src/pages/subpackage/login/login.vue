@@ -153,6 +153,7 @@ import constants from '@/utils/constants';
 import NavBar from '@/components/NavBar.vue';
 import navBg from '@/static/home/login-nav.jpg';
 import safeInset from '@/hooks/safeInset';
+import { startTokenGuard } from '@/hooks/tokenGuard';
 
 const { safeInsetBottom } = safeInset();
 
@@ -313,6 +314,8 @@ const handleFastLoginCheck = async (data) => {
 	// 设置token的过期时间
 	const expires = +new Date() + 2 * 60 * 60 * 1000; // 设置2小时过期
 	uni.setStorageSync('b2cToken', { expires, token: data.token });
+	// 登录成功后启动定时器，周期性校验token是否失效
+	startTokenGuard();
 	if (msg !== '已绑定') {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
@@ -327,6 +330,7 @@ const handleFastLoginCheck = async (data) => {
 	// 这里默认填入数据以防本地认证状态丢失（userAuth.vue--204行）
 	// 如果已经绑定，这里的res就是返回的身份信息
 	uni.setStorageSync('b2cAuth', {
+		expires,
 		...res,
 		sex:
 			res.sex ||
