@@ -19,10 +19,11 @@ export default {
 		if (!this.getLoginState) {
 			// this.login();
 		}
+		console.log('App Show');
 		startTokenGuard();
 	},
 	onHide: function () {
-		// console.log('App Hide');
+		console.log('App Hide');
 		stopTokenGuard();
 	},
 	methods: {

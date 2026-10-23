@@ -195,6 +195,7 @@ import {
 } from '@/api/index.js';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
+import { startTokenGuard } from '@/hooks/tokenGuard';
 
 const success = 'success';
 const fail = 'fail';
@@ -482,6 +483,7 @@ const handleBindUserInfo = () => {
 				uni.reLaunch({
 					url: '/pages/tabBar/index/index',
 				});
+				startTokenGuard();
 			}, 2000);
 		})
 		.catch((err) => {

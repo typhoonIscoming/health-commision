@@ -184,7 +184,7 @@ export default () => {
 			return;
 		}
 		list.value = response.data.rows;
-		console.log('获取到的公众宣教表数据', list.value);
+		// console.log('获取到的公众宣教表数据', list.value);
 		return list.value;
 	};
 
@@ -213,4 +213,4 @@ export default () => {
 		getData,
 		getDetail,
 	};
-};;
+};

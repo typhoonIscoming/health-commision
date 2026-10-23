@@ -1,9 +1,15 @@
-import { checkUserAuth, fastLogin } from '@/api';
-import { isEmpty, to, userInfo as USER_INFO_KEY } from '@/utils';
+import { getWorksheetInfo, getWorksheetDetail, fastLogin } from '@/api';
+import {
+	isEmpty,
+	to,
+	userInfo as USER_INFO_KEY,
+	retryWithDelay,
+} from '@/utils';
 import useLoginStore from '@/store/login';
+import constants from '@/utils/constants';
 
 // 检测间隔：20 分钟
-const CHECK_INTERVAL = 20 * 60 * 1000;
+const CHECK_INTERVAL = 1 * 60 * 1000;
 
 let timer = null;
 let isHandlingInvalidToken = false;
@@ -40,6 +46,54 @@ const promptRelogin = () => {
 	});
 };
 
+const getUserInfo = async () => {
+	const data = {
+		appKey: constants.appKey,
+		sign: constants.sign,
+		worksheetId: 'rywh',
+	};
+	const [err, res] = await to(getWorksheetInfo(data));
+	if (!isEmpty(err)) {
+		// 配置retryWithDelay方法，让方法重试
+		throw Error('429');
+	}
+	const view = res.data.views.find((item) => item.name === '人员列表');
+	const control = res.data.controls.find((item) => item.alias === 'sfzh');
+	const userInfo = uni.getStorageSync('b2cAuth');
+	console.log('userinfo ', userInfo);
+	if (isEmpty(userInfo)) {
+		return;
+	}
+	const params = {
+		appKey: constants.appKey,
+		sign: constants.sign,
+		worksheetId: 'rywh',
+		viewId: view.viewId,
+		pageSize: 20,
+		pageIndex: 1,
+		listType: 1,
+		filters: [
+			{
+				controlId: control.controlId,
+				values: [userInfo.car_id],
+				filterType: 2,
+				dataType: 2,
+				spliceType: 1,
+			},
+		],
+	};
+	// 获取人员详细信息
+	const [e, response] = await to(getWorksheetDetail(params));
+	if (!isEmpty(e)) {
+		throw Error('429');
+	}
+	if (isEmpty(response.data.rows)) {
+		return;
+	}
+	console.log('get user info', response);
+	// 如果人员状态为非正常，就提示重新登录
+};
+
 // 向后台请求人员的token，判断是否失效
 const checkToken = async () => {
 	const openid = uni.getStorageSync('b2cOpenid');
@@ -49,15 +103,11 @@ const checkToken = async () => {
 	if (isEmpty(openid) || isEmpty(token)) {
 		return;
 	}
-	const [err, res] = await to(fastLogin({ login_type: 'token', token }));
+	const [err, res] = await to(getUserInfo());
+	console.log('check token result', err, res);
 	// 请求失败，或者返回数据里没有token，视为登录态已失效
-	if (!isEmpty(err) || isEmpty(res) || isEmpty(res.token)) {
+	if (!isEmpty(res) && isEmpty(res.jlzt) && res.jlzt !== '正常') {
 		promptRelogin();
-	}
-	// 如果请求成功且返回了token，说明登录态仍然有效，更新本地token的过期时间
-	if (!isEmpty(res) && !isEmpty(res.token)) {
-		const expires = +new Date() + 2 * 60 * 60 * 1000; // 设置2小时过期
-		uni.setStorageSync('b2cToken', { expires, token: res.token });
 	}
 };
 

@@ -314,8 +314,7 @@ const handleFastLoginCheck = async (data) => {
 	// 设置token的过期时间
 	const expires = +new Date() + 2 * 60 * 60 * 1000; // 设置2小时过期
 	uni.setStorageSync('b2cToken', { expires, token: data.token });
-	// 登录成功后启动定时器，周期性校验token是否失效
-	startTokenGuard();
+
 	if (msg !== '已绑定') {
 		// 未认证，跳转认证页
 		uni.showToast({ icon: 'none', title: '请先完成用户认证' });
@@ -344,6 +343,8 @@ const handleFastLoginCheck = async (data) => {
 		uni.reLaunch({
 			url: '/pages/tabBar/index/index',
 		});
+		// 登录成功后启动定时器，周期性校验token是否失效
+		startTokenGuard();
 	}, 1000);
 };
 

@@ -107,14 +107,15 @@ export const getAuth = () => {
 		uni.removeStorageSync('b2cOpenid');
 		return null;
 	}
-	// 获取有效期
-	const { expires } = auth;
-	if (expires < +new Date()) {
-		// 如果过期，清除相关存储
-		uni.removeStorageSync('b2cAuth');
-		uni.removeStorageSync('b2cOpenid');
-		return null;
-	}
+	// 检查人员状态是否正常，不通过token判断了，就没必要判断有效期了
+	// const { expires } = auth;
+	// console.log('expires', expires, +new Date());
+	// if (expires < +new Date()) {
+	// 	// 如果过期，清除相关存储
+	// 	uni.removeStorageSync('b2cAuth');
+	// 	uni.removeStorageSync('b2cOpenid');
+	// 	return null;
+	// }
 	return auth;
 };
 
@@ -259,3 +260,30 @@ export const getUserInfo = () => {
 	}
 	return null;
 };
+
+// 重试函数
+export async function retryWithDelay(fn, maxRetries = 3, delay = 1000) {
+	let lastError;
+
+	for (let i = 0; i < maxRetries; i++) {
+		try {
+			return await fn();
+		} catch (error) {
+			lastError = error;
+
+			// 如果是429错误，增加延迟时间
+			if (error instanceof Error && error.message.includes('429')) {
+				const backoffDelay = delay * Math.pow(2, i); // 指数退避
+				console.log(`请求被限流，等待 ${backoffDelay}ms 后重试...`);
+				await new Promise((resolve) =>
+					setTimeout(resolve, backoffDelay),
+				);
+			} else if (i < maxRetries - 1) {
+				// 其他错误，短暂延迟后重试
+				await new Promise((resolve) => setTimeout(resolve, delay));
+			}
+		}
+	}
+
+	throw lastError;
+}

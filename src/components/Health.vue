@@ -43,10 +43,12 @@
 										border-radius: 10rpx;
 									"
 								/>
-								<video
+								<Video
 									v-else-if="isVideo(media.DownloadUrl)"
 									:src="media.DownloadUrl"
-									controls
+									:controls="false"
+									:show-play-btn="false"
+									:show-center-play-btn="false"
 									class="artical-img"
 									style="
 										width: 100%;
@@ -66,6 +68,7 @@
 import { onMounted, computed } from 'vue';
 import Title from './Title.vue';
 import educationHook from '@/hooks/education';
+import Video from '@/components/Video.vue';
 import { isJSON } from '@/utils';
 
 const { list, loading, getData } = educationHook();
