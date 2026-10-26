@@ -9,7 +9,7 @@ import useLoginStore from '@/store/login';
 import constants from '@/utils/constants';
 
 // 检测间隔：20 分钟
-const CHECK_INTERVAL = 1 * 60 * 1000;
+const CHECK_INTERVAL = 20 * 60 * 1000;
 
 let timer = null;
 let isHandlingInvalidToken = false;
@@ -60,7 +60,7 @@ const getUserInfo = async () => {
 	const view = res.data.views.find((item) => item.name === '人员列表');
 	const control = res.data.controls.find((item) => item.alias === 'sfzh');
 	const userInfo = uni.getStorageSync('b2cAuth');
-	console.log('userinfo ', userInfo);
+	// console.log('userinfo ', userInfo);
 	if (isEmpty(userInfo)) {
 		return;
 	}
@@ -90,7 +90,7 @@ const getUserInfo = async () => {
 	if (isEmpty(response.data.rows)) {
 		return;
 	}
-	console.log('get user info', response);
+	// console.log('get user info', response);
 	// 如果人员状态为非正常，就提示重新登录
 };
 
@@ -104,7 +104,7 @@ const checkToken = async () => {
 		return;
 	}
 	const [err, res] = await to(getUserInfo());
-	console.log('check token result', err, res);
+	// console.log('check token result', err, res);
 	// 请求失败，或者返回数据里没有token，视为登录态已失效
 	if (!isEmpty(res) && isEmpty(res.jlzt) && res.jlzt !== '正常') {
 		promptRelogin();
