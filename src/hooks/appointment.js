@@ -5,7 +5,7 @@ import constants from '@/utils/constants';
 
 export default () => {
 	const hospitial = ref([]);
-	const currentIndex = ref(0);
+	const currentIndex = ref(null);
 
 	const tjyyControls = ref([]);
 	// 获取机构列表
@@ -47,15 +47,10 @@ export default () => {
 				name: item.jgmc,
 			};
 		});
-		const curr = hospitial.value[currentIndex.value];
-		if (!isEmpty(curr)) {
-			// getHospitialDateList(curr);
-		}
 	};
 
 	// 获取当前医院的预约日期列表
 	const getHospitialDateList = async (currHospitial) => {
-		// console.log('getHospitialDateList', currHospitial);
 		if (isEmpty(currHospitial)) {
 			return;
 		}

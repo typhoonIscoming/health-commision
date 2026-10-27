@@ -11,7 +11,7 @@
 					:src="item.avatar || '@/static/home/doctor-avatar.png'"
 					mode="aspectFill"
 					class="doctor-avatar"
-					style="width: 120rpx; height: 150rpx; border-radius: 20rpx"
+					style="width: 160rpx; height: 200rpx; border-radius: 20rpx"
 				/>
 			</view>
 			<view class="doctor-detail">

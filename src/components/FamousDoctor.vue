@@ -24,7 +24,11 @@
 							"
 							mode="aspectFill"
 							class="doctor-avatar"
-							style="width: 160rpx; height: 200rpx"
+							style="
+								width: 160rpx;
+								height: 200rpx;
+								border-radius: 20rpx;
+							"
 						/>
 						<view class="avatar-bg"></view>
 						<view

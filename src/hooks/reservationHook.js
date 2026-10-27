@@ -8,6 +8,8 @@ export default () => {
 	// 保存配置
 	const worksheetInfo = ref({});
 
+	const total = ref(0);
+
 	const mockList = ref([
 		{
 			id: '1',
@@ -98,11 +100,13 @@ export default () => {
 		} else {
 			reservationList.value = reservationList.value.concat(list);
 		}
+		total.value = response.data.total || 0;
 		return response.data;
 	};
 	return {
 		reservationList,
 		mockList,
+		total,
 		getList,
 	};
 };

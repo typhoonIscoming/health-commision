@@ -26,7 +26,11 @@
 						v-if="mediaList(item).length"
 						class="artical-img-wrap"
 					>
-						<swiper circular style="width: 100%; height: 100%">
+						<swiper
+							autoplay
+							circular
+							style="width: 100%; height: 100%"
+						>
 							<swiper-item
 								v-for="(media, index) in mediaList(item)"
 								:key="index"
@@ -34,12 +38,12 @@
 							>
 								<image
 									v-if="isImage(media.thumbnail_full_path)"
-									:src="media.thumbnail_full_path"
-									mode="aspectFill"
+									:src="media.large_thumbnail_full_path"
+									mode="aspectFit"
 									class="artical-img"
 									style="
-										width: 100%;
-										height: 100%;
+										width: 240rpx;
+										height: 120rpx;
 										border-radius: 10rpx;
 									"
 								/>
@@ -146,6 +150,7 @@ const isVideo = (url) => {
 		.artical-img-wrap {
 			width: 240rpx;
 			height: 120rpx;
+			margin-left: 10rpx;
 		}
 	}
 }

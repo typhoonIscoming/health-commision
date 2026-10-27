@@ -1,6 +1,6 @@
 <template>
 	<view class="reservation-item">
-		<view class="left">
+		<view v-if="showHospital" class="left">
 			<image
 				src="../static/main/hospitalBuilding.png"
 				mode="aspectFill"
@@ -16,7 +16,7 @@
 					font-size: 28rpx;
 					font-weight: bold;
 				"
-				>{{ info.status }}</view
+				>{{ info.yyzt }}</view
 			>
 
 			<view class="row flex-col">
@@ -84,6 +84,10 @@ const props = defineProps({
 	status: {
 		type: Number,
 		default: 0,
+	},
+	showHospital: {
+		type: Boolean,
+		default: true,
 	},
 	item: {
 		type: Object,

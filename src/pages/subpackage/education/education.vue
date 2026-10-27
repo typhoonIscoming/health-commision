@@ -70,8 +70,8 @@ const list = ref([]);
 const getPageData = async (fresh) => {
 	if (loading.value) return;
 	loadStatus.value = 'loading';
-	getData({ pageIndex: pageIndex.value, pageSize: pageSize.value }).then(
-		(res) => {
+	getData({ pageIndex: pageIndex.value, pageSize: pageSize.value })
+		.then((res) => {
 			loading.value = false;
 			if (!res) {
 				loadStatus.value = 'nomore';
@@ -97,8 +97,12 @@ const getPageData = async (fresh) => {
 				const dateB = new Date(b.fbrq).getTime();
 				return dateB - dateA;
 			});
-		},
-	);
+		})
+		.catch((err) => {
+			loading.value = false;
+			loadStatus.value = 'nomore';
+			console.error(err);
+		});
 };
 
 const handleRoute = (item) => {

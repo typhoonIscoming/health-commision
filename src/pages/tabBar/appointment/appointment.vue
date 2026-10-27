@@ -13,23 +13,80 @@
 				ref="form"
 			>
 				<uv-form-item label="" prop="name" :borderBottom="false">
-					<view style="width: 100%">
-						<view style="margin-bottom: 20rpx">
-							<Title title="选择医院" />
+					<view style="margin-bottom: 20rpx">
+						<Title title="选择医院" />
+					</view>
+
+					<view class="hospital-wrapper">
+						<view
+							v-for="(item, i) in list"
+							:key="i"
+							class="hospital-item"
+							:class="{ selected: currentIndex === i }"
+							@click="handleSelectHospital(item)"
+						>
+							<view class="selected-icon">
+								<uv-icon :name="selected" size="24" />
+							</view>
+							<view class="hospital-name gap-icon row flex">
+								<uv-icon
+									:name="hospitalIcon"
+									size="20"
+									color="#999999"
+								></uv-icon>
+								<text
+									style="
+										font-weight: bold;
+										color: #3d3d3d;
+										font-size: 30rpx;
+									"
+								>
+									{{ item.name }}
+								</text>
+							</view>
+							<view v-if="item.jgdz" class="hospital-address row">
+								{{ item.jgdz }}
+							</view>
+							<view
+								v-if="item.yydh"
+								class="hospital-contact gap-icon flex align-center row"
+							>
+								<uv-icon
+									:name="phoneIcon"
+									size="20"
+									color="#999999"
+								></uv-icon>
+								<text
+									style="
+										font-weight: bold;
+										color: #58b384;
+										margin-right: 30rpx;
+									"
+								>
+									预约电话
+								</text>
+								<text
+									style="
+										color: #58b384;
+										font-weight: bold;
+										font-size: 28rpx;
+									"
+									@click.stop="handleCall(item.yydh)"
+								>
+									{{ item.yydh }}
+								</text>
+							</view>
 						</view>
-						<uni-data-select
-							v-model="model.name"
-							:localdata="list"
-							@change="change"
-						></uni-data-select>
 					</view>
 				</uv-form-item>
 				<uv-form-item
 					v-if="currentList.length"
-					label="请选择预约日期"
 					prop="date"
 					:borderBottom="false"
 				>
+					<view style="margin-bottom: 20rpx">
+						<Title title="请选择预约日期" />
+					</view>
 					<view
 						class="flex flex-wrap"
 						style="flex-wrap: wrap; width: 100%"
@@ -78,22 +135,25 @@
 					@click="handleConfrim"
 				></uv-button>
 			</view>
+			<AppointmentList :list="reservationList" :total="total" />
 		</view>
-
-		<!-- <Tabbar current-tab="appointment" /> -->
 	</view>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import NavBar from '@/components/NavBar.vue';
-import Tabbar from '@/components/Tabbar.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
 import appointmentHook from '@/hooks/appointment';
 import { makeAppointment } from '@/api';
+import constants from '@/utils/constants';
 import Title from '@/components/Title.vue';
-import { onShow } from '@dcloudio/uni-app';
+import AppointmentList from '@/components/AppointmentList.vue';
 import selected from '@/static/user/selected.png';
+import hospitalIcon from '@/static/card/hospital-icon.png';
+import phoneIcon from '@/static/card/phone.png';
+import reservationHook from '@/hooks/reservationHook';
+
+const { reservationList, total, getList } = reservationHook();
 
 const { hospitial, currentIndex, getHospitialDateList, getHospitial } =
 	appointmentHook();
@@ -107,6 +167,17 @@ const rules = ref({
 	date: [{ required: true, message: '请选择日期' }],
 });
 const form = ref();
+const appointmentRef = ref();
+const pageIndex = ref(1);
+const pageSize = ref(5);
+
+const getReservationList = () => {
+	getList({
+		pageIndex: pageIndex.value,
+		pageSize: pageSize.value,
+		refresh: true,
+	});
+};
 
 onMounted(() => {
 	const userInfo = uni.getStorageSync('b2cAuth');
@@ -115,6 +186,7 @@ onMounted(() => {
 		return;
 	}
 	getHospitial();
+	getReservationList();
 });
 
 const list = computed(() => {
@@ -123,6 +195,7 @@ const list = computed(() => {
 		text: item.name,
 		value: item.rowid,
 	}));
+	console.log('list', result);
 	return result;
 });
 const height = computed(() => {
@@ -140,16 +213,17 @@ const submitColor = computed(() => {
 	return '#58b384';
 });
 
-const change = (id) => {
-	const index = list.value.findIndex((item) => item.value === id);
+// 选择医院
+const handleSelectHospital = (item) => {
+	const index = list.value.findIndex((i) => i.value === item.rowid);
+	if (currentIndex.value === index && currentList.value.length) return;
 	currentIndex.value = index;
 	timeIndex.value = null;
-	const item = list.value[index];
-	console.log('change', id, index, item);
-	getHospitialDateList(item);
+	const oItem = list.value[index];
+	model.value.name = item.name;
+	console.log('selected hospital:', item, oItem);
+	getHospitialDateList(oItem);
 };
-// 选择的医院
-const hospitalIndex = ref(0);
 // 选择的时间索引
 const timeIndex = ref();
 // 选择预约时间
@@ -178,6 +252,8 @@ const onSubmit = async (userInfo) => {
 	const params = {
 		row_id: selectedTime.rowid,
 		ybbh: userInfo.ybbh,
+		appKey: constants.appKey,
+		sign: constants.sign,
 	};
 	const [err, res] = await to(makeAppointment(params));
 	if (!isEmpty(err) || isEmpty(res)) {
@@ -189,10 +265,14 @@ const onSubmit = async (userInfo) => {
 		return;
 	}
 	getHospitial();
+	getReservationList();
 	uni.showModal({
 		title: '提交成功',
 		content: `您已预约${selectedHospital.name}，预约时间为${selectedTime.date}，请等待机构人员确认后按时前往体检！`,
 		showCancel: false,
+		success: () => {
+			appointmentRef.value?.refresh();
+		},
 	});
 };
 // 提交事件
@@ -203,6 +283,12 @@ const handleConfrim = () => {
 				onSubmit(userInfo);
 			}
 		});
+	});
+};
+const handleCall = (phone) => {
+	if (!phone) return;
+	uni.makePhoneCall({
+		phoneNumber: phone,
 	});
 };
 </script>
@@ -228,6 +314,14 @@ const handleConfrim = () => {
 		align-items: center;
 		text-align: center;
 		padding: 40rpx 0;
+	}
+	.selected-icon {
+		display: none;
+		width: fit-content;
+		height: fit-content;
+		position: absolute;
+		bottom: -2px;
+		right: 0;
 	}
 	.item {
 		width: 33.3%;
@@ -255,14 +349,7 @@ const handleConfrim = () => {
 				}
 			}
 		}
-		.selected-icon {
-			display: none;
-			width: fit-content;
-			height: fit-content;
-			position: absolute;
-			bottom: -2px;
-			right: 0;
-		}
+
 		&.active {
 			.item-wrap {
 				border-color: #58b384;
@@ -299,6 +386,38 @@ const handleConfrim = () => {
 		line-height: 1.5;
 		& ~ .uni-select__selector-item {
 			margin-top: 30rpx;
+		}
+	}
+	.flex {
+		display: flex;
+	}
+	.gap-icon {
+		gap: 10rpx;
+	}
+	.align-center {
+		align-items: center;
+	}
+	.hospital-wrapper {
+		.hospital-item {
+			border-radius: 20rpx;
+			background: #fff;
+			box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.1);
+			padding: 20rpx;
+			position: relative;
+			border: 2px solid transparent;
+			&.selected {
+				border-color: #58b384;
+				.selected-icon {
+					display: initial;
+				}
+			}
+		}
+		.row {
+			& + .row {
+				margin-top: 10rpx;
+			}
+		}
+		.hospital-name {
 		}
 	}
 }
