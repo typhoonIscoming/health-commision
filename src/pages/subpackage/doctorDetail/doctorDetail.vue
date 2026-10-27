@@ -16,7 +16,7 @@
 		<view class="doctor-avatar flex">
 			<image
 				:src="doctorDetail.avatar || doctorDetail.fakeAvatar"
-				mode="heightFix"
+				mode="aspectFill"
 				class="doctor-avatar__img"
 			/>
 			<view class="doctor-detail" style="flex: 1">

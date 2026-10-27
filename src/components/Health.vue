@@ -23,12 +23,12 @@
 						</view>
 					</view>
 					<view
-						v-if="mediaList(item.wztwsc).length"
+						v-if="mediaList(item).length"
 						class="artical-img-wrap"
 					>
 						<swiper circular style="width: 100%; height: 100%">
 							<swiper-item
-								v-for="(media, index) in mediaList(item.wztwsc)"
+								v-for="(media, index) in mediaList(item)"
 								:key="index"
 								style="width: 100%; height: 100%"
 							>
@@ -82,6 +82,7 @@ const sortedList = computed(() => {
 		const dateB = new Date(b.fbrq).getTime();
 		return dateB - dateA;
 	});
+	console.log('sortedList', result);
 	return result.slice(0, 5);
 });
 
@@ -95,12 +96,12 @@ const handleMore = () => {
 
 const handleDetail = (item) => {
 	uni.navigateTo({
-		// url: `/pages/subpackage/thridParty/thridParty?url=${item.url}`,
 		url: `/pages/subpackage/publicize/publicize?rowid=${item.rowid}`,
 	});
 };
 
-const mediaList = (dataStr) => {
+const mediaList = (item) => {
+	const dataStr = item.wzfm || item.wztwsc || '[]';
 	const data = isJSON(dataStr) ? JSON.parse(dataStr) : [];
 	return Array.isArray(data) ? data : [];
 };

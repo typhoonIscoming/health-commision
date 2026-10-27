@@ -1,8 +1,11 @@
 <template>
 	<view class="famous-doctor page-gap">
 		<Title title="名医风采">
-			<view style="display: flex; align-items: center">
-				<text style="color: #4a4a4a" @click="handleMore"> 更多 </text>
+			<view
+				style="display: flex; align-items: center"
+				@click="handleMore"
+			>
+				<text style="color: #4a4a4a"> 更多 </text>
 				<uv-icon name="arrow-right" size="15"></uv-icon>
 			</view>
 		</Title>
@@ -19,9 +22,9 @@
 							:src="
 								item.avatar || '@/static/home/doctor-avatar.png'
 							"
-							mode="aspectFit"
+							mode="aspectFill"
 							class="doctor-avatar"
-							style="width: 180rpx; height: 200rpx"
+							style="width: 160rpx; height: 200rpx"
 						/>
 						<view class="avatar-bg"></view>
 						<view
@@ -93,6 +96,9 @@ const handleDetail = (item) => {
 			min-width: 200rpx;
 			padding-top: 40rpx;
 			position: relative;
+			& + .doctor-item {
+				margin-left: 10rpx;
+			}
 			.doctor-avatar {
 				position: absolute;
 				z-index: 1;
@@ -102,7 +108,7 @@ const handleDetail = (item) => {
 				margin: auto;
 			}
 			.avatar-bg {
-				width: 90%;
+				width: 100%;
 				height: 160rpx;
 				background: linear-gradient(
 					180deg,

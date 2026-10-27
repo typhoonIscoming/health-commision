@@ -9,7 +9,7 @@ export default {
 	hookNewAuthCheck: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM4', // 'Njk3MjM1ZmExMmZhNjYzYTcxMzlmZTAz',
 	hookNewAuthBind: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM3', // 'Njk3MjJkMWMxMmZhNjYzYTcxMzljOTQy', // 最新的hook
 	hookDownloadReport: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OTlh', //'Njk2MzUxY2E4NTViZjhmNDVmMzlmMmM0', // 获取体检报告的下载地址
-	hookMakeAppointment: 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
+	hookMakeAppointment: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWM5', // 'Njk3MjM5ODIxMmZhNjYzYTcxM2ExYzg5', // 提交预约
 	mobileVerifyCodeKey: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNh', // 'Njk2MGNiZTlmMWQyYjk1ZWE2OWE2ZGNi', // 短信验证码
 	hookGetAccessToken: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNi', // 'Njk4NWExOGZmOThkZGFkZjdjYWRmMjc1', // 获取公众号token
 	hookMeterialList: 'NmFjNjY5N2I2MWZhMjFhYzU0ZTQ4OWNj', // 'Njk5ZTY1NThiNzdmYTU2MDliNWQwM2M5', // 获取物料列表

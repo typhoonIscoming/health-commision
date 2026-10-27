@@ -20,7 +20,7 @@
 					<video
 						v-else-if="isVideo(media.DownloadUrl)"
 						:src="media.DownloadUrl"
-						autoplay
+						:autoplay="false"
 						controls
 						style="
 							width: 100%;
@@ -60,8 +60,14 @@ const initialStyle = (nodes = []) =>
 				...node,
 				attrs: {
 					...attrs,
-					style: `display:block;margin:0 auto;max-width:100%;${attrs.style || ''}`,
+					height: 'auto',
+					style: `display:inline-block;aspect-ratio: auto 1 / 1;margin:0 auto;object-fit:contain;object-position:top;max-width:100%;${attrs.style || ''}`,
 				},
+			};
+		} else {
+			node = {
+				...node,
+				attrs: { ...(node.attrs || {}), style: 'line-height: 2;' },
 			};
 		}
 		return node.children

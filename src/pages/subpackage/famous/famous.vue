@@ -9,9 +9,9 @@
 			<view class="avatar-wrap">
 				<image
 					:src="item.avatar || '@/static/home/doctor-avatar.png'"
-					mode="heightFix"
+					mode="aspectFill"
 					class="doctor-avatar"
-					style="height: 150rpx; border-radius: 20rpx"
+					style="width: 120rpx; height: 150rpx; border-radius: 20rpx"
 				/>
 			</view>
 			<view class="doctor-detail">
