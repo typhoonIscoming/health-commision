@@ -9,7 +9,7 @@ import useLoginStore from '@/store/login';
 import constants from '@/utils/constants';
 
 // 检测间隔：20 分钟
-const CHECK_INTERVAL = 20 * 60 * 1000;
+const CHECK_INTERVAL = 5 * 60 * 1000;
 
 let timer = null;
 let isHandlingInvalidToken = false;
@@ -84,14 +84,11 @@ const getUserInfo = async () => {
 	};
 	// 获取人员详细信息
 	const [e, response] = await to(getWorksheetDetail(params));
-	if (!isEmpty(e)) {
-		throw Error('429');
-	}
-	if (isEmpty(response.data.rows)) {
+	if (!isEmpty(e) || isEmpty(response.data.rows)) {
 		return;
 	}
-	// console.log('get user info', response);
 	// 如果人员状态为非正常，就提示重新登录
+	return response.data.rows[0];
 };
 
 // 向后台请求人员的token，判断是否失效
@@ -104,10 +101,15 @@ const checkToken = async () => {
 		return;
 	}
 	const [err, res] = await to(getUserInfo());
-	// console.log('check token result', err, res);
 	// 请求失败，或者返回数据里没有token，视为登录态已失效
-	if (!isEmpty(res) && isEmpty(res.jlzt) && res.jlzt !== '正常') {
+	if (!isEmpty(res) && !isEmpty(res.jlzt) && res.jlzt !== '正常') {
 		promptRelogin();
+		return;
+	}
+	// console.log('check token response', res);
+	// 更新用户数据
+	if (!isEmpty(res)) {
+		uni.setStorageSync('b2cUserInfo', res);
 	}
 };
 
