@@ -377,6 +377,8 @@ const getVerify = () => {
 	}
 	getMobileVerifyCode({
 		mob: model.value.phone,
+		appKey: constants.appKey,
+		sign: constants.sign,
 	})
 		.then(() => {
 			uni.showToast({ icon: 'none', title: '验证码已发送' });

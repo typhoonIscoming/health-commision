@@ -320,6 +320,8 @@ const getVerifyId = async () => {
 		real_name: model.value.name,
 		id_card: model.value.idCard,
 		openid: uni.getStorageSync('b2cOpenid'),
+		sign: constants.sign,
+		appKey: constants.appKey,
 	};
 	const [err, res] = await to(faceRecognition(params));
 	if (err) {
@@ -448,6 +450,8 @@ const handleBindUserInfo = () => {
 		open_id: uni.getStorageSync('b2cOpenid'),
 		token: uni.getStorageSync('b2cToken')?.token,
 		xcx_code: uni.getStorageSync('b2cWechatCode'),
+		appKey: constants.appKey,
+		sign: constants.sign,
 	};
 	bindUserAuth(params)
 		.then((res) => {
@@ -518,7 +522,7 @@ const handleGetVerifyCode = async () => {
 	const [err, res] = await to(
 		getMobileVerifyCode({
 			mob: model.value.phone,
-			appkey: constants.appKey,
+			appKey: constants.appKey,
 			sign: constants.sign,
 		}),
 	);
