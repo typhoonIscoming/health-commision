@@ -53,10 +53,14 @@ text {
 	font-family:
 		serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Trebuchet MS',
 		'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-	font-size: 13px;
+	font-size: var(--app-font-size-text, 13px);
 	box-sizing: border-box;
 }
 page {
+	--app-font-size-title: 15px;
+	--app-font-size-subtitle: 14px;
+	--app-font-size-text: 13px;
+	--app-font-size-tip: 12px;
 	background: #fafafa;
 }
 

@@ -1,13 +1,16 @@
 <template>
 	<view
 		class="user"
-		:style="{
-			backgroundImage: `url(${navBg})`,
-			backgroundSize: '100% auto',
-			backgroundRepeat: 'no-repeat',
-			backgroundPositionY: `${0}px`,
-			paddingBottom: `${safeInsetBottom}px`,
-		}"
+		:style="[
+			{
+				backgroundImage: `url(${navBg})`,
+				backgroundSize: '100% auto',
+				backgroundRepeat: 'no-repeat',
+				backgroundPositionY: `${0}px`,
+				paddingBottom: `${safeInsetBottom}px`,
+			},
+			pageFontStyle,
+		]"
 	>
 		<NavBar :bgImage="navBg">
 			<template #left>
@@ -28,6 +31,7 @@
 		<view class="user-info-wrap">
 			<HomeCard theme="light" />
 		</view>
+		<FontSizeAdjuster @change="handleFontSizeChange" />
 		<view class="entry-wrapper">
 			<view class="menus-wrapper">
 				<uv-list>
@@ -78,6 +82,7 @@ import { onShow } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import HomeCard from '@/components/HomeCard.vue';
 import Tabbar from '@/components/Tabbar.vue';
+import FontSizeAdjuster from '@/components/FontSizeAdjuster.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
 import navBg from '@/static/home/home-bg.png';
 
@@ -91,6 +96,25 @@ defineOptions({
 	},
 });
 const userInfo = ref(null);
+const fontSizeConfig = ref({
+	key: 'normal',
+	sizes: {
+		title: '15px',
+		subtitle: '14px',
+		text: '13px',
+		tip: '12px',
+	},
+});
+const pageFontStyle = computed(() => ({
+	'--app-font-size-title': fontSizeConfig.value.sizes.title,
+	'--app-font-size-subtitle': fontSizeConfig.value.sizes.subtitle,
+	'--app-font-size-text': fontSizeConfig.value.sizes.text,
+	'--app-font-size-tip': fontSizeConfig.value.sizes.tip,
+}));
+
+const handleFontSizeChange = (config) => {
+	fontSizeConfig.value = config;
+};
 
 const menus = ref([
 	{
