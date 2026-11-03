@@ -143,7 +143,7 @@ const initTabList = () => {
 			> text {
 				text-align: center;
 				color: #999;
-				font-size: 20rpx;
+				font-size: var(--app-font-size-tip, 12px);
 			}
 			.active {
 				color: rgb(87, 190, 173);

@@ -34,22 +34,20 @@
 						<view
 							style="
 								margin-top: 10rpx;
-								font-size: 28rpx;
+								font-size: var(--app-font-size-text, 13px);
 								color: #4d9c73;
 								max-width: 240rpx;
 								white-space: nowrap;
 							"
-						>
-							{{ item.ysxm }}
+						>							{{ item.ysxm }}
 						</view>
 						<view
 							style="
 								margin-top: 10rpx;
-								font-size: 24rpx;
+								font-size: var(--app-font-size-tip, 12px);
 								color: #898989;
 							"
-						>
-							{{ item.zhicheng }}
+						>							{{ item.zhicheng }}
 						</view>
 					</view>
 				</view>

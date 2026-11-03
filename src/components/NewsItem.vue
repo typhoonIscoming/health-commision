@@ -38,7 +38,7 @@ const handleRoute = () => {
 	background: #fff;
 	margin-top: 20rpx;
 	&-title {
-		font-size: 32rpx;
+		font-size: var(--app-font-size-subtitle, 14px);
 		font-weight: bold;
 		color: #121212;
 	}

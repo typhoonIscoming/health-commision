@@ -1,5 +1,5 @@
 <template>
-	<view class="famous-wrapper">
+	<view class="famous-wrapper" :style="fontStyle">
 		<view
 			v-for="(item, i) in list"
 			:key="i"
@@ -16,27 +16,14 @@
 			</view>
 			<view class="doctor-detail">
 				<view class="flex flex-center" style="white-space: nowrap">
-					<text
-						style="
-							font-size: 32rpx;
-							color: #3d3d3d;
-							font-weight: bold;
-						"
-					>
+					<text class="doctor-name">
 						{{ item.ysxm }}
 					</text>
-					<text style="margin-left: 10rpx; font-size: 26rpx">
+					<text class="doctor-title">
 						{{ item.zhicheng }}
 					</text>
 				</view>
-				<view
-					style="
-						margin-top: 10rpx;
-						font-size: 24rpx;
-						color: #3d3d3d;
-						font-size: 30rpx;
-					"
-				>
+				<view class="doctor-hospital">
 					<text>
 						{{ item.ssyyjg }}
 					</text>
@@ -45,7 +32,6 @@
 				</view>
 				<view
 					class="doctor-desc"
-					style="margin-top: 10rpx; color: #999999"
 					v-html="parseText(item.desc)"
 				>
 				</view>
@@ -55,9 +41,13 @@
 	</view>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 import doctorHook from '@/hooks/doctorHook';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { doctorList, list, getData } = doctorHook();
 
@@ -122,12 +112,31 @@ onMounted(() => {
 		flex-direction: column;
 		justify-content: center;
 	}
+	.doctor-name {
+		font-size: var(--app-font-size-title, 18px);
+		color: #3d3d3d;
+		font-weight: bold;
+	}
+	.doctor-title {
+		margin-left: 10rpx;
+		font-size: var(--app-font-size-text, 15px);
+		color: #666;
+	}
+	.doctor-hospital {
+		margin-top: 10rpx;
+		font-size: var(--app-font-size-text, 15px);
+		color: #3d3d3d;
+	}
 	.doctor-desc {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 5;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		margin-top: 10rpx;
+		color: #999999;
+		font-size: var(--app-font-size-text, 15px);
+		line-height: 1.6;
 	}
 }
 </style>

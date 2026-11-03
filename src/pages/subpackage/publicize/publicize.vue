@@ -1,5 +1,5 @@
 <template>
-	<view class="publicize">
+	<view class="publicize" :style="fontStyle">
 		<view class="title">
 			{{ detail?.wzbt }}
 		</view>
@@ -35,11 +35,15 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import educationHook from '@/hooks/education';
 import parseHtml from '@/utils/html-paser';
 import { isJSON } from '@/utils';
+import useFontSizeStore from '@/store/fontSize';
 // import Video from '@/components/Video.vue';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 // 去掉 figure 节点本身，保留其子节点（如图片）
 const unwrapFigure = (nodes = []) =>
@@ -114,12 +118,12 @@ const isVideo = (url) => {
 	background: #fff;
 	min-height: 100vh;
 	.title {
-		font-size: 32rpx;
+		font-size: var(--app-font-size-title, 15px);
 		font-weight: bold;
 		margin-bottom: 20rpx;
 	}
 	.time {
-		font-size: 24rpx;
+		font-size: var(--app-font-size-tip, 13px);
 		color: #888;
 		margin-bottom: 30rpx;
 	}
@@ -128,6 +132,8 @@ const isVideo = (url) => {
 		color: #2a82e4;
 	}
 	.content {
+		font-size: var(--app-font-size-text, 15px);
+		line-height: 1.8;
 		.content-paragraph {
 			view {
 				margin-top: 20rpx;
@@ -136,12 +142,12 @@ const isVideo = (url) => {
 		.content-item {
 			margin-bottom: 30rpx;
 			.content-title {
-				font-size: 28rpx;
+				font-size: var(--app-font-size-subtitle, 16px);
 				font-weight: bold;
 				margin-bottom: 15rpx;
 			}
 			.content-text {
-				font-size: 24rpx;
+				font-size: var(--app-font-size-text, 15px);
 				line-height: 1.5;
 				color: #555;
 			}

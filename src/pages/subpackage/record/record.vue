@@ -1,5 +1,5 @@
 <template>
-	<view class="record">
+	<view class="record" :style="fontStyle">
 		<uv-form
 			labelPosition="left"
 			:model="model"
@@ -12,6 +12,7 @@
 					v-model="model.name"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -21,6 +22,7 @@
 					v-model="model.phone"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -30,6 +32,7 @@
 					v-model="model.gender"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -39,6 +42,7 @@
 					v-model="model.age"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -48,6 +52,7 @@
 					v-model="model.idCard"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -62,6 +67,7 @@
 					v-model="model.birthday"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -71,6 +77,7 @@
 					v-model="model.rankYears"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -85,6 +92,7 @@
 					v-model="model.recordStatus"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -99,6 +107,7 @@
 					v-model="model.personStatus"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -112,6 +121,7 @@
 					v-model="model.civilServantLevel"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -126,6 +136,7 @@
 					v-model="model.treatmentLevel"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -140,6 +151,7 @@
 					v-model="model.cardType"
 					readonly
 					border="none"
+					fontSize="var(--app-font-size-text, 14px)"
 					inputAlign="right"
 					color="#808080"
 				></uv-input>
@@ -162,6 +174,10 @@
 <script setup>
 import { onShow } from '@dcloudio/uni-app';
 import { ref, defineOptions, computed } from 'vue';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 defineOptions({
 	options: {
@@ -272,6 +288,7 @@ onShow(() => {
 	box-sizing: border-box;
 	height: 100vh;
 	position: relative;
+	font-size: var(--app-font-size-text, 15px);
 	.uv-form-item {
 		background: white;
 		padding: 0 10px;
@@ -282,6 +299,7 @@ onShow(() => {
 	}
 	.uv-form-item__body__left__content__label {
 		color: #000000;
+		font-size: var(--app-font-size-text, 15px) !important;
 	}
 	.button-wrapper {
 		position: absolute;
@@ -289,6 +307,9 @@ onShow(() => {
 		left: 50%;
 		transform: translateX(-50%);
 		width: 100%;
+		.uv-button__text {
+			font-size: var(--app-font-size-text, 14px) !important;
+		}
 	}
 }
 </style>

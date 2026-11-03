@@ -1,9 +1,10 @@
 <template>
-	<view class="tips-page">
+	<view class="tips-page" :style="fontStyle">
 		<view class="notice-wrapper">
 			<uv-notice-bar
 				:text="text"
 				:icon="false"
+				fontSize="var(--app-font-size-text, 14px)"
 				bgColor="transparent"
 				color="#58B384"
 			></uv-notice-bar>
@@ -76,13 +77,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
+
 const text = ref(
 	'就医温馨提示：请您在就医前做好相关准备，携带好必要的证件和资料，遵守医院的相关规定，配合医护人员的工作，共同维护良好的就医环境。祝您就医顺利，身体健康！',
 );
 </script>
 <style lang="scss" scoped>
 .tips-page {
+	font-size: var(--app-font-size-text, 15px);
 	.notice-wrapper {
 		background: linear-gradient(to right, #e0f5e9, #e8f9de);
 	}
@@ -95,13 +102,13 @@ const text = ref(
 			margin-top: 10px;
 		}
 		.notice-header {
-			font-size: 15px;
+			font-size: var(--app-font-size-subtitle, 16px);
 			margin-bottom: 10rpx;
 		}
 		.notice-item {
 			color: #3d3d3d;
 			line-height: 1.7;
-			font-size: 13px;
+			font-size: var(--app-font-size-text, 15px);
 			&.number {
 				padding-left: 10rpx;
 			}

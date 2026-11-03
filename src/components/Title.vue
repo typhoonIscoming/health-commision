@@ -2,7 +2,7 @@
 	<view class="title-wrapper">
 		<text
 			class="title-text"
-			style="font-weight: bold; font-size: 32rpx; color: #3d3d3d"
+			style="font-weight: bold; color: #3d3d3d; font-size: var(--app-font-size-title, 15px);"
 		>
 			{{ props.title }}
 		</text>

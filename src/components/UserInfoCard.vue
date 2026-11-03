@@ -7,9 +7,9 @@
 					mode="heightFix"
 					style="width: 35px; height: 35px; margin-right: 10rpx"
 				/>
-				<text style="font-size: 30rpx">医疗就诊卡</text>
+				<text style="font-size: var(--app-font-size-subtitle, 14px)">医疗就诊卡</text>
 			</view>
-			<view style="color: #999999; font-size: 24rpx">点击查看详情</view>
+			<view style="color: #999999; font-size: var(--app-font-size-tip, 12px)">点击查看详情</view>
 		</view>
 		<image
 			v-if="userInfo"
@@ -237,7 +237,7 @@ const handleIdCard = (idCard) => {
 			align-items: center;
 
 			.value {
-				font-size: 32rpx;
+				font-size: var(--app-font-size-text, 13px);
 			}
 
 			& ~ .row {
@@ -270,7 +270,7 @@ const handleIdCard = (idCard) => {
 		.label,
 		.value {
 			color: #080708;
-			font-size: 28rpx;
+			font-size: var(--app-font-size-text, 13px);
 		}
 	}
 	.right-wrap {

@@ -1,5 +1,5 @@
 <template>
-	<view class="user-card">
+	<view class="user-card" :style="fontStyle">
 		<uv-modal ref="modal" :asyncClose="true" :showConfirmButton="false">
 			<view class="card-content">
 				<view v-if="true" class="user-info">
@@ -18,15 +18,7 @@
 											border-radius: 50%;
 										"
 									></image>
-									<text
-										style="
-											font-size: 32rpx;
-											font-weight: bold;
-											margin-left: 20rpx;
-										"
-									>
-										医疗就诊卡
-									</text>
+									<text class="card-title"> 医疗就诊卡 </text>
 								</view>
 								<view class="row flex-center">
 									<view class="label">姓名：</view>
@@ -55,16 +47,10 @@
 									</view>
 								</view>
 								<view class="row flex-center">
-									<view
-										class="label"
-										style="font-weight: bold"
-									>
+									<view class="label label-strong">
 										身份证号：
 									</view>
-									<view
-										class="value"
-										style="font-weight: bold"
-									>
+									<view class="value value-strong">
 										{{ userInfo?.car_id }}
 									</view>
 								</view>
@@ -148,10 +134,14 @@
 	</view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Carousel from './Carousel.vue';
 import useHospital from '@/hooks/hospitalHook';
 import { isEmpty, getUserInfo } from '@/utils/index';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { hospitalList } = useHospital();
 
@@ -213,6 +203,20 @@ defineOptions({
 }
 
 .user-card {
+	.card-title {
+		font-size: var(--app-font-size-subtitle, 16px);
+		font-weight: bold;
+		margin-left: 20rpx;
+	}
+	.label,
+	.value {
+		font-size: var(--app-font-size-text, 15px);
+	}
+	.label-strong,
+	.value-strong {
+		font-weight: bold;
+	}
+
 	.uv-popup {
 		.uv-modal__content {
 			position: relative;
@@ -270,7 +274,7 @@ defineOptions({
 				.label,
 				.value {
 					color: #080708;
-					font-size: 28rpx;
+					font-size: var(--app-font-size-text, 15px);
 				}
 			}
 			.right-wrap {
@@ -285,12 +289,16 @@ defineOptions({
 				align-items: center;
 				padding: 20rpx 0;
 				color: white;
+				font-size: var(--app-font-size-text, 15px);
 			}
 		}
 		&.list {
 			height: 100%;
+			max-height: 40vh;
 			padding: 20rpx;
 			border-radius: 0 0 30rpx 30rpx;
+			overflow-y: auto;
+			scrollbar-width: none;
 		}
 	}
 	.collapse-wrapper {
@@ -348,7 +356,7 @@ defineOptions({
 			flex: 1;
 			padding: 5rpx 0;
 			text-align: center;
-			font-size: 26rpx;
+			font-size: var(--app-font-size-text, 15px);
 			color: #333;
 			// border-right: 1px solid #999999;
 			&:last-child {

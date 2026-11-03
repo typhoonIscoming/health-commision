@@ -104,7 +104,7 @@ onMounted(() => {
 			flex: 1;
 			position: relative;
 			.service-name {
-				font-size: 32rpx;
+				font-size: var(--app-font-size-text, 13px);
 				color: #3d3d3d;
 				margin-top: 10rpx;
 				font-weight: 700;

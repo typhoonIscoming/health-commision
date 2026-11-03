@@ -3,6 +3,7 @@
 		<view
 			class="card-content psychological-test flex flex-center flex-between"
 			@click="handleClick('xinli')"
+			style="align-self: stretch"
 		>
 			<image
 				src="@/static/home/xinliceping.png"
@@ -71,7 +72,7 @@ onMounted(() => {
 	align-items: center;
 	gap: 20rpx;
 	.card-content {
-		flex: 1;
+		flex: 1 1 45%;
 		background: white;
 		border-radius: 20rpx;
 		padding: 30rpx 10rpx 30rpx 0;
@@ -88,11 +89,11 @@ onMounted(() => {
 	}
 	.label {
 		color: #ffffff;
-		font-size: 28rpx;
+		font-size: var(--app-font-size-text, 13px);
 	}
 	.desc {
 		color: #ffffff;
-		font-size: 22rpx;
+		font-size: var(--app-font-size-tip, 12px);
 		margin-top: 10rpx;
 	}
 }

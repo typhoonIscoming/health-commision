@@ -2,6 +2,7 @@
 	<view
 		class="doctor-wrap"
 		:style="{
+			...fontStyle,
 			'background-image': `url(${doctorBg})`,
 			'background-size': 'contain',
 		}"
@@ -29,17 +30,10 @@
 						type="success"
 					></uv-tags>
 				</view>
-				<view
-					style="
-						font-size: 32rpx;
-						font-weight: bold;
-						color: #222;
-						margin-top: 20rpx;
-					"
-				>
+				<view class="doctor-name">
 					{{ doctorDetail.ysxm }}
 				</view>
-				<view style="margin-top: 20rpx; font-size: #222">
+				<view class="doctor-dept">
 					{{ doctorDetail.szks }}
 				</view>
 				<view class="hospital-address">
@@ -55,10 +49,10 @@
 		<view class="doctor-good-at doctor-info">
 			<view class="flex flex-center">
 				<uv-icon :name="goodAt" size="28" color="#999999"></uv-icon>
-				<text style="font-size: 32rpx; color: #58b384">擅长</text>
+				<text class="section-title">擅长</text>
 			</view>
 			<view class="skill-content">
-				<view> {{ doctorDetail.scly }} </view>
+				{{ doctorDetail.scly }}
 			</view>
 		</view>
 		<view
@@ -71,14 +65,12 @@
 					size="28"
 					color="#999999"
 				></uv-icon>
-				<text style="font-size: 32rpx; color: #58b384">专家介绍</text>
+				<text class="section-title">专家介绍</text>
 			</view>
 			<view class="skill-content">
-				<view>
-					{{ descriptions }}
-					<!-- {{ doctorDetail.introduction }} -->
-					<!-- <RichTextNode :nodes="doctorDetail.desc" /> -->
-				</view>
+				{{ descriptions }}
+				<!-- {{ doctorDetail.introduction }} -->
+				<!-- <RichTextNode :nodes="doctorDetail.desc" /> -->
 			</view>
 		</view>
 	</view>
@@ -92,7 +84,11 @@ import doctorBg from '@/static/card/doctor-detail.png';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import goodAt from '@/static/card/skill.png';
 import doctorSkill from '@/static/card/doctor-skill.png';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { doctorList, list, getData } = doctorHook();
 
@@ -144,9 +140,20 @@ onLoad((options) => {
 			width: 240rpx;
 			height: 320rpx;
 		}
+		.doctor-name {
+			font-size: var(--app-font-size-title, 18px);
+			font-weight: bold;
+			color: #222;
+			margin-top: 20rpx;
+		}
+		.doctor-dept {
+			margin-top: 20rpx;
+			font-size: var(--app-font-size-text, 15px);
+			color: #222;
+		}
 		.hospital-address {
 			margin-top: 40rpx;
-			font-size: 24rpx;
+			font-size: var(--app-font-size-text, 15px);
 			color: #222;
 			display: flex;
 			align-items: center;
@@ -162,9 +169,13 @@ onLoad((options) => {
 		border-radius: 20rpx;
 		background: url('@/static/card/goodAtBg.png') no-repeat center;
 		background-size: cover;
+		.section-title {
+			font-size: var(--app-font-size-subtitle, 16px);
+			color: #58b384;
+		}
 		.skill-content {
 			margin-top: 20rpx;
-			font-size: 28rpx;
+			font-size: var(--app-font-size-subtitle, 15px);
 			color: #3d3d3d;
 			line-height: 1.5;
 			background: white;

@@ -1,21 +1,31 @@
+<template>
+	<view class="app-root" :style="fontStyle">
+		<slot />
+	</view>
+</template>
+
 <script>
 import { mapState, mapActions } from 'pinia';
 import useLoginStore from './store/login';
+import useFontSizeStore from './store/fontSize';
 import { startTokenGuard, stopTokenGuard } from './hooks/tokenGuard';
 export default {
 	computed: {
 		...mapState(useLoginStore, ['getLoginState']),
+		...mapState(useFontSizeStore, ['fontStyle']),
 	},
 	onLaunch: function () {
 		console.log('App Launch');
-		// 存在登录态时，启动定时器周期性校验人员的token是否失效
+		const fontStore = useFontSizeStore();
+		fontStore.initFromStorage();
 		startTokenGuard();
 	},
 	onShow: function () {
 		// #ifdef MP-WEIXIN
 		uni.hideTabBar();
 		// #endif
-		// console.log('App Show', this.getLoginState);
+		const fontStore = useFontSizeStore();
+		fontStore.initFromStorage();
 		if (!this.getLoginState) {
 			// this.login();
 		}
@@ -53,33 +63,18 @@ text {
 	font-family:
 		serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Trebuchet MS',
 		'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-	font-size: 13px;
+	font-size: var(--app-font-size-text, 13px);
 	box-sizing: border-box;
 }
 page {
+	--app-font-size-title: 15px;
+	--app-font-size-subtitle: 14px;
+	--app-font-size-text: 13px;
+	--app-font-size-tip: 12px;
+	--mall4j-safe-area-inset-bottom: 0px;
+	--uni-primary-text-color: #58b383; // 主要文字颜色
 	background: #fafafa;
 }
-
-/* h5低版本浏览兼容 */
-page {
-	--mall4j-safe-area-inset-bottom: env(safe-area-inset-bottom);
-	--uni-primary-text-color: #58b383; // 主要文字颜色
-}
-/* #ifdef H5 */
-page {
-	--mall4j-safe-area-inset-bottom: 0px;
-}
-@supports (bottom: constant(safe-area-inset-bottom)) {
-	page {
-		--mall4j-safe-area-inset-bottom: constant(safe-area-inset-bottom);
-	}
-}
-@supports (bottom: env(safe-area-inset-bottom)) {
-	page {
-		--mall4j-safe-area-inset-bottom: env(safe-area-inset-bottom);
-	}
-}
-/* #endif */
 .uni-tabbar-bottom {
 	display: none;
 }

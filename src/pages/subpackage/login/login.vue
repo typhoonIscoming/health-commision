@@ -2,6 +2,7 @@
 	<view
 		class="page-container"
 		:style="{
+			...fontStyle,
 			background: `url(${navBg})`,
 			backgroundSize: '100% auto',
 			backgroundRepeat: 'no-repeat',
@@ -30,6 +31,7 @@
 					:loading="isLoggingIn"
 					shape="circle"
 					color="#58B384"
+					class="wechat-login-btn"
 				>
 					微信快速登录
 				</uv-button>
@@ -76,7 +78,7 @@
 						</uv-input>
 					</uv-form-item>
 				</uv-form>
-				<view style="margin-top: 40rpx">
+				<view style="margin-top: 40rpx" class="login-btn-box">
 					<uv-button
 						class="authorized-btn"
 						color="var(--uni-primary-text-color)"
@@ -146,16 +148,19 @@
 	</view>
 </template>
 <script setup>
-import { ref, defineOptions } from 'vue';
+import { ref, defineOptions, computed } from 'vue';
 import { fastLogin, checkUserAuth, getMobileVerifyCode } from '@/api';
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
 import NavBar from '@/components/NavBar.vue';
+import useFontSizeStore from '@/store/fontSize';
 import navBg from '@/static/home/login-nav.jpg';
 import safeInset from '@/hooks/safeInset';
 import { startTokenGuard } from '@/hooks/tokenGuard';
 
 const { safeInsetBottom } = safeInset();
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 defineOptions({
 	options: {
@@ -461,6 +466,12 @@ const onToTermsOfService = () => {
 		margin: 0 auto;
 		text-align: center;
 	}
+	.login-btn-box,
+	.fast-login {
+		.uv-button {
+			font-size: var(--app-font-size-subtitle, 13px);
+		}
+	}
 	.fast-login {
 		margin-top: 60rpx;
 	}
@@ -505,7 +516,7 @@ const onToTermsOfService = () => {
 		justify-content: center;
 		.login-item {
 			color: var(--uni-primary-text-color);
-			font-size: 28rpx;
+			font-size: var(--app-font-size-text, 13px);
 		}
 	}
 	.footer {
@@ -547,10 +558,10 @@ const onToTermsOfService = () => {
 			flex-direction: column;
 			align-items: center;
 			.title {
-				font-size: 32rpx;
+				font-size: var(--app-font-size-subtitle, 14px);
 			}
 			.content {
-				font-size: 24rpx;
+				font-size: var(--app-font-size-tip, 12px);
 				color: #999;
 				padding: 30rpx 0;
 				line-height: 1.5;
@@ -566,7 +577,7 @@ const onToTermsOfService = () => {
 					padding: 10rpx 60rpx;
 					border: 1rpx solid var(--uni-primary-text-color);
 					border-radius: 40rpx;
-					font-size: 26rpx;
+					font-size: var(--app-font-size-text, 13px);
 					background-color: var(--uni-primary-text-color);
 					color: #fff;
 				}
@@ -589,12 +600,12 @@ const onToTermsOfService = () => {
 				background-color: none;
 			}
 			.statement-content {
-				font-size: 28rpx;
+				font-size: var(--app-font-size-text, 13px);
 			}
 			text {
 				color: env(--uni-primary-text-color);
 				cursor: pointer;
-				font-size: 28rpx;
+				font-size: var(--app-font-size-text, 13px);
 			}
 		}
 		.check-box {

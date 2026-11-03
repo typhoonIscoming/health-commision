@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view :style="fontStyle">
 		<view v-if="loading || list.length !== 0" class="health-card page-gap">
 			<Title title="健康科普">
 				<view style="display: flex; align-items: center">
@@ -74,6 +74,10 @@ import Title from './Title.vue';
 import educationHook from '@/hooks/education';
 import Video from '@/components/Video.vue';
 import { isJSON } from '@/utils';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { list, loading, getData } = educationHook();
 
@@ -140,11 +144,11 @@ const isVideo = (url) => {
 		.artical-title {
 			font-weight: 700;
 			color: #3d3d3d;
-			font-size: 28rpx;
+			font-size: var(--app-font-size-text, 13px);
 		}
 		.artical-time {
 			color: #999999;
-			font-size: 24rpx;
+			font-size: var(--app-font-size-tip, 12px);
 			margin-top: 20rpx;
 		}
 		.artical-img-wrap {

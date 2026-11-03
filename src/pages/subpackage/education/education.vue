@@ -1,5 +1,5 @@
 <template>
-	<view class="education-page">
+	<view class="education-page" :style="fontStyle">
 		<view class="education-list">
 			<view
 				v-for="(item, i) in list"
@@ -56,9 +56,14 @@
 	</view>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import educationHook from '@/hooks/education';
 import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
+import useFontSizeStore from '@/store/fontSize';
+import { isJSON } from '@/utils';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { loading, getData } = educationHook();
 
@@ -147,6 +152,7 @@ const isVideo = (url) => {
 <style lang="scss">
 .education-page {
 	padding: 13px;
+	font-size: var(--app-font-size-text, 15px);
 	.tab-wrap {
 		display: flex;
 		align-items: center;
@@ -181,11 +187,11 @@ const isVideo = (url) => {
 			.artical-title {
 				font-weight: 700;
 				color: #3d3d3d;
-				font-size: 28rpx;
+				font-size: var(--app-font-size-subtitle, 16px);
 			}
 			.artical-time {
 				color: #999999;
-				font-size: 24rpx;
+				font-size: var(--app-font-size-tip, 13px);
 				margin-top: 20rpx;
 			}
 			.artical-img-wrap {

@@ -2,6 +2,7 @@
 	<view
 		class="user"
 		:style="{
+			...fontStyle,
 			backgroundImage: `url(${navBg})`,
 			backgroundSize: '100% auto',
 			backgroundRepeat: 'no-repeat',
@@ -28,8 +29,9 @@
 		<view class="user-info-wrap">
 			<HomeCard theme="light" />
 		</view>
+		<FontSizeAdjuster />
 		<view class="entry-wrapper">
-			<view class="menus-wrapper">
+			<view class="menus-wrapper user-actions-list">
 				<uv-list>
 					<uv-list-item
 						v-for="(item, i) in menus"
@@ -75,9 +77,11 @@
 <script setup>
 import { ref, computed, defineOptions } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
+import useFontSizeStore from '@/store/fontSize';
 import NavBar from '@/components/NavBar.vue';
 import HomeCard from '@/components/HomeCard.vue';
 import Tabbar from '@/components/Tabbar.vue';
+import FontSizeAdjuster from '@/components/FontSizeAdjuster.vue';
 import { isEmpty, to, checkLogin } from '@/utils';
 import navBg from '@/static/home/home-bg.png';
 
@@ -91,6 +95,8 @@ defineOptions({
 	},
 });
 const userInfo = ref(null);
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const menus = ref([
 	{
@@ -222,42 +228,9 @@ onShow(() => {
 			padding-right: 15px !important;
 		}
 	}
-	.menus-item {
-		width: 100%;
-		height: 160rpx;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-radius: 20rpx;
-		color: white;
-		padding: 20rpx;
-		box-sizing: border-box;
-		&.record {
-			background: #fda062;
-		}
-		&.evaluate {
-			background: #67b5f9;
-		}
-		&.questionnaire {
-			background: #4acf9e;
-		}
-		&.reservation {
-			background: #fc668b;
-		}
-		.menus-icon {
-			width: 45px;
-			height: 45px;
-			background: white;
-			border-radius: 50%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		.menus-name {
-			font-size: 17px;
-		}
-		.menus-desc {
-			margin-top: 18rpx;
+	.user-actions-list {
+		.uv-list-item__content-title {
+			font-size: var(--app-font-size-title, 14px);
 		}
 	}
 }

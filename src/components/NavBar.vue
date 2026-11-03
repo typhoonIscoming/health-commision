@@ -101,7 +101,7 @@ onMounted(() => {
 		}
 	}
 	.nav-title {
-		font-size: 16px;
+		font-size: var(--app-font-size-title, 15px);
 	}
 }
 .uv-nav-slot {

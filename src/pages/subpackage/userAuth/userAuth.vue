@@ -1,5 +1,5 @@
 <template>
-	<view class="userAuth">
+	<view class="userAuth" :style="fontStyle">
 		<NavBar title="用户认证">
 			<template v-slot:left>
 				<view
@@ -22,7 +22,7 @@
 				style="
 					margin-left: 10rpx;
 					color: var(--uni-primary-text-color);
-					font-size: 28rpx;
+					font-size: var(--app-font-size-text, 28rpx);
 				"
 			>
 				用于身份认证，请填写您的真实信息
@@ -45,6 +45,7 @@
 							placeholderClass="place-holder"
 							inputAlign="right"
 							border="none"
+							fontSize="var(--app-font-size-text, 14px)"
 							placeholder="请输入姓名"
 							placeholderStyle="color: #7C7C7C"
 							@change="model.recognition = ''"
@@ -59,6 +60,7 @@
 							inputAlign="right"
 							type="number"
 							border="none"
+							fontSize="var(--app-font-size-text, 14px)"
 							placeholder="请输入手机号"
 							placeholderStyle="color: #7C7C7C"
 						>
@@ -72,6 +74,7 @@
 							inputAlign="right"
 							type="number"
 							border="none"
+							fontSize="var(--app-font-size-text, 14px)"
 							placeholder="请输入手机验证码"
 							placeholderStyle="color: #7C7C7C"
 						>
@@ -81,6 +84,10 @@
 									type="primary"
 									size="mini"
 									shape="circle"
+									:customStyle="{
+										fontSize:
+											'var(--app-font-size-tip, 24rpx)',
+									}"
 									color="#58B384"
 								>
 									{{ count }} s
@@ -92,6 +99,10 @@
 									size="mini"
 									shape="circle"
 									color="#58B384"
+									:customStyle="{
+										fontSize:
+											'var(--app-font-size-tip, 24rpx)',
+									}"
 									@click="handleGetVerifyCode"
 								>
 									发送验证码
@@ -107,6 +118,7 @@
 							inputAlign="right"
 							type="idcard"
 							border="none"
+							fontSize="var(--app-font-size-text, 14px)"
 							placeholder="请选择证件类型"
 							placeholderStyle="color: #7C7C7C"
 						>
@@ -123,6 +135,7 @@
 							inputAlign="right"
 							type="idcard"
 							border="none"
+							fontSize="var(--app-font-size-text, 14px)"
 							placeholder="请输入身份证号"
 							placeholderStyle="color: #7C7C7C"
 							@change="model.recognition = ''"
@@ -152,7 +165,8 @@
 									:customStyle="{
 										padding: '10rpx 50rpx',
 										lineHeight: '1',
-										fontSize: '24rpx',
+										fontSize:
+											'var(--app-font-size-text, 24rpx)',
 										height: '60rpx',
 									}"
 									@click="handleStartSoterAuthentication"
@@ -169,7 +183,7 @@
 				</view>
 			</uv-form>
 
-			<view style="margin-top: 60rpx">
+			<view style="margin-top: 60rpx" class="submit-wrapper">
 				<uv-button
 					:loading="bindLoading"
 					type="primary"
@@ -184,7 +198,7 @@
 	</view>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import {
 	bindUserAuth,
@@ -196,6 +210,10 @@ import {
 import { isEmpty, to } from '@/utils';
 import constants from '@/utils/constants';
 import { startTokenGuard } from '@/hooks/tokenGuard';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const success = 'success';
 const fail = 'fail';
@@ -574,6 +592,7 @@ onMounted(() => {
 	padding: 20rpx;
 	min-height: 100vh;
 	background-color: #f7f7f7;
+	font-size: var(--app-font-size-text, 15px);
 	.form-wrap {
 		margin-top: 30rpx;
 		.base-info-wrap {
@@ -584,6 +603,7 @@ onMounted(() => {
 		.uv-form-item__body__left__content__label {
 			color: #3d3d3d !important;
 			font-weight: bold;
+			font-size: var(--app-font-size-text, 15px);
 		}
 		.uv-form-item__body__right__message {
 			text-align: right;
@@ -624,6 +644,11 @@ onMounted(() => {
 				top: 50%;
 				transform: translateY(-50%) translateX(50%);
 			}
+		}
+	}
+	.submit-wrapper {
+		.uv-button {
+			font-size: var(--app-font-size-text, 14px) !important;
 		}
 	}
 }

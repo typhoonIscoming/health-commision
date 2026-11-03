@@ -112,7 +112,7 @@ onShow(() => {
 			justify-content: center;
 		}
 		.name {
-			font-size: 16px;
+			font-size: var(--app-font-size-subtitle, 14px);
 			font-weight: bold;
 			color: #ffffff;
 		}
@@ -123,11 +123,12 @@ onShow(() => {
 			color: #ffffff;
 			padding: 4rpx 10rpx;
 			margin-left: 16rpx;
-			font-size: 24rpx;
+			font-size: var(--app-font-size-tip, 12px);
 		}
 		.phone {
 			color: #eeeeee;
 			margin-top: 16rpx;
+			font-size: var(--app-font-size-text, 13px);
 		}
 	}
 

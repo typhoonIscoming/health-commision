@@ -1,5 +1,5 @@
 <template>
-	<view class="agreement-wrap">
+	<view class="agreement-wrap" :style="fontStyle">
 		<view class="title">
 			本指引是新疆居民健康卡小程序开发者“新疆维吾尔自治区二次补偿小程序”（以下简称“开发者”）为处理你的个人信息而制定。
 		</view>
@@ -71,17 +71,27 @@
 		</view>
 	</view>
 </template>
-<script setup></script>
+<script setup>
+import { computed } from 'vue';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
+</script>
 <style scoped lang="scss">
 .agreement-wrap {
 	padding: 20rpx;
-	font-size: 28rpx;
+	font-size: var(--app-font-size-text, 13px);
 	color: #333;
 	line-height: 1.6;
 	background-color: #fff;
 	.label {
 		font-weight: bold;
 		margin-top: 20rpx;
+		font-size: var(--app-font-size-subtitle, 14px);
+	}
+	.value {
+		font-size: var(--app-font-size-text, 13px);
 	}
 }
 </style>

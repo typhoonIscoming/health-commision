@@ -2,6 +2,7 @@
 	<view
 		class="hospital-container"
 		:style="{
+			...fontStyle,
 			backgroundSize: '100% auto',
 			backgroundRepeat: 'no-repeat',
 			backgroundPositionY: `${0}px`,
@@ -20,7 +21,11 @@
 					color="#999999"
 				></uv-icon>
 				<text
-					style="font-weight: bold; color: #3d3d3d; font-size: 30rpx"
+					style="
+						font-weight: bold;
+						color: #3d3d3d;
+						font-size: var(--app-font-size-subtitle, 14px);
+					"
 				>
 					{{ item.name }}
 				</text>
@@ -40,7 +45,11 @@
 					预约电话
 				</text>
 				<text
-					style="color: #58b384; font-weight: bold; font-size: 28rpx"
+					style="
+						color: #58b384;
+						font-weight: bold;
+						font-size: var(--app-font-size-text, 13px);
+					"
 					@click="handleCall(item.phone)"
 				>
 					{{ item.phone }}
@@ -76,6 +85,7 @@
 									color: #3d3d3d;
 									font-weight: bold;
 									margin-left: 8px;
+									font-size: var(--app-font-size-text, 13px);
 								"
 							>
 								{{ doctor.phone }}
@@ -90,15 +100,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Tabbar from '../../../components/Tabbar.vue';
 import safeInset from '../../../hooks/safeInset';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import phoneIcon from '@/static/card/phone.png';
 import phoneIcon2 from '@/static/card/phone2.png';
 import useHospital from '@/hooks/hospitalHook';
+import useFontSizeStore from '@/store/fontSize';
 
 const { safeInsetBottom } = safeInset();
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { hospitalList } = useHospital();
 
@@ -125,18 +138,19 @@ const handleCall = (phone: string) => {
 	.hospital-name {
 		gap: 10rpx;
 		padding-left: 10px;
-		align-items: flex-start;
+		align-items: center;
 	}
 	.hospital-address {
 		margin: 10rpx 0;
 		color: #999999;
-		font-size: 28rpx;
+		font-size: var(--app-font-size-text, 13px);
 		padding-left: 10px;
 	}
 	.hospital-contact {
 		padding: 6px 10px;
 		background-color: #eef7f2;
 		border-radius: 8rpx;
+		font-size: var(--app-font-size-text, 13px);
 	}
 	.hospital-doctor {
 		margin-top: 14rpx;

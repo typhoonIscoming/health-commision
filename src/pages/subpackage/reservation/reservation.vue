@@ -1,5 +1,5 @@
 <template>
-	<view class="reservation">
+	<view class="reservation" :style="fontStyle">
 		<view class="reservation-wrapper">
 			<ReservationItem
 				v-for="(item, i) in reservationList"
@@ -18,11 +18,15 @@
 	</view>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { onPullDownRefresh, onReachBottom, onShow } from '@dcloudio/uni-app';
 import ReservationItem from '@/components/ReservationItem.vue';
 import { isEmpty } from '@/utils';
 import reservationHook from '@/hooks/reservationHook';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { reservationList, mockList, getList } = reservationHook();
 
@@ -86,6 +90,7 @@ onReachBottom(() => {
 .reservation {
 	padding: 13px;
 	position: relative;
+	font-size: var(--app-font-size-text, 15px);
 	// background: white;
 	min-height: 100vh;
 	.footer {

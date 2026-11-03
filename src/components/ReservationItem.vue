@@ -13,7 +13,7 @@
 				style="
 					padding: 20rpx 0;
 					color: #58b384;
-					font-size: 28rpx;
+					font-size: var(--app-font-size-text, 13px);
 					font-weight: bold;
 				"
 				>{{ info.yyzt }}</view
@@ -26,7 +26,7 @@
 				<view
 					class="value"
 					style="
-						font-size: 34rpx;
+						font-size: var(--app-font-size-subtitle, 14px);
 						font-weight: bold;
 						margin-top: 10rpx;
 					"
@@ -61,7 +61,7 @@
 			</view>
 			<view v-if="info.yybz" class="row flex">
 				<view class="title">备注：</view>
-				<view class="value" style="font-size: 28rpx">
+				<view class="value" style="font-size: var(--app-font-size-text, 13px)">
 					{{ info.yybz }}
 				</view>
 			</view>

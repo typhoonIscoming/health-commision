@@ -1,8 +1,9 @@
 <template>
-	<view class="appointment-content">
-		<!-- <NavBar title="体检预约" :opacity="1" /> -->
+	<view class="appointment-content" :style="fontStyle">
 		<view class="appointment-bg">
-			<text style="font-size: 28rpx"> 请选择您要预约的医院及时间 </text>
+			<text style="font-size: var(--app-font-size-text, 13px)">
+				请选择您要预约的医院及时间
+			</text>
 		</view>
 		<view style="padding: 20rpx">
 			<uv-form
@@ -34,13 +35,7 @@
 									size="20"
 									color="#999999"
 								></uv-icon>
-								<text
-									style="
-										font-weight: bold;
-										color: #3d3d3d;
-										font-size: 30rpx;
-									"
-								>
+								<text class="hospital-name-text">
 									{{ item.name }}
 								</text>
 							</view>
@@ -66,11 +61,10 @@
 									预约电话
 								</text>
 								<text
-									style="
-										color: #58b384;
-										font-weight: bold;
-										font-size: 28rpx;
-									"
+									style="color: #58b384; font-weight: bold"
+									:style="{
+										fontSize: `var(--app-font-size-text, 13px)`,
+									}"
 									@click.stop="handleCall(item.yydh)"
 								>
 									{{ item.yydh }}
@@ -152,6 +146,10 @@ import selected from '@/static/user/selected.png';
 import hospitalIcon from '@/static/card/hospital-icon.png';
 import phoneIcon from '@/static/card/phone.png';
 import reservationHook from '@/hooks/reservationHook';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { reservationList, total, getList } = reservationHook();
 
@@ -295,6 +293,7 @@ const handleCall = (phone) => {
 <style lang="scss">
 .appointment-content {
 	position: relative;
+	font-size: var(--app-font-size-text, 15px);
 	.header {
 		padding: 30rpx;
 		font-size: 30rpx;
@@ -398,6 +397,11 @@ const handleCall = (phone) => {
 		align-items: center;
 	}
 	.hospital-wrapper {
+		.hospital-name-text {
+			font-weight: bold;
+			color: #3d3d3d;
+			font-size: var(--app-font-size-subtitle, 16px);
+		}
 		.hospital-item {
 			border-radius: 20rpx;
 			background: #fff;
@@ -417,7 +421,10 @@ const handleCall = (phone) => {
 				margin-top: 10rpx;
 			}
 		}
-		.hospital-name {
+	}
+	.submit-wrap {
+		.uv-button__text {
+			font-size: var(--app-font-size-text, 15px) !important;
 		}
 	}
 }

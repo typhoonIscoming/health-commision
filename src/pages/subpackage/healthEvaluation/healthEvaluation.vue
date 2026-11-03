@@ -1,51 +1,57 @@
 <template>
-	<view class="health-evaluation">
+	<view class="health-evaluation" :style="fontStyle">
 		<view class="health-content">
 			<view class="evaluation-item psychological" @click="handlePsycho">
-				<view class="title">心理测评</view>
-				<view class="subtitle">心理健康测评</view>
-				<view class="btn-wrapper">
-					<view class="evaluation-btn">
-						<text class="btn-text" style="color: #279536">
-							去测评
-						</text>
-						<uv-icon
-							name="arrow-right"
-							color="#279536"
-							size="15"
-						></uv-icon>
+				<view class="evaluation-content">
+					<view class="title">心理测评</view>
+					<view class="subtitle">心理健康测评</view>
+					<view class="btn-wrapper">
+						<view class="evaluation-btn">
+							<text class="btn-text" style="color: #279536">
+								去测评
+							</text>
+							<uv-icon
+								name="arrow-right"
+								color="#279536"
+								size="15"
+							></uv-icon>
+						</view>
 					</view>
 				</view>
 			</view>
 			<view class="evaluation-item physical" @click="handlePhysical">
-				<view class="title">体质自测</view>
-				<view class="subtitle">中医体质自测</view>
-				<view class="btn-wrapper">
-					<view class="evaluation-btn">
-						<text class="btn-text" style="color: #00aea2">
-							去测评
-						</text>
-						<uv-icon
-							name="arrow-right"
-							color="#00AEA2"
-							size="15"
-						></uv-icon>
+				<view class="evaluation-content">
+					<view class="title">体质自测</view>
+					<view class="subtitle">中医体质自测</view>
+					<view class="btn-wrapper">
+						<view class="evaluation-btn">
+							<text class="btn-text" style="color: #00aea2">
+								去测评
+							</text>
+							<uv-icon
+								name="arrow-right"
+								color="#00AEA2"
+								size="15"
+							></uv-icon>
+						</view>
 					</view>
 				</view>
 			</view>
 			<view class="evaluation-item weight" @click="handleWeight">
-				<view class="title">体重测评</view>
-				<view class="subtitle">体重状况测评</view>
-				<view class="btn-wrapper">
-					<view class="evaluation-btn">
-						<text class="btn-text" style="color: #519aec">
-							去测评
-						</text>
-						<uv-icon
-							name="arrow-right"
-							color="#519AEC"
-							size="15"
-						></uv-icon>
+				<view class="evaluation-content">
+					<view class="title">体重测评</view>
+					<view class="subtitle">体重状况测评</view>
+					<view class="btn-wrapper">
+						<view class="evaluation-btn">
+							<text class="btn-text" style="color: #519aec">
+								去测评
+							</text>
+							<uv-icon
+								name="arrow-right"
+								color="#519AEC"
+								size="15"
+							></uv-icon>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -53,9 +59,13 @@
 	</view>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import psychoLogicalHook from '@/hooks/psychoLogicalHook.js';
 import { debounce, isEmpty } from '@/utils';
+import useFontSizeStore from '@/store/fontSize';
+
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { list, loading, getData } = psychoLogicalHook();
 
@@ -128,32 +138,43 @@ onMounted(() => {
 <style lang="scss">
 .health-evaluation {
 	width: 100%;
+	font-size: var(--app-font-size-text, 15px);
 	.health-content {
 		padding: 10px;
 	}
 	.evaluation-item {
-		padding: 20rpx 30rpx;
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: 15rpx;
 		border-radius: 20rpx;
-		background-size: cover;
+
 		&.psychological {
 			// background: #c2f7ce;
-			background: url('/static/user/psychological.png') no-repeat center
-				center;
+			background-image: url('/static/user/psychological.png');
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: cover;
 		}
 		&.physical {
 			// background: #bbf3f1;
-			background: url('/static/user/physical.png') no-repeat center center;
+			background-image: url('/static/user/physical.png');
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: cover;
 		}
 		&.weight {
 			// background: #d0e3f9;
-			background: url('/static/user/weight.png') no-repeat center center;
+			background-image: url('/static/user/weight.png');
+			background-repeat: no-repeat;
+			background-position: center center;
+			background-size: cover;
 		}
 		& + .evaluation-item {
 			margin-top: 15px;
+		}
+		.evaluation-content {
+			padding: 30rpx 30rpx;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			gap: 15rpx;
 		}
 		.btn-wrapper {
 			overflow: hidden;
@@ -165,17 +186,18 @@ onMounted(() => {
 			border-radius: 30rpx;
 			align-items: center;
 			background: white;
-			box-shadow: -10px 0 10px rgba(255, 255, 255, 0.8);
+			// box-shadow: -10px 0 10px rgba(255, 255, 255, 0.8);
 			.btn-text {
-				font-size: 24rpx;
+				font-size: var(--app-font-size-text, 15px);
 			}
 		}
 		.title {
 			font-weight: bold;
-			font-size: 30rpx;
+			font-size: var(--app-font-size-subtitle, 16px);
 		}
 		.subtitle {
 			color: #3a383a;
+			font-size: var(--app-font-size-text, 15px);
 		}
 	}
 }

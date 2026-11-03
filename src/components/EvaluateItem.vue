@@ -4,7 +4,7 @@
 			<uv-icon :name="hospitalIcon" color="#ffffff" size="20"></uv-icon>
 			<view
 				class="hospital-name"
-				style="font-weight: bold; font-size: 14px; margin-left: 10rpx"
+				style="font-weight: bold; font-size: var(--app-font-size-text, 13px); margin-left: 10rpx"
 			>
 				新疆医科大学附属肿瘤医院
 			</view>
@@ -72,7 +72,7 @@ const info = computed(() => props.item);
 		}
 	}
 	&-title {
-		font-size: 28rpx;
+		font-size: var(--app-font-size-text, 13px);
 		margin-top: 40rpx;
 		.evaluate-type {
 			border-radius: 8px;

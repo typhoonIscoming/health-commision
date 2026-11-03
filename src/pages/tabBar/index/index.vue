@@ -2,6 +2,7 @@
 	<view
 		class="home"
 		:style="{
+			...fontStyle,
 			// background: `url(${navBg})`,
 			backgroundSize: '100% auto',
 			backgroundRepeat: 'no-repeat',
@@ -42,6 +43,7 @@
 			<uv-notice-bar
 				:text="noticeItem.biaoti"
 				:icon="noticePng"
+				fontSize="var(--app-font-size-text, 14px)"
 				color="#999999"
 				bgColor="#ffffff"
 				@click="handleNotice"
@@ -60,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { onPageScroll } from '@dcloudio/uni-app';
 import NavBar from '@/components/NavBar.vue';
 import Tabbar from '@/components/Tabbar.vue';
@@ -75,8 +77,11 @@ import FamousDoctor from '@/components/FamousDoctor.vue';
 import safeInset from '@/hooks/safeInset';
 import noticePng from '@/static/card/notice.png';
 import HealthScience from '@/components/Health.vue';
+import useFontSizeStore from '@/store/fontSize';
 
 const { safeInsetBottom } = safeInset();
+const fontSizeStore = useFontSizeStore();
+const fontStyle = computed(() => fontSizeStore.fontStyle);
 
 const { noticeList, getList } = homeNoticebar();
 
